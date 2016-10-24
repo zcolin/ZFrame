@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 进度条引用视图 -->
+<RelativeLayout android:id="@+id/progressBar_rl"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:id="@+id/progressBar_centerrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/dimens_mid">
+
+        <ProgressBar
+            android:id="@+id/progressBar_pg"
+            style="@style/style_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/progressBar_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/progressBar_pg"
+            android:gravity="center_vertical"
+            android:textColor="@color/black_dark"
+            android:textSize="@dimen/textsize_small">
+        </TextView>
+    </RelativeLayout>
+
+</RelativeLayout>

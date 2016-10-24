@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.fosung.usedemo"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <!-- 操作摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 手机震动 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 获取手机状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 访问wifi网络信息,wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 改变wifi状态，操作wifi进行连接断开等 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 在SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <!-- 允许应用读取低级别的系统日志文件 -->
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <!-- 手机震动 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 操作键盘锁 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 读取联系人 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <application
+        android:name="com.fosung.usedemo.app.App"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="GlideModule"
+            android:value=".imageloader.SimpleGlideModule"/>
+
+        <activity android:name="com.fosung.usedemo.amodule.init.InitActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fosung.usedemo.demo.demo_mvp.activity.MainActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoToolBarActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoSecondLevelActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoMvpActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoDesignSupportActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoDesignSupportActivity1"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.videorecord.DemoRecordVideoActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.videorecord.DemoRecordVideoPreviewActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoQrCodeScanActivity"/>
+        <activity android:name="com.fosung.usedemo.demo.demo_mvp.activity.DemoImageSelectorActivity"/>
+        
+    </application>
+
+</manifest>

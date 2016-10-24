@@ -1,0 +1,21 @@
+<!--
+  ~ ***********************************************************
+  ~   author   colin
+  ~   company  fosung
+  ~   email    wanglin2046@126.com
+  ~   date     16-10-11 下午5:56
+  ~ **********************************************************
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
+
+    <com.fosung.usedemo.views.superrecyclerview.SuperRecyclerView
+        android:id="@+id/pullLoadMoreRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimens_mid"/>
+
+</RelativeLayout>

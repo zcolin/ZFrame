@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.fosung.usedemo.views.ZBanner
+        android:id="@+id/view_banner"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:indicator_height="@dimen/dimens_small"
+        app:indicator_width="@dimen/dimens_small"/>
+
+    <com.fosung.usedemo.views.ZTextSwitcher
+        android:id="@+id/view_textswitcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_banner"
+        android:layout_margin="@dimen/dimens_big"
+        android:background="@color/blue_mid"/>
+
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_below="@+id/view_textswitcher"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/dimens_big"/>
+
+    <Button
+        android:id="@+id/btn_mvp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_content"
+        android:layout_marginTop="@dimen/dimens_big"
+        android:text="启动示例列表"/>
+</RelativeLayout>

@@ -1,0 +1,1 @@
+include ':app', ':greendao_generator', ':libFosungFrame' 

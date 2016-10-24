@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_item_height_small_small"
+                android:background="@color/white_light"
+                android:paddingLeft="@dimen/dimens_mid"
+                android:paddingRight="@dimen/dimens_mid">
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dimens_small"
+        android:layout_marginRight="@dimen/dimens_small"/>
+
+    <com.fosung.lighthouse.views.SwitchButton
+        android:id="@+id/switchButton"
+        style="@style/TextStyle_BlackLight_Normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/dimens_mid"
+        android:layout_toLeftOf="@+id/iv_arrow"
+        android:layout_toRightOf="@id/iv_img"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/dimens_small"
+        android:paddingRight="@dimen/dimens_mid"
+        app:frameDrawable="@drawable/switch_frame"
+        app:sliderDrawable="@drawable/switchbutton_slider_sel"
+        app:stateDrawable="@drawable/switchbutton_state_sel"
+        app:stateMaskDrawable="@drawable/switch_state_mask"/>
+
+    <include
+        android:id="@+id/view_bottomline"
+        layout="@layout/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#f0f0f0"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.fosung.usedemo.views.VideoRecorderView
+            android:id="@+id/movieRecorderView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView_release_to_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="50dp"
+                android:background="#99b31921"
+                android:padding="2dp"
+                android:text="松开取消"
+                android:textColor="#ffffff"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView_up_to_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#33000000"
+            android:text="上移取消"
+            android:textColor="#ffffff"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar_loading"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="5dp"
+            android:progressDrawable="@drawable/progressbar_horizontal"/>
+
+        <Button
+            android:id="@+id/button_shoot"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_common_circle_sel"
+            android:text="按住拍"
+            android:textColor="#ffffff"
+            android:textSize="14sp"/>
+    </RelativeLayout>
+</LinearLayout>

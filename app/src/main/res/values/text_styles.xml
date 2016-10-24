@@ -1,0 +1,62 @@
+<resources>
+
+    <style name="TextStyle_White_Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+    </style>
+
+    <style name="TextStyle_White_Normal" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+
+    <style name="TextStyle_White_Big" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+
+    <style name="TextStyle_White_Large" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textsize_large</item>
+    </style>
+
+    <style name="TextStyle_BlackLight_Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black_light</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+    </style>
+
+    <style name="TextStyle_BlackLight_Normal" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black_light</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+
+    <style name="TextStyle_BlackLight_Big" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black_light</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+
+    <style name="TextStyle_BlackLight_Large" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black_light</item>
+        <item name="android:textSize">@dimen/textsize_large</item>
+    </style>
+
+    <style name="TextStyle_BlueMid_Small" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/blue_mid</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+    </style>
+
+    <style name="TextStyle_BlueMid_Normal" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/blue_mid</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+
+    <style name="TextStyle_BlueMid_Big" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/blue_mid</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+
+    <style name="TextStyle_GrayMid_Normal" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/gray_mid</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+</resources>

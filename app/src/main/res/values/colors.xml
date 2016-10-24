@@ -1,0 +1,54 @@
+<resources>
+    <color name="text_yel_color">#ffaf50</color>
+    <color name="red_light">#f36765</color>
+    <color name="choose_eara_item_press_color">#f4f4f4</color>
+    <color name="popup_main_background">#80000000</color>
+    <color name="colorPrimary">#13B8F5</color>
+    <color name="colorPrimaryDark">#13B8F5</color>
+    <color name="colorAccent">#13B8F5</color>
+    <color name="colorControlNormal">#e2e2e2</color>
+
+    <color name="edit_text">#f2a820</color>
+    <!-- 背景颜色 -->
+    <color name="bg_color">#efefef</color>
+    <!-- 深黑 -->
+    <color name="black_dark">#111111</color>
+    <!--中黑-->
+    <color name="black_mid">#757575</color>
+    <!-- 浅黑 -->
+    <color name="black">#000000</color>
+    <!-- 浅黑 -->
+    <color name="black_light">#333333</color>
+    <!-- 透明 -->
+    <color name="transparent">#00000000</color>
+    <color name="transparent_gray">#11000000</color>
+    <!-- 深灰 -->
+    <color name="gray_dark">#444444</color>
+    <!-- 中灰 -->
+    <color name="gray_mid">#c3c3c3</color>
+    <!-- 浅灰 -->
+    <color name="gray_light">#e2e2e2</color>
+    <!-- 浅灰 -->
+    <color name="gray_disable">#d7d7d7</color>
+    <!-- 白 -->
+    <color name="white">#ffffff</color>
+    <!-- 浅白 -->
+    <color name="white_light">#f7f7f7</color>
+    <!-- 白 -->
+    <color name="white_20">#33ffffff</color>
+
+    <!-- 浅橙 -->
+    <color name="orange_light">#de523d</color>
+    <!-- 深橙 -->
+    <color name="orange_dark">#c54431</color>
+    <!-- 黄 -->
+    <color name="yello">#f2a820</color>
+    <!-- 浅绿 -->
+    <color name="green_light">#96d458</color>
+    <!-- 紫 -->
+    <color name="purple">#9d5adc</color>
+    <!-- 中蓝 -->
+    <color name="blue_mid">#13B8F5</color>
+    <!-- 浅蓝 -->
+    <color name="blue_light">#21b7c2</color>
+</resources>

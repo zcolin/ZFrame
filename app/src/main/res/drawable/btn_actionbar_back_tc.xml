@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/blue_mid"/>
+
+            <padding android:bottom="@dimen/dimens_mid" android:left="@dimen/dimens_big" android:right="@dimen/dimens_big" android:top="@dimen/dimens_mid"/>
+        </shape>
+    </item>
+    <item android:state_pressed="false">
+        <shape>
+            <solid android:color="@color/colorPrimary"/>
+
+            <padding android:bottom="@dimen/dimens_mid" android:left="@dimen/dimens_big" android:right="@dimen/dimens_big" android:top="@dimen/dimens_mid"/>
+        </shape>
+    </item>
+
+</selector>

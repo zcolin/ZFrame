@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ ***********************************************************
+  ~   author   colin
+  ~   company  fosung
+  ~   email    wanglin2046@126.com
+  ~   date     16-10-8 下午4:50
+  ~ **********************************************************
+  -->
+
+<LinearLayout android:id="@+id/dialogradiogroup_l"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="8dp"
+              android:paddingTop="24dp">
+
+    <TextView
+        android:id="@+id/dialogradiogroup_title"
+        style="@style/TextStyle_BlackLight_Big"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:textColor="@android:color/black"
+        android:visibility="gone">
+    </TextView>
+
+    <com.fosung.smartliving.views.ZMaxHeightScrollView
+        android:id="@+id/dialogradiogroup_sc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none">
+
+        <RadioGroup
+            android:id="@+id/dialogradiogroup_radiogroup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+    </com.fosung.smartliving.views.ZMaxHeightScrollView>
+
+    <include
+        android:id="@+id/dialogradiogroup_bottom"
+        layout="@layout/dlg_bottomitem"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
