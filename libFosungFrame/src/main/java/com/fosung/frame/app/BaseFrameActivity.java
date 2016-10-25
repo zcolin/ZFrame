@@ -31,7 +31,7 @@ import com.fosung.frame.utils.ActivityUtil;
  */
 public class BaseFrameActivity extends AppCompatActivity {
     private   ResultActivityHelper resultActivityHelper;
-    protected AppCompatActivity    mActivity;
+    protected BaseFrameActivity    mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
