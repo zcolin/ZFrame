@@ -72,7 +72,6 @@ public class DemoImageSelectorActivity extends BaseSecondLevelActivity {
                 }
             });
         }
-
     }
 
     private void pickImage() {

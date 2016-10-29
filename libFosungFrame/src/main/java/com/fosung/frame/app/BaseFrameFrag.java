@@ -7,7 +7,6 @@
 
 package com.fosung.frame.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,21 +22,21 @@ import com.fosung.frame.permission.PermissionsManager;
 
 /**
  * Fragment的基类，实现公共操作
- * <p/>
+ * <p>
  * 1 权限回调处理
  * 2 onActivityResult回调处理
  * 3 继承此类之后可使用getView（int resId）替代findViewById。
  * 4 子类的ActivityContext可使用mActivity
  */
 public abstract class BaseFrameFrag extends Fragment {
-    protected Activity             mActivity;
+    protected BaseFrameActivity    mActivity;
     protected View                 rootView;
     private   ResultActivityHelper resultActivityHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = getActivity();
+        mActivity = (BaseFrameActivity)getActivity();
     }
 
     @Override
@@ -91,7 +90,7 @@ public abstract class BaseFrameFrag extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultActivityHelper != null) {
             resultActivityHelper.onActivityResult(requestCode, resultCode, data);
         }
