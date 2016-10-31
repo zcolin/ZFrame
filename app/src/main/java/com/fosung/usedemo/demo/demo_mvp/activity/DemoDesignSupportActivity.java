@@ -66,6 +66,8 @@ public class DemoDesignSupportActivity extends BaseFrameActivity implements Demo
         //mPullRecyclerView.setPullRefreshEnable(true);
         //设置是否可以上拉刷新
         //mPullRecyclerView.setPushRefreshEnable(false);
+        //设置是否处理冲突，如viewPager
+        //mPullRecyclerView.setIsProceeConflict(true);
         //显示下拉刷新
         mPullRecyclerView.setRefreshing(true);
         mPullRecyclerView.setLinearLayout();

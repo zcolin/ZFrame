@@ -3,7 +3,7 @@
  *   author   colin
  *   company  fosung
  *   email    wanglin2046@126.com
- *   date     16-10-13 上午11:45
+ *   date     16-10-8 下午3:55
  * *********************************************************
  */
 
@@ -64,22 +64,19 @@ public class PullRecyclerView extends LinearLayout {
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public PullRecyclerView(Context context) {
-        this(context, null);
+        super(context);
+        initView(context);
     }
 
     public PullRecyclerView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public PullRecyclerView(Context context, AttributeSet attrs, int resId) {
         super(context, attrs);
-        initView(context, resId);
+        initView(context);
     }
 
-    private void initView(Context context, int resId) {
+    private void initView(Context context) {
         mContext = context;
         View view = LayoutInflater.from(context)
-                                  .inflate(resId > 0 ? resId : R.layout.view_pullrecycler, null);
+                                  .inflate(R.layout.view_pullrecycler, null);
         mSwipeRefreshLayout = (ZSwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_blue_dark, android.R.color.holo_orange_dark);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutOnRefresh(this));
@@ -246,6 +243,13 @@ public class PullRecyclerView extends LinearLayout {
         return mSwipeRefreshLayout;
     }
 
+    /**
+     * 设置是否处理冲突（如Viewpager），默认不处理
+     */
+    public void setIsProceeConflict(boolean isProceeConflict) {
+        mSwipeRefreshLayout.setIsProceeConflict(isProceeConflict);
+    }
+
     public void setRefreshing(final boolean isRefreshing) {
         handler.post(new Runnable() {
 
@@ -256,7 +260,6 @@ public class PullRecyclerView extends LinearLayout {
             }
         });
     }
-
 
     /**
      * When view detached from window , unregister adapter data observer, avoid momery leak.
@@ -293,19 +296,19 @@ public class PullRecyclerView extends LinearLayout {
         return loadMoreLayout;
     }
 
-    private void setFooterViewBackgroundColor(int color) {
+    public void setFooterViewBackgroundColor(int color) {
         loadMoreLayout.setBackgroundColor(ContextCompat.getColor(mContext, color));
     }
 
-    private void setFooterViewText(CharSequence text) {
+    public void setFooterViewText(CharSequence text) {
         loadMoreText.setText(text);
     }
 
-    private void setFooterViewText(int resid) {
+    public void setFooterViewText(int resid) {
         loadMoreText.setText(resid);
     }
 
-    private void setFooterViewTextColor(int color) {
+    public void setFooterViewTextColor(int color) {
         loadMoreText.setTextColor(ContextCompat.getColor(mContext, color));
     }
 
@@ -341,9 +344,6 @@ public class PullRecyclerView extends LinearLayout {
         }
     }
 
-    /**
-     * 结束下拉和上拉
-     */
     public void setPullLoadMoreCompleted() {
         isRefresh = false;
         setRefreshing(false);
@@ -354,10 +354,7 @@ public class PullRecyclerView extends LinearLayout {
                    .setDuration(300)
                    .setInterpolator(new AccelerateDecelerateInterpolator())
                    .start();
-    }
 
-    public void setNoMore(boolean noMore) {
-        setPushRefreshEnable(false);
     }
 
     public void setOnPullLoadMoreListener(PullLoadMoreListener listener) {
