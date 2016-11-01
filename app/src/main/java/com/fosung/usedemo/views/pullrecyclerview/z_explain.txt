@@ -1,1 +1,0 @@
-下拉样式为google的下拉样式，如客户坚持使用位移下拉，请使用SuperRecyclerView
