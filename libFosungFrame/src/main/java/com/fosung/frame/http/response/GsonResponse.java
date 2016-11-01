@@ -9,6 +9,7 @@
 
 package com.fosung.frame.http.response;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.fosung.frame.app.BaseFrameActivity;
@@ -32,7 +33,7 @@ public abstract class GsonResponse<T> extends GsonCallback<T> {
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public GsonResponse(Class<T> cls, BaseFrameActivity barActy) {
+    public GsonResponse(Class<T> cls, Activity barActy) {
         this(cls, barActy, null);
     }
 
@@ -40,11 +41,11 @@ public abstract class GsonResponse<T> extends GsonCallback<T> {
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public GsonResponse(Class<T> cls, BaseFrameActivity barActy, String barMsg) {
+    public GsonResponse(Class<T> cls, Activity barActy, String barMsg) {
         super(cls);
         if (barActy != null) {
-            if (barActy.getProgressDialog() != null) {
-                proBar = new ProgressDialog(barActy);
+            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
+                proBar = ((BaseFrameActivity)barActy).getProgressDialog();
             } else {
                 proBar = new ProgressDialog(barActy);
             }

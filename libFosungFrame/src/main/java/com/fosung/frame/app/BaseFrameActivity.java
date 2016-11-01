@@ -7,6 +7,7 @@
 
 package com.fosung.frame.app;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build.VERSION;
@@ -31,7 +32,7 @@ import com.fosung.frame.utils.ActivityUtil;
  */
 public class BaseFrameActivity extends AppCompatActivity {
     private   ResultActivityHelper resultActivityHelper;
-    protected BaseFrameActivity    mActivity;
+    protected Activity             mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

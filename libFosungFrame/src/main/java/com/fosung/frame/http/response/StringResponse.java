@@ -9,6 +9,7 @@
 
 package com.fosung.frame.http.response;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.fosung.frame.app.BaseFrameActivity;
@@ -31,7 +32,7 @@ public abstract class StringResponse extends StringCallback {
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public StringResponse(BaseFrameActivity barActy) {
+    public StringResponse(Activity barActy) {
         this(barActy, null);
     }
 
@@ -39,11 +40,11 @@ public abstract class StringResponse extends StringCallback {
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public StringResponse(BaseFrameActivity barActy, String barMsg) {
+    public StringResponse(Activity barActy, String barMsg) {
         if (barActy != null) {
-            if (barActy.getProgressDialog() != null) {
-                proBar = new ProgressDialog(barActy);
-            } else {
+            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
+                proBar = ((BaseFrameActivity)barActy).getProgressDialog();
+            }  else {
                 proBar = new ProgressDialog(barActy);
             }
             this.barMsg = barMsg;

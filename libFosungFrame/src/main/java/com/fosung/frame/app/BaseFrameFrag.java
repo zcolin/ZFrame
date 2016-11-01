@@ -7,6 +7,7 @@
 
 package com.fosung.frame.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,14 +30,14 @@ import com.fosung.frame.permission.PermissionsManager;
  * 4 子类的ActivityContext可使用mActivity
  */
 public abstract class BaseFrameFrag extends Fragment {
-    protected BaseFrameActivity    mActivity;
+    protected Activity             mActivity;
     protected View                 rootView;
     private   ResultActivityHelper resultActivityHelper;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (BaseFrameActivity)getActivity();
+        mActivity = getActivity();
     }
 
     @Override
