@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.fosung.userdemo"
+        applicationId "com.fosung"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
