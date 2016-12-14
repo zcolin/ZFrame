@@ -59,8 +59,8 @@ public class ActivityUtil {
      *
      * @param classObj Activity的class对象
      */
-    public static void finishActivity(Class<Activity>... classObj) {
-        for (Class<?> obj : classObj) {
+    public static <E extends Activity> void finishActivity(Class<E>... classObj) {
+        for (Class<E> obj : classObj) {
             for (Activity acty : ACTIVITY_LIST) {
                 if (acty != null && acty.getClass() == obj && !acty.isFinishing()) {
                     acty.finish();
