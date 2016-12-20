@@ -44,12 +44,6 @@ android {
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-    compile 'com.android.support:cardview-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.github.zcolin:zcolin_FrameTemplateLib:1.0.2'//程序框架 
-    compile 'com.github.zcolin:zcolin_BarcodeScannerLib:1.0.0'//二维码扫描
-    compile 'com.github.zcolin:zcolin_MultiImageSelectorLib:1.0.0'//多图选择   
 }
 
 

@@ -22,7 +22,7 @@
 app的build.gradle中添加
 ```
 dependencies {
-    compile 'com.github.zcolin:zcolin_FrameTemplateLib:1.0.7'
+    compile 'com.github.zcolin:ZFrameTemplate:1.0.8'
 }
 ```
 工程的build.gradle中添加
