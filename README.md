@@ -16,3 +16,21 @@
 6 二维码扫描、多图片选择库集成
 
 具体使用Demo参见com.fosung.userdemo.demo;
+
+
+## Gradle
+app的build.gradle中添加
+```
+dependencies {
+    compile 'com.github.zcolin:zcolin_FrameTemplateLib:1.0.7'
+}
+```
+工程的build.gradle中添加
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
