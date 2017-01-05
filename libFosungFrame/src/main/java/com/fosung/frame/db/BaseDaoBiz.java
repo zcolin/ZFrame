@@ -225,7 +225,7 @@ public abstract class BaseDaoBiz<T, T1 extends AbstractDaoSession> {
     /**
      * 根据Id查询某个Object
      */
-    public T queryObject(Class<T> cls, long id) {
+    public <T,K> T queryObject(Class<T> cls, K id) {
         return daoSession.load(cls, id);
     }
 
