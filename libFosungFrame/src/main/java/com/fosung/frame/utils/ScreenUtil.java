@@ -63,6 +63,13 @@ public class ScreenUtil {
     }
 
     /**
+     * 获取当前窗口的宽度
+     */
+    public static int getWindowWidth(Activity activity) {
+        return getScreenWidth(activity);
+    }
+
+    /**
      * 精确获取屏幕尺寸（例如：3.5、4.0、5.0寸屏幕）
      *
      * @return 设备尺寸

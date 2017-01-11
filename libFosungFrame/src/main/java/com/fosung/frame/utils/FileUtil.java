@@ -281,19 +281,19 @@ public class FileUtil {
      */
     public static String readFileStr(InputStream in) {
         BufferedReader br = null;
-        StringBuffer strbuf = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             br = new BufferedReader(new InputStreamReader(in));
             String str = null;
             while ((str = br.readLine()) != null) {
-                strbuf.append(str);
+                stringBuilder.append(str);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             colseStreamWithCatchException(br);
         }
-        return strbuf.toString();
+        return stringBuilder.toString();
     }
 
     /**
@@ -305,14 +305,14 @@ public class FileUtil {
     public static String readFileStr(String path) {
         File file = new File(path);
         BufferedReader br = null;
-        StringBuffer strbuf = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         if (file.exists()) {
             try {
                 //可以换成工程目录下的其他文本文件
                 br = new BufferedReader(new FileReader(file));
                 String str = null;
                 while ((str = br.readLine()) != null) {
-                    strbuf.append(str);
+                    stringBuilder.append(str);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -320,7 +320,7 @@ public class FileUtil {
                 colseStreamWithCatchException(br);
             }
         }
-        return strbuf.toString();
+        return stringBuilder.toString();
     }
 
     /**
@@ -410,7 +410,7 @@ public class FileUtil {
             colseStreamWithCatchException(fis);
             colseStreamWithCatchException(out);
         }
-        return out.toByteArray();
+        return out == null ? null : out.toByteArray();
     }
 
     /**

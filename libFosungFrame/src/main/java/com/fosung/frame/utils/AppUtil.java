@@ -47,11 +47,15 @@ public class AppUtil {
     /**
      * 退出程序
      */
-    public static void quitSystemWithService(String serviceName) {
+    public static void quitSystemWithService(String... serviceName) {
         ActivityUtil.finishAllActivity();
-        Intent intent = new Intent(serviceName);
-        intent.setPackage(BaseApp.APP_CONTEXT.getPackageName());
-        BaseApp.APP_CONTEXT.stopService(intent);
+        if (serviceName != null && serviceName.length > 0) {
+            for (String s : serviceName) {
+                Intent intent = new Intent(s);
+                intent.setPackage(BaseApp.APP_CONTEXT.getPackageName());
+                BaseApp.APP_CONTEXT.stopService(intent);
+            }
+        }
     }
 
     /**

@@ -11,17 +11,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.util.Util;
 import com.fosung.frame.app.BaseApp;
-
-import java.io.File;
 
 
 /**
@@ -29,136 +27,136 @@ import java.io.File;
  * 可以传入Context、Fragment、FragmentActivity, Activity，函数会自定判断
  * <p>
  * 如果传入的是Context或者fragment，会根据生命周期暂停/重新加载
+ * <p>
+ * 特殊需求直接使用Glide
  */
 public class ImageLoaderUtils {
 
-    public static void displayImage(Object context, Uri uri, ImageView iv) {
-        getRequestManager(context)
-                .load(uri)
-                .into(iv);
-    }
-
-    public static void displayImage(Object context, File file, ImageView iv) {
-        getRequestManager(context)
-                .load(file)
-                .into(iv);
-    }
-
-    public static void displayImage(Object context, int res, ImageView iv) {
-        getRequestManager(context)
-                .load(res)
-                .into(iv);
-    }
-
-    public static void displayImage(Object context, String url, ImageView iv) {
-        getRequestManager(context)
-                .load(url)
-                .into(iv);
-    }
-
     /**
-     * 设置有加载动画
+     * @param context 传入Context、Fragment、FragmentActivity、Activity四项的实体及其子类 否则抛出异常
+     * @param uri     传入Uri、File、res（int）、url(String), 否则抛出异常
      */
-    public static void displayImageWithAnim(Object context, String url, ImageView iv, int anim) {
-        getRequestManager(context)
-                .load(url)
-                .animate(anim)
+    public static <T, Z> void displayImage(T context, Z uri, ImageView iv) {
+        getDrawableTypeRequest(context, uri)
                 .into(iv);
     }
 
-    /**
-     * 显示为圆角图图片
-     */
-    public static void displayRoundCornersImage(Object context, String url, ImageView iv, int corner) {
-        getRequestManager(context)
-                .load(url)
-                .asBitmap()
-                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                .into(iv);
-    }
-
-    /**
-     * 显示为圆角图图片
-     */
-    public static void displayRoundCornersImageWithPlaceHolder(Object context, String url, ImageView iv, int corner, int placeHolder) {
-        getRequestManager(context)
-                .load(url)
-                .asBitmap()
+    public static <T, Z> void displayImage(T context, Z uri, ImageView iv, int placeHolder) {
+        getDrawableTypeRequest(context, uri)
                 .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+
+    public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, int placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .animate(anim)
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, Drawable placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .animate(anim)
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
                 .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
                 .into(iv);
     }
 
-    /**
-     * 显示为圆形图片
-     */
-    public static void displayCircleImage(Object context, String url, ImageView iv) {
-        getRequestManager(context)
-                .load(url)
+    public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, int placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
+                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, Drawable placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
+                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int corner) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
                 .transform(new CircleTransform((Context) context))
                 .into(iv);
     }
 
-    /**
-     * 显示为圆形图片
-     */
-    public static void displayCircleImageWithPlaceholder(Object context, String url, ImageView iv, int placeholder) {
-        getRequestManager(context)
-                .load(url)
-                .placeholder(placeholder)
+    public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int corner, int placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
                 .transform(new CircleTransform((Context) context))
+                .placeholder(placeHolder)
                 .into(iv);
     }
 
-    /**
-     * 加载过程中设置有加载中图片
-     */
-    public static void displayImageWithPlaceholder(Object context, String url, ImageView iv, int placeholder) {
-        getRequestManager(context)
-                .load(url)
-                .placeholder(placeholder)
-                .error(placeholder)
+    public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int corner, Drawable placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .asBitmap()
+                .transform(new CircleTransform((Context) context))
+                .placeholder(placeHolder)
                 .into(iv);
     }
 
-
-    /**
-     * 加载过程中显示缩略图，全部加载完毕再显示原图，缩略大小为10%
-     */
-    public static void displayImageWithThumbnails(Object context, String url, ImageView imv) {
-        getRequestManager(context)
-                .load(url)
-                .thumbnail(0.1f)
-                .into(imv);
-    }
-
-    /**
-     * 加载过程中显示缩略图，全部加载完毕再显示原图
-     */
-    public static void displayImageWithThumbnails(Object context, String url, ImageView imv, float sizeMultiplier) {
-        getRequestManager(context)
-                .load(url)
+    public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier) {
+        getDrawableTypeRequest(context, uri)
                 .thumbnail(sizeMultiplier)
-                .into(imv);
+                .into(iv);
     }
 
-    private static RequestManager getRequestManager(Object context) {
+    public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, int placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .thumbnail(sizeMultiplier)
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, Drawable placeHolder) {
+        getDrawableTypeRequest(context, uri)
+                .thumbnail(sizeMultiplier)
+                .placeholder(placeHolder)
+                .into(iv);
+    }
+
+    private static <T, Z> DrawableTypeRequest<Z> getDrawableTypeRequest(T context, Z uri) {
         if (context == null) {
             throw new IllegalArgumentException("You cannot start a load on a null Context");
         } else if (Util.isOnMainThread() && !(context instanceof Application)) {
             if (context instanceof FragmentActivity) {
-                return Glide.with(((FragmentActivity) context));
+                return Glide.with(((FragmentActivity) context))
+                            .load(uri);
             } else if (context instanceof Activity) {
-                return Glide.with(((Activity) context));
+                return Glide.with(((Activity) context))
+                            .load(uri);
             } else if (context instanceof Fragment) {
-                return Glide.with(((Fragment) context));
+                return Glide.with(((Fragment) context))
+                            .load(uri);
             } else if (context instanceof android.app.Fragment) {
-                return Glide.with((((android.app.Fragment) context)));
-            }else if (context instanceof ContextWrapper) {
-                return Glide.with((((ContextWrapper) context).getBaseContext()));
+                return Glide.with((((android.app.Fragment) context)))
+                            .load(uri);
+            } else if (context instanceof ContextWrapper) {
+                return Glide.with((((ContextWrapper) context).getBaseContext()))
+                            .load(uri);
             }
         }
-        return Glide.with((Context) context);
+        return Glide.with((Context) context)
+                    .load(uri);
     }
 }
    
