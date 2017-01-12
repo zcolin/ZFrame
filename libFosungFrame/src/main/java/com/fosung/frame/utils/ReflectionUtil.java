@@ -7,139 +7,171 @@
 package com.fosung.frame.utils;
 
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.XmlResourceParser;
-import android.text.TextUtils;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import dalvik.system.PathClassLoader;
-
 /**
- * 反射工具类
+ * 反射辅助类
  */
 public class ReflectionUtil {
-    private static final String TAG      = "ReflectionUtil";
-    private static final String ID       = "$id";
-    private static final String LAYOUT   = "$layout";
-    private static final String STYLE    = "$style";
-    private static final String STRING   = "$string";
-    private static final String DRAWABLE = "$drawable";
-    private static final String ARRAY    = "$array";
-    private static final String COLOR    = "color";
-    private static final String ANIM     = "anim";
 
     /**
-     * 从SDcard读取layout
+     * 设置字段值
+     * 
+     * @param source 需要设置的对象
+     * @param name  字段名字
+     * @param obj
      */
-    public static XmlPullParser getLayoutXmlPullParser(Context context, String filePath, String fileName) {
-        XmlResourceParser paser = null;
-        AssetManager asset = context.getResources()
-                                    .getAssets();
+    public static void setField(Object source, String name, Object obj) {
+        Field field;
         try {
-            Method method = asset.getClass()
-                                 .getMethod("addAssetPath", String.class);
-            int cookie = (Integer) method.invoke(asset, filePath);
-            if (cookie == 0) {
-                LogUtil.e(TAG, "加载路径失败");
-            }
-            paser = asset.openXmlResourceParser(cookie, fileName + ".xml");
-        } catch (NoSuchMethodException | InvocationTargetException | IOException | IllegalAccessException e) {
+            field = source.getClass()
+                          .getDeclaredField(name);
+            field.setAccessible(true);
+            field.set(source, obj);
+            field.setAccessible(false);
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        return paser;
+
     }
 
     /**
-     * 获取类里面的所在字段
+     * reflect super class's field, then set new value
      */
-    public static Field[] getFields(Class clazz) {
-        Field[] fields = null;
-        fields = clazz.getDeclaredFields();
-        if (fields == null || fields.length == 0) {
-            Class superClazz = clazz.getSuperclass();
-            if (superClazz != null) {
-                fields = getFields(superClazz);
-            }
-        }
-        return fields;
-    }
-
-    /**
-     * 获取类里面的指定对象，如果该类没有则从父类查询
-     */
-    public static Field getField(Class clazz, String name) {
-        Field field = null;
+    public static void setSuperField(Object source, String name, Object obj) {
+        Field field;
         try {
-            field = clazz.getDeclaredField(name);
-        } catch (NoSuchFieldException e) {
-            try {
-                field = clazz.getField(name);
-            } catch (NoSuchFieldException e1) {
-                if (clazz.getSuperclass() == null) {
-                    return field;
-                } else {
-                    field = getField(clazz.getSuperclass(), name);
-                }
-            }
-        }
-        if (field != null) {
+            field = source.getClass()
+                          .getSuperclass()
+                          .getDeclaredField(name);
             field.setAccessible(true);
+            field.set(source, obj);
+            field.setAccessible(false);
+        } catch (SecurityException | NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
-        return field;
     }
 
     /**
-     * 利用递归找一个类的指定方法，如果找不到，去父亲里面找直到最上层Object对象为止。
-     *
-     * @param clazz      目标类
-     * @param methodName 方法名
-     * @param params     方法参数类型数组
-     * @return 方法对象
+     * get super class's reflect field
      */
-    public static Method getMethod(Class clazz, String methodName, final Class<?>... params) {
-        Method method = null;
+    public static Object getField(Object source, String name) {
+        Field field;
+        Object obj = null;
         try {
-            method = clazz.getDeclaredMethod(methodName, params);
-        } catch (NoSuchMethodException e) {
-            try {
-                method = clazz.getMethod(methodName, params);
-            } catch (NoSuchMethodException ex) {
-                if (clazz.getSuperclass() == null) {
-                    return method;
-                } else {
-                    method = getMethod(clazz.getSuperclass(), methodName, params);
-                }
-            }
+            field = source.getClass()
+                          .getDeclaredField(name);
+            field.setAccessible(true);
+            obj = field.get(source);
+            field.setAccessible(false);
+        } catch (SecurityException | NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
-        if (method != null) {
-            method.setAccessible(true);
-        }
-        return method;
+        return obj;
     }
 
+
     /**
-     * 加载指定的反射类
+     * get reflect field
      */
-    public static Class<?> loadClass(Context context, String ClassName) {
-        String packageName = AppUtil.getPackageName(context);
-        String sourcePath = AppUtil.getSourcePath(context, packageName);
-        if (!TextUtils.isEmpty(sourcePath)) {
-            PathClassLoader cl = new PathClassLoader(sourcePath, "/data/app/", ClassLoader.getSystemClassLoader());
-            try {
-                return cl.loadClass(ClassName);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else {
-            LogUtil.e(TAG, "没有【" + sourcePath + "】目录");
+    public static Object getSuperField(Object source, String name) {
+        Field field;
+        Object obj = null;
+        try {
+            field = source.getClass()
+                          .getSuperclass()
+                          .getDeclaredField(name);
+            field.setAccessible(true);
+            obj = field.get(source);
+            field.setAccessible(false);
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        return obj;
+    }
+
+
+    /**
+     * invoke reflect method
+     */
+    public static Object invokeMethod(Object source, String name) {
+        Method method;
+        Object result = null;
+        try {
+            method = source.getClass()
+                           .getDeclaredMethod(name);
+            method.setAccessible(true);
+            result = method.invoke(source);
+            method.setAccessible(false);
+        } catch (SecurityException | InvocationTargetException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+
+    /**
+     * invoke reflect method
+     */
+    public static Object invokeMethod(Object source, String name, Object[] obj, Class<?>... cls) {
+        Method method;
+        Object result = null;
+        try {
+            method = source.getClass()
+                           .getDeclaredMethod(name, cls);
+            method.setAccessible(true);
+            result = method.invoke(source, obj);
+            method.setAccessible(false);
+        } catch (SecurityException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    /**
+     * invoke reflect super class's method
+     */
+    public static Object invokeSuperMethod(Object source, String name) {
+        Method method;
+        Object result = null;
+        try {
+            method = source.getClass()
+                           .getSuperclass()
+                           .getDeclaredMethod(name);
+            method.setAccessible(true);
+            result = method.invoke(source);
+            method.setAccessible(false);
+        } catch (SecurityException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    /**
+     * invoke reflect super class's method
+     */
+    public static Object invokeSuperMethod(Object source, String name, Object[] obj, Class<?>... cls) {
+        Method method;
+        Object result = null;
+        try {
+            method = source.getClass()
+                           .getSuperclass()
+                           .getDeclaredMethod(name, cls);
+            method.setAccessible(true);
+            result = method.invoke(source, obj);
+            method.setAccessible(false);
+        } catch (SecurityException | NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
