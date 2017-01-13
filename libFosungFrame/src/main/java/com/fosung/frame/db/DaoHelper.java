@@ -24,11 +24,11 @@ import java.util.List;
  * T 生成的实体对象
  * T1 DaoSession
  */
-public class DaoHleper<T, T1 extends AbstractDaoSession> {
-    public static final String TAG = DaoHleper.class.getSimpleName();
+public class DaoHelper<T, T1 extends AbstractDaoSession> {
+    public static final String TAG = DaoHelper.class.getSimpleName();
     public T1 daoSession;
 
-    public DaoHleper(T1 daoSession) {
+    public DaoHelper(T1 daoSession) {
         this.daoSession = daoSession;
     }
 
