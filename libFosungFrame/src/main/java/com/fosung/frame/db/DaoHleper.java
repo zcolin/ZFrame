@@ -24,15 +24,13 @@ import java.util.List;
  * T 生成的实体对象
  * T1 DaoSession
  */
-public abstract class BaseDaoBiz<T, T1 extends AbstractDaoSession> {
-    public static final String TAG = BaseDaoBiz.class.getSimpleName();
+public class DaoHleper<T, T1 extends AbstractDaoSession> {
+    public static final String TAG = DaoHleper.class.getSimpleName();
     public T1 daoSession;
 
-    public BaseDaoBiz() {
-        daoSession = getDaoSession();
+    public DaoHleper(T1 daoSession) {
+        this.daoSession = daoSession;
     }
-
-    public abstract T1 getDaoSession();
 
     /*********************************** 增  start  **********************************************/
     /**
@@ -225,7 +223,7 @@ public abstract class BaseDaoBiz<T, T1 extends AbstractDaoSession> {
     /**
      * 根据Id查询某个Object
      */
-    public <T,K> T queryObject(Class<T> cls, K id) {
+    public <T, K> T queryObject(Class<T> cls, K id) {
         return daoSession.load(cls, id);
     }
 
@@ -279,7 +277,7 @@ public abstract class BaseDaoBiz<T, T1 extends AbstractDaoSession> {
         return queryBuilder.list();
     }
 
-    public QueryBuilder<T> getQueryBuilder(Class<T> object){
+    public QueryBuilder<T> getQueryBuilder(Class<T> object) {
         return daoSession.queryBuilder(object);
     }
 

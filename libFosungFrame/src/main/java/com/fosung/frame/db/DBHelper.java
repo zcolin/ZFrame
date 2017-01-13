@@ -21,7 +21,7 @@ import java.util.List;
  * SQLiteOpenHelper基类
  * <p>
  *
- * @deprecated 使用GreenDao，此类不再使用，{@link BaseDaoBiz}
+ * @deprecated 使用GreenDao，此类不再使用，{@link DaoHleper}
  */
 public class DBHelper extends SQLiteOpenHelper {
 
