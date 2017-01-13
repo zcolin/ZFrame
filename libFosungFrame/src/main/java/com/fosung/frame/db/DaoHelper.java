@@ -24,7 +24,7 @@ import java.util.List;
  * T 生成的实体对象
  * T1 DaoSession
  */
-public class DaoHelper<T, T1 extends AbstractDaoSession> {
+public class DaoHelper<T1 extends AbstractDaoSession> {
     public static final String TAG = DaoHelper.class.getSimpleName();
     public T1 daoSession;
 
@@ -36,7 +36,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 插入单个对象
      */
-    public boolean insertObject(T object) {
+    public <T> boolean insertObject(T object) {
         boolean flag = false;
         try {
             flag = daoSession.insert(object) != -1;
@@ -50,7 +50,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 插入或者替换单个对象
      */
-    public boolean insertOrReplaceObject(T object) {
+    public <T> boolean insertOrReplaceObject(T object) {
         boolean flag = false;
         try {
             flag = daoSession.insertOrReplace(object) != -1;
@@ -63,7 +63,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 插入多个对象，并开启新的线程
      */
-    public boolean insertMultObject(final List<T> objects) {
+    public <T> boolean insertMultObject(final List<T> objects) {
         boolean flag = false;
         if (null == objects || objects.isEmpty()) {
             return false;
@@ -92,7 +92,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
      * 以对象形式进行数据修改
      * 其中必须要知道对象的主键ID
      */
-    public void updateObject(T object) {
+    public <T> void updateObject(T object) {
         if (null == object) {
             return;
         }
@@ -106,7 +106,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 批量更新数据
      */
-    public void updateMultObject(final List<T> objects, Class cls) {
+    public <T> void updateMultObject(final List<T> objects, Class cls) {
         if (null == objects || objects.isEmpty()) {
             return;
         }
@@ -130,7 +130,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 删除某个数据库表
      */
-    public boolean deleteAll(Class clss) {
+    public <T> boolean deleteAll(Class clss) {
         boolean flag = false;
         try {
             daoSession.deleteAll(clss);
@@ -144,7 +144,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 删除某个对象
      */
-    public void deleteObject(T object) {
+    public <T> void deleteObject(T object) {
         try {
             daoSession.delete(object);
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 异步批量删除数据
      */
-    public boolean deleteMultObject(final List<T> objects, Class clss) {
+    public <T> boolean deleteMultObject(final List<T> objects, Class clss) {
         boolean flag = false;
         if (null == objects || objects.isEmpty()) {
             return false;
@@ -180,7 +180,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 根据ID进行数据库的删除操作
      */
-    private <K> void deleteById(Class<T> cls, K id) {
+    private <T, K> void deleteById(Class<T> cls, K id) {
         @SuppressWarnings("unchecked")
         AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
         dao.deleteByKey(id);
@@ -190,7 +190,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 根据ID同步删除数据库操作
      */
-    private <K> void deleteByIds(Class<T> cls, List<K> ids) {
+    private <T, K> void deleteByIds(Class<T> cls, List<K> ids) {
         @SuppressWarnings("unchecked")
         AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
         dao.deleteByKeyInTx(ids);
@@ -202,7 +202,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 获得某个表名
      */
-    public String getTableName(Class<T> object) {
+    public <T> String getTableName(Class<T> object) {
         return daoSession.getDao(object)
                          .getTablename();
     }
@@ -212,7 +212,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
      *
      * @param condition example NoteDao.Properties.Id.eq(id)
      */
-    public boolean isExitObject(Class<T> object, WhereCondition condition) {
+    public <T> boolean isExitObject(Class<T> object, WhereCondition condition) {
         QueryBuilder<T> qb = daoSession.queryBuilder(object);
         qb.where(condition);
         long length = qb.buildCount()
@@ -237,7 +237,7 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
      * @param where  where clause, include 'where' word
      * @param params query parameters
      */
-    public List<T> queryObjects(Class<T> object, String where, String... params) {
+    public <T> List<T> queryObjects(Class<T> object, String where, String... params) {
         List<T> objects = null;
         try {
             objects = daoSession.queryRaw(object, where, params);
@@ -251,14 +251,14 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 查询某条件下的对象
      */
-    public List<T> queryObjects(Class<T> object, WhereCondition where) {
+    public <T> List<T> queryObjects(Class<T> object, WhereCondition where) {
         return queryObjects(object, 0, 0, where);
     }
 
     /**
      * 查询某条件下的对象
      */
-    public List<T> queryObjects(Class<T> object, int limit, int offSet, WhereCondition where, WhereCondition... condMore) {
+    public <T> List<T> queryObjects(Class<T> object, int limit, int offSet, WhereCondition where, WhereCondition... condMore) {
         QueryBuilder<T> queryBuilder = daoSession.queryBuilder(object);
         queryBuilder.where(where, condMore);
         if (limit > 0) {
@@ -273,18 +273,18 @@ public class DaoHelper<T, T1 extends AbstractDaoSession> {
     /**
      * 查询某条件下的对象
      */
-    public List<T> queryObjects(QueryBuilder<T> queryBuilder) {
+    public <T> List<T> queryObjects(QueryBuilder<T> queryBuilder) {
         return queryBuilder.list();
     }
 
-    public QueryBuilder<T> getQueryBuilder(Class<T> object) {
+    public <T> QueryBuilder<T> getQueryBuilder(Class<T> object) {
         return daoSession.queryBuilder(object);
     }
 
     /**
      * 查询所有对象
      */
-    public List<T> queryAll(Class<T> object) {
+    public <T> List<T> queryAll(Class<T> object) {
         List<T> objects = null;
         try {
             objects = daoSession.loadAll(object);
