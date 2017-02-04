@@ -17,7 +17,7 @@ Feature
 app的build.gradle中添加
 ```
 dependencies {
-    compile 'com.github.zcolin:ZFrameTemplate:1.0.8'
+    compile 'com.github.zcolin:ZFrame:latest.release'
 }
 ```
 工程的build.gradle中添加
