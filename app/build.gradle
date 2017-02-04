@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.fosung"
+        applicationId "com.zcolin.frame.demo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
