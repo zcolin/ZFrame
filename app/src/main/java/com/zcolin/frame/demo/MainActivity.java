@@ -12,8 +12,6 @@ package com.zcolin.frame.demo;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.zcolin.R;
-
 public class MainActivity extends Activity {
 
     @Override
