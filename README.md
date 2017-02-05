@@ -1,4 +1,4 @@
-# FrameTemplate
+# ZFrame
 ##程序初始框架,主要包含五部分:Orm数据库、OkHttp封装、Glide图片加载、PermissionHelper权限处理、工具类集合.
 ####Orm数据库采用GreenDao，Http采用OkHttp，图片加载采用Glide, 这三个库是经过从性能和易用度综合考虑确定的.封装的基本能满足平时的使用了，遇到特殊问题，就google去吧。
 
@@ -33,7 +33,7 @@ allprojects {
 Usage
 =
 ```
-//HttpDemo,当然还可以进一步封装，但这不是框架层要考虑的了，具体示例在我的AllLibDemo中用
+//HttpDemo,当然还可以进一步封装，但这不是框架层要考虑的了，具体示例在我的[AllLibDemo](https://github.com/zcolin/AllLibDemo)中
 OkHttpUtils.get()
    .url(url)
    .tag(cancelTag)
