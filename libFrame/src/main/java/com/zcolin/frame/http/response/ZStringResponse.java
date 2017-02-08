@@ -13,42 +13,39 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.zcolin.frame.app.BaseFrameActivity;
-import com.zcolin.frame.http.okhttp.callback.GsonCallback;
+import com.zcolin.frame.http.okhttp.callback.StringCallback;
 
 import okhttp3.Request;
 
 
 /**
- * 返回gson对象
+ * 返回String对象
  */
-public abstract class GsonResponse<T> extends GsonCallback<T> {
+public abstract class ZStringResponse extends StringCallback {
 
     private ProgressDialog proBar;        //请求过程中的进度条
     private String         barMsg;        //进度条上的文字
 
-    public GsonResponse(Class<T> cls) {
-        super(cls);
+    public ZStringResponse() {
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public GsonResponse(Class<T> cls, Activity barActy) {
-        this(cls, barActy, null);
+    public ZStringResponse(Activity barActy) {
+        this(barActy, null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public GsonResponse(Class<T> cls, Activity barActy, String barMsg) {
-        super(cls);
+    public ZStringResponse(Activity barActy, String barMsg) {
         if (barActy != null) {
             if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
                 proBar = ((BaseFrameActivity)barActy).getProgressDialog();
-            } else {
+            }  else {
                 proBar = new ProgressDialog(barActy);
-                proBar.setCancelable(false);
             }
             this.barMsg = barMsg;
         }

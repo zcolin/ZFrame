@@ -13,41 +13,42 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.zcolin.frame.app.BaseFrameActivity;
-import com.zcolin.frame.http.okhttp.callback.FileCallBack;
+import com.zcolin.frame.http.okhttp.callback.GsonCallback;
 
 import okhttp3.Request;
 
 
 /**
- * 返回File对象
+ * 返回gson对象
  */
-public abstract class FileResponse extends FileCallBack {
+public abstract class ZGsonResponse<T> extends GsonCallback<T> {
 
     private ProgressDialog proBar;        //请求过程中的进度条
     private String         barMsg;        //进度条上的文字
 
-    public FileResponse(String destPath) {
-        this(destPath, null);
+    public ZGsonResponse(Class<T> cls) {
+        super(cls);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public FileResponse(String destPath, Activity barActy) {
-        this(destPath, barActy, null);
+    public ZGsonResponse(Class<T> cls, Activity barActy) {
+        this(cls, barActy, null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public FileResponse(String destPath, Activity barActy, String barMsg) {
-        super(destPath);
+    public ZGsonResponse(Class<T> cls, Activity barActy, String barMsg) {
+        super(cls);
         if (barActy != null) {
             if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
                 proBar = ((BaseFrameActivity)barActy).getProgressDialog();
             } else {
                 proBar = new ProgressDialog(barActy);
+                proBar.setCancelable(false);
             }
             this.barMsg = barMsg;
         }
@@ -66,16 +67,6 @@ public abstract class FileResponse extends FileCallBack {
         if (proBar != null) {
             proBar.dismiss();
             barMsg = null;
-        }
-    }
-
-    public void setBarMsg(String barMsg) {
-        if (proBar != null) {
-            if (proBar.isShowing()) {
-                proBar.setMessage(barMsg);
-            } else {
-                this.barMsg = barMsg;
-            }
         }
     }
 }

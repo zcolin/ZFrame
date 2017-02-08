@@ -13,38 +13,40 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.zcolin.frame.app.BaseFrameActivity;
-import com.zcolin.frame.http.okhttp.callback.StringCallback;
+import com.zcolin.frame.http.okhttp.callback.FileCallBack;
 
 import okhttp3.Request;
 
 
 /**
- * 返回String对象
+ * 返回File对象
  */
-public abstract class StringResponse extends StringCallback {
+public abstract class ZFileResponse extends FileCallBack {
 
     private ProgressDialog proBar;        //请求过程中的进度条
     private String         barMsg;        //进度条上的文字
 
-    public StringResponse() {
+    public ZFileResponse(String destPath) {
+        this(destPath, null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public StringResponse(Activity barActy) {
-        this(barActy, null);
+    public ZFileResponse(String destPath, Activity barActy) {
+        this(destPath, barActy, null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public StringResponse(Activity barActy, String barMsg) {
+    public ZFileResponse(String destPath, Activity barActy, String barMsg) {
+        super(destPath);
         if (barActy != null) {
             if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
                 proBar = ((BaseFrameActivity)barActy).getProgressDialog();
-            }  else {
+            } else {
                 proBar = new ProgressDialog(barActy);
             }
             this.barMsg = barMsg;
@@ -64,6 +66,16 @@ public abstract class StringResponse extends StringCallback {
         if (proBar != null) {
             proBar.dismiss();
             barMsg = null;
+        }
+    }
+
+    public void setBarMsg(String barMsg) {
+        if (proBar != null) {
+            if (proBar.isShowing()) {
+                proBar.setMessage(barMsg);
+            } else {
+                this.barMsg = barMsg;
+            }
         }
     }
 }
