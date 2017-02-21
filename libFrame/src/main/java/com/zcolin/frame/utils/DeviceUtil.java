@@ -11,26 +11,12 @@ import android.telephony.TelephonyManager;
 
 import com.zcolin.frame.permission.PermissionsResultAction;
 
+import java.util.UUID;
+
 /**
  *
  */
 public class DeviceUtil {
-
-    /**
-     * 综合多个获取的id，重复几率较小
-     */
-    public static String getUniqueId(Context context) {
-        //deviceId 可能获取不到
-        String str1 = getDeviceId(context);
-        //设备信息
-        String str2 = "35" + Build.BOARD.length() % 10 + Build.BRAND.length() % 10 + Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 + Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 + Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 + Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 + Build.TAGS.length() % 10 + Build.TYPE.length() % 10 + Build.USER.length() % 10;
-        //androidId 可能为空
-        String str3 = Settings.Secure.getString(context.getContentResolver(), "android_id");
-        //mac地址不能使用，6.0之后户籍哦去的都是一样的
-        String str4 = str1 + str2 + str3;
-        str4 = MD5Util.getMD5Str(str4);
-        return str4;
-    }
 
     /**
      * 调用次函数需要调用{@link com.zcolin.frame.permission.PermissionHelper#requestReadPhoneStatePermission(Object, PermissionsResultAction)}获取权限
@@ -38,6 +24,19 @@ public class DeviceUtil {
      */
     public static String getDeviceId(Context context) {
         return ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+    }
+
+    /**
+     * 如果用户拒绝了权限，即{@link #getDeviceId(Context)}没有获取到结果，则需要生成一个本次安装的唯一ID
+     */
+    public static String getUUID() {
+        String str = SPUtil.getString("device_app_uuid", null);
+        if (str == null) {
+            str = UUID.randomUUID()
+                      .toString();
+            SPUtil.putString("device_app_uuid", str);
+        }
+        return str;
     }
 
 
