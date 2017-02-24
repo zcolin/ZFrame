@@ -1,9 +1,17 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    //GreenDao配置
+    greendao {
+        schemaVersion 1
+        //daoPackage 'com.greendao.gen'  //dao包名
+        //targetGenDir 'src/main/java'  //生成目录
+    }
+    
     //lint配置
     lintOptions {
         checkReleaseBuilds false
@@ -44,6 +52,7 @@ android {
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':libFrame')
 }
 
 
