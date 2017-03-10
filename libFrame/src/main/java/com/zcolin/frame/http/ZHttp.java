@@ -64,7 +64,7 @@ public class ZHttp {
 
 
     public static <T extends ZReply> String post(String url, Map<String, String> contentParams, ZResponse<T> response) {
-        return post(url, contentParams, response);
+        return post(url, null, contentParams, response);
     }
 
 
@@ -123,7 +123,7 @@ public class ZHttp {
     }
 
     public static String post(String url, Map<String, String> contentParams, ZStringResponse response) {
-        return post(url, contentParams, response);
+        return post(url, null, contentParams, response);
     }
 
     public static String post(String url, Object contentParams, ZStringResponse response) {
