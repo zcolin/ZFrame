@@ -11,23 +11,29 @@ package com.zcolin.frame.demo;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.zcolin.frame.app.FramePathConst;
 import com.zcolin.frame.app.ResultActivityHelper;
+import com.zcolin.frame.imageloader.ImageLoaderUtils;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
 import com.zcolin.frame.utils.ActivityUtil;
+import com.zcolin.frame.utils.SystemIntentUtil;
 import com.zcolin.frame.utils.ToastUtil;
 
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout llContent;
+    private ImageView    imageView;
     private ArrayList<Button> listButton = new ArrayList<>();
 
     @Override
@@ -40,9 +46,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void init() {
         llContent = getView(R.id.ll_content);
+        imageView = getView(R.id.imageview);
         listButton.add(addButton("Http演示"));
         listButton.add(addButton("Db演示"));
         listButton.add(addButton("权限处理和回传数据演示"));
+        listButton.add(addButton("拍照和裁剪演示"));
+        listButton.add(addButton("图片选取和裁剪演示"));
 
         for (Button btn : listButton) {
             btn.setOnClickListener(this);
@@ -73,7 +82,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     intent.putExtra("data", "传入数据-xxx");
                     startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
                         @Override
-                        public void onResult(int requestCode, int resultCode, Intent data) {
+                        public void onResult(int resultCode, Intent data) {
                             if (resultCode == RESULT_OK) {
                                 if (data != null) {
                                     ToastUtil.toastShort(data.getStringExtra("data"));
@@ -86,6 +95,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void onDenied(String permission) {
                     ToastUtil.toastShort("请赋予本程序拨打电话和摄像头权限!");
+                }
+            });
+        } else if (v == listButton.get(3)) {
+            final String savePath = FramePathConst.getInstance()
+                                                  .getTempFilePath("jpg");
+            SystemIntentUtil.takePhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
+                @Override
+                public void onSelected(Uri fileProviderUri) {
+                    ImageLoaderUtils.displayImage(mActivity, savePath, imageView);
+                    System.out.println(fileProviderUri.getPath());
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+        } else if (v == listButton.get(4)) {
+            final String savePath = FramePathConst.getInstance()
+                                                  .getTempFilePath("jpg");
+            SystemIntentUtil.selectPhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
+                @Override
+                public void onSelected(Uri fileProviderUri) {
+                    ImageLoaderUtils.displayImage(mActivity, fileProviderUri, imageView);
+                    System.out.println(fileProviderUri.getPath());
+                }
+
+                @Override
+                public void onCancel() {
+
                 }
             });
         }

@@ -47,7 +47,7 @@ public class ResultActivityHelper {
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         ResultActivityListener listener = requests.get(requestCode);
         if (listener != null) {
-            listener.onResult(requestCode, resultCode, data);
+            listener.onResult(resultCode, data);
             requests.remove(requestCode); //请求完就清除掉
             return true;
         }
@@ -55,6 +55,6 @@ public class ResultActivityHelper {
     }
 
     public interface ResultActivityListener {
-        public void onResult(int requestCode, int resultCode, Intent data);
+        public void onResult(int resultCode, Intent data);
     }
 }

@@ -9,6 +9,8 @@ package com.zcolin.frame.app;
 
 import android.os.Environment;
 
+import java.util.UUID;
+
 /**
  * 程序路径类
  * <p>
@@ -70,5 +72,10 @@ public class FramePathConst {
 
     public String getPathLog() {
         return PATH_LOG;
+    }
+
+    public String getTempFilePath(String suffix) {
+        return getPathTemp() + UUID.randomUUID()
+                                   .toString() + "." + suffix;
     }
 }
