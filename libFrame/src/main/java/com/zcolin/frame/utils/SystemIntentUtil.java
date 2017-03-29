@@ -10,6 +10,7 @@
 package com.zcolin.frame.utils;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -20,8 +21,6 @@ import com.zcolin.frame.app.FramePathConst;
 import com.zcolin.frame.app.ResultActivityHelper;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
-
-import java.io.File;
 
 
 /**
@@ -44,32 +43,30 @@ public class SystemIntentUtil {
      * @param savePath       拍照完后的保存路径
      * @param resultListener 拍照完的回调函数接口
      */
-    public static Uri takePhoto(final Object context, String savePath, final ResultActivityHelper.ResultActivityListener resultListener) {
+    public static Uri takePhoto(final Context context, final String savePath, final ResultActivityHelper.ResultActivityListener resultListener) {
         if (!SDCardUtil.isSDCardEnable()) {
             return null;
         }
 
         FileUtil.checkFilePath(savePath, false);
-        File out = new File(savePath);
-        final Uri uri = Uri.fromFile(out);
-        final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-        PermissionHelper.requestPermission(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-                if (context instanceof BaseFrameActivity) {
-                    ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
-                } else if (context instanceof BaseFrameFrag) {
-                    ((BaseFrameFrag) context).startActivityWithCallback(intent, resultListener);
+        Uri uri = NUriParse.getUriFromPath(context, savePath);
+        if (uri != null) {
+            final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            PermissionHelper.requestPermission(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
+                @Override
+                public void onGranted() {
+                    if (context instanceof BaseFrameActivity) {
+                        ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
+                    }
                 }
-            }
 
-            @Override
-            public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
-            }
-        });
+                @Override
+                public void onDenied(String permission) {
+                    ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
+                }
+            });
+        }
         return uri;
     }
 
@@ -88,12 +85,12 @@ public class SystemIntentUtil {
      *
      * @param context        只能为BaseFrag或者BaseActivity的子类
      * @param savePath       裁剪完成后保存路径
-     * @param data           需要裁剪的图片的Uri
+     * @param data           需要裁剪的图片的Uri，拍照返回的Uri
      * @param cropX          x像素（单位为dp）
      * @param cropY          y像素（单位为dp）
      * @param resultListener 完成后回调
      */
-    public static String cropPhoto(final Object context, final String savePath, final Uri data, final int cropX,
+    public static String cropPhoto(final Context context, final String savePath, final Uri data, final int cropX,
                                    final int cropY, final ResultActivityHelper.ResultActivityListener resultListener) {
         if (!SDCardUtil.isSDCardEnable()) {
             return null;
@@ -103,27 +100,25 @@ public class SystemIntentUtil {
             @Override
             public void onGranted() {
                 FileUtil.checkFilePath(savePath, false);
-                
                 Intent intent = new Intent("com.android.camera.action.CROP");
                 intent.setDataAndType(data, "image/*");
-
-                // 裁剪头像的绝对路径
-                Uri cropUri = Uri.fromFile(new File(savePath));
-                intent.putExtra("output", cropUri);
-                intent.putExtra("crop", "true");
-                int[] arr = minScale(cropX, cropY);
-                intent.putExtra("aspectX", arr[0]);// 裁剪框比例
-                intent.putExtra("aspectY", arr[1]);
-                intent.putExtra("outputX", cropX);// 输出图片大小
-                intent.putExtra("outputY", cropY);
-                intent.putExtra("scale", true);// 去黑边
-                intent.putExtra("scaleUpIfNeeded", true);// 去黑边
-                //是否要返回值。
-                //intent.putExtra("return-data", true);
-                if (context instanceof BaseFrameActivity) {
-                    ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
-                } else if (context instanceof BaseFrameFrag) {
-                    ((BaseFrameFrag) context).startActivityWithCallback(intent, resultListener);
+                Uri uri = NUriParse.getUriFromPath(context, savePath);
+                if (uri != null) {
+                    // 裁剪头像的绝对路径
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    intent.putExtra("crop", "true");
+                    int[] arr = minScale(cropX, cropY);
+                    intent.putExtra("aspectX", arr[0]);// 裁剪框比例
+                    intent.putExtra("aspectY", arr[1]);
+                    intent.putExtra("outputX", cropX);// 输出图片大小
+                    intent.putExtra("outputY", cropY);
+                    intent.putExtra("scale", true);// 去黑边
+                    intent.putExtra("scaleUpIfNeeded", true);// 去黑边
+                    //是否要返回值。
+                    //intent.putExtra("return-data", true);
+                    if (context instanceof BaseFrameActivity) {
+                        ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
+                    }
                 }
             }
 
@@ -233,29 +228,30 @@ public class SystemIntentUtil {
         return FramePathConst.getInstance()
                              .getPathTemp() + "zz_videoCapture_" + CalendarUtil.getDateTime() + ".mp4";
     }
-    
+
     /**
      * @param savePath      视频保存路径
      * @param durationLimit 最大时间限制 秒  为0不限制
      * @param isHighQuality 是否高质量
      * @return 视频保存路径
      */
-    public static String videoCapture(final Object context, final String savePath, final int durationLimit, final boolean isHighQuality,
+    public static String videoCapture(final Context context, final String savePath, final int durationLimit, final boolean isHighQuality,
                                       final ResultActivityHelper.ResultActivityListener resultListener) {
         PermissionHelper.requestPermission(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
             @Override
             public void onGranted() {
                 FileUtil.checkFilePath(savePath, false);
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(savePath)));
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, isHighQuality ? 1 : 0);
-                if (durationLimit > 0) {
-                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit);
-                }
-                if (context instanceof BaseFrameActivity) {
-                    ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
-                } else if (context instanceof BaseFrameFrag) {
-                    ((BaseFrameFrag) context).startActivityWithCallback(intent, resultListener);
+                Uri uri = NUriParse.getUriFromPath(context, savePath);
+                if (uri != null) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, isHighQuality ? 1 : 0);
+                    if (durationLimit > 0) {
+                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit);
+                    }
+                    if (context instanceof BaseFrameActivity) {
+                        ((BaseFrameActivity) context).startActivityWithCallback(intent, resultListener);
+                    }
                 }
             }
 

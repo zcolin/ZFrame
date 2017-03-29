@@ -376,7 +376,7 @@ public class AppUtil {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(f), "application/vnd.android.package-archive");
+        intent.setDataAndType(NUriParse.getUriFromFile(context, f), "application/vnd.android.package-archive");
         context.startActivity(intent);
     }
 
