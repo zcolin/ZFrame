@@ -8,6 +8,8 @@ android {
         abortOnError false
     }
     defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
     }
     buildTypes {
         release {
