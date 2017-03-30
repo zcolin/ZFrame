@@ -48,6 +48,7 @@ public abstract class ZFileResponse extends FileCallBack {
                 proBar = ((BaseFrameActivity)barActy).getProgressDialog();
             } else {
                 proBar = new ProgressDialog(barActy);
+                proBar.setCancelable(false);
             }
             this.barMsg = barMsg;
         }
