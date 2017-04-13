@@ -33,6 +33,20 @@ public abstract class BaseFrameFrag extends Fragment {
     protected Activity             mActivity;
     protected View                 rootView;
     private   ResultActivityHelper resultActivityHelper;
+    private   boolean              isVisible;//Fragment当前状态是否可见
+    private   boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
+    private   boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
+
+
+    /**
+     * 获取关联的LayoutId
+     */
+    protected abstract int getRootViewLayId();
+
+    /**
+     * 初始化view及数据,第一次调用onCreateView时调用
+     */
+    protected abstract void createView();
 
     @Override
     public void onAttach(Context context) {
@@ -53,6 +67,8 @@ public abstract class BaseFrameFrag extends Fragment {
         if (rootView == null) {
             rootView = inflater.inflate(getRootViewLayId(), null);
             createView();
+            isPrepared = true;
+            onPreLoad();
         } else {
             if (rootView.getParent() != null) {
                 ((ViewGroup) rootView.getParent()).removeView(rootView);
@@ -63,14 +79,43 @@ public abstract class BaseFrameFrag extends Fragment {
     }
 
     /**
-     * 获取关联的LayoutId
+     * 在OnCreatView之前执行
+     * onAttach之前
      */
-    protected abstract int getRootViewLayId();
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            isVisible = true;
+            onPreLoad();
+        } else {
+            isVisible = false;
+        }
+    }
 
     /**
-     * 初始化view及数据,第一次调用onCreateView时调用
+     * 懒加载之前的判断
      */
-    protected abstract void createView();
+    private void onPreLoad() {
+        if (!isVisible || !isPrepared || mHasLoadedOnce) {
+            return;
+        }
+
+        mHasLoadedOnce = true;
+        lazyLoad();
+    }
+
+    /**
+     * 延迟加载， 子类需要懒加载可以重写此方法
+     * 第一次调用onCreateView，并且可见时调用
+     * <p>
+     * 注意 ： 第一次加载时onResume是在lazyLoad（）之前调用，如果需要在onResume中需要对控件进行操作，可以有两种选择:
+     * 1 可以重写creatView函数进行控件初始化
+     * 2 在onResume判断 控件是否为空
+     */
+    protected void lazyLoad() {
+
+    }
 
     protected <T> T getView(int id) {
         if (rootView != null) {
