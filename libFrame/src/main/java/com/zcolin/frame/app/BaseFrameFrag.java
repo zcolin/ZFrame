@@ -43,11 +43,6 @@ public abstract class BaseFrameFrag extends Fragment {
      */
     protected abstract int getRootViewLayId();
 
-    /**
-     * 初始化view及数据,第一次调用onCreateView时调用
-     */
-    protected abstract void createView();
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -103,6 +98,13 @@ public abstract class BaseFrameFrag extends Fragment {
 
         mHasLoadedOnce = true;
         lazyLoad();
+    }
+
+    /**
+     * 初始化view及数据,第一次调用onCreateView时调用
+     */
+    protected void createView() {
+        
     }
 
     /**
