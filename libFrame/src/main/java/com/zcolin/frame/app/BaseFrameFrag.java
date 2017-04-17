@@ -61,9 +61,9 @@ public abstract class BaseFrameFrag extends Fragment {
         /*在ViewPager切换过程中会重新调用onCreateView，此时如果实例化过，需要移除，会自动再次添加*/
         if (rootView == null) {
             rootView = inflater.inflate(getRootViewLayId(), null);
-            createView();
+            createView(savedInstanceState);
             isPrepared = true;
-            onPreLoad();
+            onPreLoad(savedInstanceState);
         } else {
             if (rootView.getParent() != null) {
                 ((ViewGroup) rootView.getParent()).removeView(rootView);
@@ -82,7 +82,7 @@ public abstract class BaseFrameFrag extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             isVisible = true;
-            onPreLoad();
+            onPreLoad(null);
         } else {
             isVisible = false;
         }
@@ -91,19 +91,19 @@ public abstract class BaseFrameFrag extends Fragment {
     /**
      * 懒加载之前的判断
      */
-    private void onPreLoad() {
+    private void onPreLoad(@Nullable Bundle savedInstanceState) {
         if (!isVisible || !isPrepared || mHasLoadedOnce) {
             return;
         }
 
         mHasLoadedOnce = true;
-        lazyLoad();
+        lazyLoad(savedInstanceState);
     }
 
     /**
      * 初始化view及数据,第一次调用onCreateView时调用
      */
-    protected void createView() {
+    protected void createView(@Nullable Bundle savedInstanceState) {
         
     }
 
@@ -115,7 +115,7 @@ public abstract class BaseFrameFrag extends Fragment {
      * 1 可以重写creatView函数进行控件初始化
      * 2 在onResume判断 控件是否为空
      */
-    protected void lazyLoad() {
+    protected void lazyLoad(@Nullable Bundle savedInstanceState) {
 
     }
 
