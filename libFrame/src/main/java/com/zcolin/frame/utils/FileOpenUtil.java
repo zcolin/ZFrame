@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import java.io.File;
 
@@ -42,7 +43,7 @@ public class FileOpenUtil {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(NUriParse.getUriFromFile(file), type);
+        intent.setDataAndType(Uri.fromFile(file), type);
         context.startActivity(intent);
     }
 
