@@ -15,6 +15,8 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.zcolin.frame.permission.PermissionsManager;
@@ -31,6 +33,7 @@ import com.zcolin.frame.utils.ActivityUtil;
  * 5 继承此类之后可使用getView（int resId）替代findViewById。
  */
 public class BaseFrameActivity extends AppCompatActivity {
+    private final SparseArray<View> mViews = new SparseArray<>();
     private   ResultActivityHelper resultActivityHelper;
     protected Activity             mActivity;
 
@@ -68,8 +71,13 @@ public class BaseFrameActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public <T> T getView(int resId) {
-        return (T) findViewById(resId);
+    public <T extends View> T getView(int resId) {
+        T view = (T) mViews.get(resId);
+        if (view == null) {
+            view = (T) findViewById(resId);
+            mViews.put(resId, view);
+        }
+        return view;
     }
 
     /**

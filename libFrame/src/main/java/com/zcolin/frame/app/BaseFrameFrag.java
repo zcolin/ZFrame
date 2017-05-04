@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.zcolin.frame.permission.PermissionsManager;
  * 4 子类的ActivityContext可使用mActivity
  */
 public abstract class BaseFrameFrag extends Fragment {
+    private final SparseArray<View> mViews = new SparseArray<>();
     protected Activity             mActivity;
     protected View                 rootView;
     private   ResultActivityHelper resultActivityHelper;
@@ -119,11 +121,13 @@ public abstract class BaseFrameFrag extends Fragment {
 
     }
 
-    protected <T> T getView(int id) {
-        if (rootView != null) {
-            return (T) rootView.findViewById(id);
+    public <T extends View> T getView(int resId) {
+        T view = (T) mViews.get(resId);
+        if (view == null) {
+            view = (T)rootView.findViewById(resId);
+            mViews.put(resId, view);
         }
-        return null;
+        return view;
     }
 
     /**
