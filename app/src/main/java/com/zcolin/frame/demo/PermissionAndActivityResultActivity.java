@@ -28,7 +28,10 @@ public class PermissionAndActivityResultActivity extends BaseActivity {
 
         final EditText editText = getView(R.id.edittext);
         Button btn = getView(R.id.button);
-        editText.setText(getIntent().getStringExtra("data"));
+        if (mBundle != null) {
+            editText.setText(mBundle.getString("data"));
+        }
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

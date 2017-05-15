@@ -36,12 +36,15 @@ public class BaseFrameActivity extends AppCompatActivity {
     private final SparseArray<View> mViews = new SparseArray<>();
     private   ResultActivityHelper resultActivityHelper;
     protected Activity             mActivity;
+    protected Bundle               mBundle; //Activity 销毁/恢复 时 保存/获取 数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
         ActivityUtil.addActivityToList(this);
+
+        putExtra(savedInstanceState);
 
         if (isImmerse()) {
             //透明状态栏
@@ -69,6 +72,16 @@ public class BaseFrameActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    protected void putExtra(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mBundle = new Bundle();
+            mBundle.putAll(savedInstanceState);
+        } else if (getIntent() != null && getIntent().getExtras() != null) {
+            mBundle = new Bundle();
+            mBundle.putAll(getIntent().getExtras());
+        }
     }
 
     public <T extends View> T getView(int resId) {
@@ -118,5 +131,14 @@ public class BaseFrameActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         PermissionsManager.getInstance()
                           .notifyPermissionsChange(permissions, grantResults);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mBundle != null) {
+            outState.putAll(mBundle);
+        }
     }
 }
