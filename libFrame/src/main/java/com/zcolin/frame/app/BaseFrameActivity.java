@@ -10,8 +10,6 @@ package com.zcolin.frame.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -84,13 +82,6 @@ public class BaseFrameActivity extends AppCompatActivity {
             mViews.put(resId, view);
         }
         return view;
-    }
-
-    /**
-     * 是否使用沉浸式状态栏
-     */
-    protected boolean isImmerse() {
-        return VERSION.SDK_INT >= VERSION_CODES.KITKAT;
     }
 
     /**
