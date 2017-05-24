@@ -117,12 +117,12 @@ public class OkHttpUtils {
                        public void onResponse(final Call call, final Response response) {
                            try {
                                if (call.isCanceled()) {
-//                                 sendFailResultCallback(2, call, new IOException("Request Canceled!"), finalCallback);
+                                   sendCancelResultCallback(finalCallback);
                                    return;
                                }
-                               
+
                                if (!finalCallback.validateReponse(response)) {
-                                   sendFailResultCallback(response.code() , call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback);
+                                   sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback);
                                    return;
                                }
 
@@ -140,6 +140,17 @@ public class OkHttpUtils {
                    });
     }
 
+    public void sendCancelResultCallback(final Callback callback) {
+        if (callback == null)
+            return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                callback.onCanceled();
+                callback.onFinished();
+            }
+        });
+    }
 
     public void sendFailResultCallback(final int code, final Call call, final Exception e, final Callback callback) {
         if (callback == null)

@@ -34,7 +34,7 @@ public class ZHttp {
     //--------------------------------------------------ZSResponse START----------------------------------------------------
 
     public static <T extends ZReply> String get(String url, ZResponse<T> response) {
-        return get(url, null, null, response);
+        return get(url, null, response);
     }
 
     public static <T extends ZReply> String get(String url, Object contentParams, ZResponse<T> response) {
@@ -42,14 +42,18 @@ public class ZHttp {
     }
 
     public static <T extends ZReply> String get(String url, Map<String, String> contentParams, ZResponse<T> response) {
-        return get(url, null, contentParams, response);
+        return getWithHeader(url, null, contentParams, response);
     }
 
-    public static <T extends ZReply> String get(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZResponse<T> response) {
-        return get(url, headerParams, beanToMap(contentParams), response);
+    public static <T extends ZReply> String getWithHeader(String url, LinkedHashMap<String, String> headerParams, ZResponse<T> response) {
+        return getWithHeader(url, headerParams, null, response);
     }
 
-    public static <T extends ZReply> String get(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
+    public static <T extends ZReply> String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZResponse<T> response) {
+        return getWithHeader(url, headerParams, beanToMap(contentParams), response);
+    }
+
+    public static <T extends ZReply> String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
         String cancelTag = UUID.randomUUID()
                                .toString();
         OkHttpUtils.get()
@@ -64,7 +68,7 @@ public class ZHttp {
 
 
     public static <T extends ZReply> String post(String url, Map<String, String> contentParams, ZResponse<T> response) {
-        return post(url, null, contentParams, response);
+        return postWithHeader(url, null, contentParams, response);
     }
 
 
@@ -72,11 +76,11 @@ public class ZHttp {
         return post(url, beanToMap(contentParams), response);
     }
 
-    public static <T extends ZReply> String post(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZResponse<T> response) {
-        return post(url, headerParams, beanToMap(contentParams), response);
+    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZResponse<T> response) {
+        return postWithHeader(url, headerParams, beanToMap(contentParams), response);
     }
 
-    public static <T extends ZReply> String post(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
+    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
         String cancelTag = UUID.randomUUID()
                                .toString();
         OkHttpUtils.post()
@@ -101,15 +105,18 @@ public class ZHttp {
     }
 
     public static String get(String url, Map<String, String> contentParams, ZStringResponse response) {
-        return get(url, null, contentParams, response);
+        return getWithHeader(url, null, contentParams, response);
     }
 
-
-    public static String get(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZStringResponse response) {
-        return get(url, headerParams, beanToMap(contentParams), response);
+    public static String getWithHeader(String url, LinkedHashMap<String, String> headerParams, ZStringResponse response) {
+        return getWithHeader(url, headerParams, null, response);
     }
 
-    public static String get(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
+    public static String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZStringResponse response) {
+        return getWithHeader(url, headerParams, beanToMap(contentParams), response);
+    }
+
+    public static String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
         String cancelTag = UUID.randomUUID()
                                .toString();
         OkHttpUtils.get()
@@ -123,18 +130,18 @@ public class ZHttp {
     }
 
     public static String post(String url, Map<String, String> contentParams, ZStringResponse response) {
-        return post(url, null, contentParams, response);
+        return postWithHeader(url, null, contentParams, response);
     }
 
     public static String post(String url, Object contentParams, ZStringResponse response) {
         return post(url, beanToMap(contentParams), response);
     }
 
-    public static String post(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZStringResponse response) {
-        return post(url, headerParams, beanToMap(contentParams), response);
+    public static String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZStringResponse response) {
+        return postWithHeader(url, headerParams, beanToMap(contentParams), response);
     }
 
-    public static String post(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
+    public static String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
         String cancelTag = UUID.randomUUID()
                                .toString();
         OkHttpUtils.post()

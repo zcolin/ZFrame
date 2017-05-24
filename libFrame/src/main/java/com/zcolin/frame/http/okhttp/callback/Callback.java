@@ -42,6 +42,13 @@ public abstract class Callback<T> {
     public void onFinished() {
     }
 
+
+    /**
+     * UI Thread
+     */
+    public void onCanceled() {
+    }
+
     /**
      * UI Thread
      */

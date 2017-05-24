@@ -17,10 +17,4 @@ import com.zcolin.frame.app.BaseFrameActivity;
  */
 public class BaseActivity extends BaseFrameActivity{
 
-    
-    @Override
-    protected boolean isImmerse() {
-        //不使用沉浸式状态栏
-        return false;
-    }
 }
