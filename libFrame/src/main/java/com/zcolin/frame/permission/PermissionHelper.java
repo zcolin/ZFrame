@@ -36,7 +36,7 @@ public class PermissionHelper {
         }
     }
 
-    /**
+    /** 
      * 申请定位权限
      *
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
