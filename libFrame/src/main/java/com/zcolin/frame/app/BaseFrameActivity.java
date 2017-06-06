@@ -66,11 +66,10 @@ public class BaseFrameActivity extends AppCompatActivity {
     }
 
     protected void putExtra(Bundle savedInstanceState) {
+        mBundle = new Bundle();
         if (savedInstanceState != null) {
-            mBundle = new Bundle();
             mBundle.putAll(savedInstanceState);
         } else if (getIntent() != null && getIntent().getExtras() != null) {
-            mBundle = new Bundle();
             mBundle.putAll(getIntent().getExtras());
         }
     }
