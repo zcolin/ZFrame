@@ -25,9 +25,9 @@ import com.zcolin.frame.app.ResultActivityHelper;
 import com.zcolin.frame.imageloader.ImageLoaderUtils;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
-import com.zcolin.frame.utils.ActivityUtil;
-import com.zcolin.frame.utils.SystemIntentUtil;
-import com.zcolin.frame.utils.ToastUtil;
+import com.zcolin.frame.util.ActivityUtil;
+import com.zcolin.frame.util.SystemIntentUtil;
+import com.zcolin.frame.util.ToastUtil;
 
 import java.util.ArrayList;
 

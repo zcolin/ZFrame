@@ -17,7 +17,7 @@ import android.util.SparseArray;
 import android.view.View;
 
 import com.zcolin.frame.permission.PermissionsManager;
-import com.zcolin.frame.utils.ActivityUtil;
+import com.zcolin.frame.util.ActivityUtil;
 
 
 /**

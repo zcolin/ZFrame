@@ -8,7 +8,9 @@
 package com.zcolin.frame.db;
 
 
-import com.zcolin.frame.utils.LogUtil;
+import android.database.Cursor;
+
+import com.zcolin.frame.util.LogUtil;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.AbstractDaoSession;
@@ -267,6 +269,7 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
         if (offSet > 0) {
             queryBuilder.offset(offSet);
         }
+
         return queryObjects(queryBuilder);
     }
 
@@ -275,10 +278,6 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      */
     public <T> List<T> queryObjects(QueryBuilder<T> queryBuilder) {
         return queryBuilder.list();
-    }
-
-    public <T> QueryBuilder<T> getQueryBuilder(Class<T> object) {
-        return daoSession.queryBuilder(object);
     }
 
     /**
@@ -295,4 +294,38 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
     }
 
     /*********************************** 查  end  **********************************************/
+
+    /***********************************其他 start**********************************************/
+
+    /**
+     * 获取QueryBuilder
+     */
+    public <T> QueryBuilder<T> getQueryBuilder(Class<T> object) {
+        return daoSession.queryBuilder(object);
+    }
+
+    /**
+     * 执行Sql查询语句
+     */
+    public Cursor rawQuery(String sql, String[] selectionArgs) {
+        return daoSession.getDatabase()
+                         .rawQuery(sql, selectionArgs);
+    }
+
+    /**
+     * 执行Sql语句
+     */
+    public void rawQuery(String sql) {
+        daoSession.getDatabase()
+                  .execSQL(sql);
+    }
+
+
+    /**
+     * 执行Sql语句
+     */
+    public void rawQuery(String sql, Object[] bindArgs) {
+        daoSession.getDatabase()
+                  .execSQL(sql, bindArgs);
+    }
 }

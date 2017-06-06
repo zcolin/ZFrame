@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.zcolin.frame.app.BaseApp;
-import com.zcolin.frame.utils.LogUtil;
+import com.zcolin.frame.util.LogUtil;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@
 package com.zcolin.frame.http.okhttp.callback;
 
 
-import com.zcolin.frame.utils.GsonUtil;
+import com.zcolin.frame.util.GsonUtil;
 
 import java.io.IOException;
 

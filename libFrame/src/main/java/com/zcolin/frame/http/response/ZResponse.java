@@ -13,8 +13,8 @@ package com.zcolin.frame.http.response;
 import android.app.Activity;
 
 import com.zcolin.frame.http.ZReply;
-import com.zcolin.frame.utils.LogUtil;
-import com.zcolin.frame.utils.ToastUtil;
+import com.zcolin.frame.util.LogUtil;
+import com.zcolin.frame.util.ToastUtil;
 
 import okhttp3.Response;
 

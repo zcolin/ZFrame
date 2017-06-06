@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.zcolin.frame.demo.db.entity.Employee;
 import com.zcolin.frame.demo.db.entity.EmployeeDao;
-import com.zcolin.frame.utils.ToastUtil;
+import com.zcolin.frame.util.ToastUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 

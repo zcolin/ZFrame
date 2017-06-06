@@ -9,7 +9,7 @@ package com.zcolin.frame.http.okhttp.callback;
 
 
 import com.zcolin.frame.http.okhttp.OkHttpUtils;
-import com.zcolin.frame.utils.FileUtil;
+import com.zcolin.frame.util.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

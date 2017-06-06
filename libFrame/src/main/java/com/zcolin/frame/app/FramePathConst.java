@@ -32,7 +32,7 @@ public class FramePathConst {
         private static FramePathConst instance = new FramePathConst();
     }
 
-    private FramePathConst() {
+    public FramePathConst() {
         boolean sdCardExist = Environment.getExternalStorageState()
                                          .equals(Environment.MEDIA_MOUNTED);   //判断sd卡是否存在 
         if (sdCardExist) {

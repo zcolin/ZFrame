@@ -9,11 +9,11 @@ package com.zcolin.frame.app;
 
 import android.os.Build;
 
-import com.zcolin.frame.utils.AppUtil;
-import com.zcolin.frame.utils.CalendarUtil;
-import com.zcolin.frame.utils.FileUtil;
-import com.zcolin.frame.utils.LogUtil;
-import com.zcolin.frame.utils.ToastUtil;
+import com.zcolin.frame.util.AppUtil;
+import com.zcolin.frame.util.CalendarUtil;
+import com.zcolin.frame.util.FileUtil;
+import com.zcolin.frame.util.LogUtil;
+import com.zcolin.frame.util.ToastUtil;
 
 import java.io.File;
 import java.io.FileWriter;

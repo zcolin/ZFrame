@@ -13,8 +13,8 @@ import android.app.Activity;
 
 import com.zcolin.frame.app.BaseApp;
 import com.zcolin.frame.http.ZReply;
-import com.zcolin.frame.utils.LogUtil;
-import com.zcolin.frame.utils.NetworkUtil;
+import com.zcolin.frame.util.LogUtil;
+import com.zcolin.frame.util.NetworkUtil;
 
 import java.net.SocketTimeoutException;
 

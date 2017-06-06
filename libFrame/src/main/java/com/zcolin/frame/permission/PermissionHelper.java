@@ -22,7 +22,7 @@ public class PermissionHelper {
     /**
      * 申请特殊权限或者权限集合
      *
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestPermission(Object context, String[] arrayPermission, PermissionsResultAction action) {
         if (context instanceof BaseFrameActivity) {
@@ -32,14 +32,24 @@ public class PermissionHelper {
             PermissionsManager.getInstance()
                               .requestPermissionsIfNecessaryForResult((BaseFrameFrag) context, arrayPermission, action);
         } else {
-            throw new IllegalArgumentException("context 必须是BaseFrag或者BaseActivity的子类");
+            throw new IllegalArgumentException("context 必须是BaseFrameFrag或者BaseFrameActivity的子类");
         }
     }
 
     /**
+     * 申请定位权限
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
+     */
+    public static void requestLocationPermission(Object context, PermissionsResultAction action) {
+        requestPermission(context,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, action);
+    }
+
+    /**
      * 申请写入SD卡权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestWriteSdCardPermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -48,8 +58,8 @@ public class PermissionHelper {
 
     /**
      * 申请读取SD卡权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadSdCardPermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -58,8 +68,8 @@ public class PermissionHelper {
 
     /**
      * 申请读写SD卡权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadWriteSdCardPermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -68,8 +78,8 @@ public class PermissionHelper {
 
     /**
      * 申请调用摄像头权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestCameraPermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -78,8 +88,8 @@ public class PermissionHelper {
 
     /**
      * 申请读取联系人权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadContactsPermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -88,8 +98,8 @@ public class PermissionHelper {
 
     /**
      * 申请读取设备码权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadPhoneStatePermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
@@ -98,8 +108,8 @@ public class PermissionHelper {
 
     /**
      * 申请拨打电话权限
-     * 
-     * @param context 只能是BaseActivity或者BaseFrag 的子类
+     *
+     * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestCallPhonePermission(Object context, PermissionsResultAction action) {
         requestPermission(context,
