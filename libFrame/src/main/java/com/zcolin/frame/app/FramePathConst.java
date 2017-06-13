@@ -25,10 +25,10 @@ public class FramePathConst {
     private String PATH_LOG; //日志路径
 
     private static class InstancesClass {
-        private static FramePathConst instance = new FramePathConst();
+        private static final FramePathConst instance = new FramePathConst();
     }
 
-    public static FramePathConst getInstance() {
+    public static final FramePathConst getInstance() {
         return InstancesClass.instance;
     }
 
