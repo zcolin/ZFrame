@@ -274,7 +274,7 @@ public class BitmapUtil {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
-    
+
     /**
      * 计算图片缩放比例,只能缩放2的指数
      *
@@ -284,23 +284,35 @@ public class BitmapUtil {
      */
     private static int calculateOriginal(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         //TODO 如果出现height或者width为-1的情况，请参考以下进行调整
-//        if (options.outHeight == -1 || options.outWidth == -1) {
-//            try {
-//                ExifInterface exifInterface = new ExifInterface(imagePath);
-//                int height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.ORIENTATION_NORMAL);//获取图片的高度
-//                int width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, ExifInterface.ORIENTATION_NORMAL);//获取图片的宽度
-//                Log.i(TAG, "exif height: " + height);
-//                Log.i(TAG, "exif width: " + width);
-//                options.outWidth = width;
-//                options.outHeight = height;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        options.inSampleSize = calculateInSampleSize(options, requestWidth, requestHeight); //计算获取新的采样率
+        //        if (options.outHeight == -1 || options.outWidth == -1) {
+        //            try {
+        //                ExifInterface exifInterface = new ExifInterface(imagePath);
+        //                int height = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.ORIENTATION_NORMAL);//获取图片的高度
+        //                int width = exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, ExifInterface.ORIENTATION_NORMAL);//获取图片的宽度
+        //                Log.i(TAG, "exif height: " + height);
+        //                Log.i(TAG, "exif width: " + width);
+        //                options.outWidth = width;
+        //                options.outHeight = height;
+        //            } catch (IOException e) {
+        //                e.printStackTrace();
+        //            }
+        //        }
+        //        options.inSampleSize = calculateInSampleSize(options, requestWidth, requestHeight); //计算获取新的采样率
 
-        final int height = options.outHeight;
-        final int width = options.outWidth;
+        int height = options.outHeight;
+        int width = options.outWidth;
+        if (height < width) {
+            int temp = height;
+            height = width;
+            width = temp;
+        }
+
+        if (reqHeight < reqWidth) {
+            int temp = reqHeight;
+            reqHeight = reqWidth;
+            reqWidth = temp;
+        }
+
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
             final int halfHeight = height / 2;
@@ -309,7 +321,7 @@ public class BitmapUtil {
                 inSampleSize *= 2;
             }
 
-            long totalPixels = width/ inSampleSize * height / inSampleSize;
+            long totalPixels = width / inSampleSize * height / inSampleSize;
             final long totalReqPixelsCap = reqWidth * reqHeight;
             while (totalPixels > totalReqPixelsCap) {
                 inSampleSize *= 2;
