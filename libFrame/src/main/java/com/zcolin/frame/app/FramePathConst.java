@@ -28,7 +28,7 @@ public class FramePathConst {
         private static final FramePathConst instance = new FramePathConst();
     }
 
-    public static final FramePathConst getInstance() {
+    public static FramePathConst getInstance() {
         return InstancesClass.instance;
     }
 
