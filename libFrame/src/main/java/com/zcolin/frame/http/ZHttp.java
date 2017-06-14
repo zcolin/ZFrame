@@ -250,13 +250,21 @@ public class ZHttp {
     }
 
     public static String downLoadFile(String url, ZFileResponse response) {
-        return downLoadFileWithHeader(url, null, response);
+        return downLoadFile(url, null, response);
+    }
+
+    public static String downLoadFile(String url, Map<String, String> contentParams, ZFileResponse response) {
+        return downLoadFileWithHeader(url, null, contentParams, response);
     }
 
     public static String downLoadFileWithHeader(String url, LinkedHashMap<String, String> headers, ZFileResponse response) {
+        return downLoadFileWithHeader(url, null, null, response);
+    }
+
+    public static String downLoadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams, ZFileResponse response) {
         String cancelTag = UUID.randomUUID()
                                .toString();
-        OkHttpUtils.post()
+        OkHttpUtils.get()
                    .url(url)
                    .headers(headers)
                    .tag(cancelTag)
