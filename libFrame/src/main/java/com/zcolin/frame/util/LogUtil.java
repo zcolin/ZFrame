@@ -9,6 +9,7 @@ package com.zcolin.frame.util;
 
 import android.util.Log;
 
+import com.zcolin.frame.BuildConfig;
 import com.zcolin.frame.app.FramePathConst;
 
 import java.io.File;
@@ -23,7 +24,6 @@ public class LogUtil {
 
     public static char    LOG_PRINT_TYPE            = 'v';                            // 输出日志类型，v输出所有信息，i输出（i、d、w、e）信息，d输出（d、w、e信息），w输出（w、e信息），e写入e信息
     public static char    LOG_WRITE_TYPE            = 'w';                            // 写入日志类型，v写入所有信息，i写入（i、d、w、e）信息，d写入（d、w、e信息），w写入（w、e信息），e写入e信息
-    public static boolean LOG_DEBUG                 = true;
     public static boolean LOG_WRITE                 = false;
     public static int     SDCARD_LOG_FILE_SAVE_DAYS = 30;                            // sd卡中日志文件的最多保存天数
     public static String  MYLOGFILEName             = "Log.txt";                    // 本类输出的日志文件名称
@@ -135,7 +135,7 @@ public class LogUtil {
             msg = "null";
         }
 
-        if (LOG_DEBUG) {
+        if (BuildConfig.DEBUG) {
             if ('e' == level) {
                 Log.e(tag, msg);
             } else if ('w' == level && ('w' == LOG_PRINT_TYPE || 'd' == LOG_PRINT_TYPE || 'i' == LOG_PRINT_TYPE || 'v' == LOG_PRINT_TYPE)) {

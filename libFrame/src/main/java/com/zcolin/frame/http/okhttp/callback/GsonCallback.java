@@ -30,7 +30,7 @@ public abstract class GsonCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response) throws IOException {
         String string = response.body()
                                 .string();
-        LogUtil.d("http response", string);
+        LogUtil.i("http response", string);
         
         if (cls == String.class) {
             return (T) string;
