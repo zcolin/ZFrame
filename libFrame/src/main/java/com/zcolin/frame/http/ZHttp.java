@@ -16,6 +16,7 @@ import com.zcolin.frame.http.okhttp.builder.PostFormBuilder;
 import com.zcolin.frame.http.response.ZFileResponse;
 import com.zcolin.frame.http.response.ZResponse;
 import com.zcolin.frame.http.response.ZStringResponse;
+import com.zcolin.frame.util.GsonUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -92,7 +93,53 @@ public class ZHttp {
                    .execute(response.generatedProxy());
         return cancelTag;
     }
+
     //--------------------------------------------------ZSResponse END---------------------------------------------------
+    //--------------------------------------------------PostString start---------------------------------------------------
+    public static <T extends ZReply> String postString(String url, String string, String mimeType, ZResponse<T> response) {
+        return postStringWithHeader(url, null, string, mimeType, response);
+    }
+
+    public static <T extends ZReply> String postStringWithHeader(String url, LinkedHashMap<String, String> headerParams, String string, String mimeType, ZResponse<T> response) {
+        String cancelTag = UUID.randomUUID()
+                               .toString();
+        OkHttpUtils.postString()
+                   .url(url)
+                   .headers(headerParams)
+                   .mimeType(mimeType)
+                   .content(string)
+                   .tag(cancelTag)
+                   .build()
+                   .execute(response.generatedProxy());
+        return cancelTag;
+    }
+
+    public static <T extends ZReply> String postJson(String url, String json, ZResponse<T> response) {
+        return postJsonWithHeader(url, null, json, response);
+    }
+
+    public static <T extends ZReply> String postJson(String url, Object jsonObj, ZResponse<T> response) {
+        return postJsonWithHeader(url, null, GsonUtil.beanToString(jsonObj), response);
+    }
+
+    public static <T extends ZReply> String postJsonWithHeader(String url, LinkedHashMap<String, String> headerParams, Object jsonObj, ZResponse<T> response) {
+        return postJsonWithHeader(url, headerParams, GsonUtil.beanToString(jsonObj), response);
+    }
+
+    public static <T extends ZReply> String postJsonWithHeader(String url, LinkedHashMap<String, String> headerParams, String json, ZResponse<T> response) {
+        String cancelTag = UUID.randomUUID()
+                               .toString();
+        OkHttpUtils.postString()
+                   .url(url)
+                   .headers(headerParams)
+                   .mimeType("application/json; charset=utf-8")
+                   .content(json)
+                   .tag(cancelTag)
+                   .build()
+                   .execute(response.generatedProxy());
+        return cancelTag;
+    }
+    //--------------------------------------------------PostString end---------------------------------------------------
 
     //--------------------------------------------------ZStringResponse Start----------------------------------------------------
 
