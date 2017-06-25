@@ -9,6 +9,7 @@ package com.zcolin.frame.http.okhttp.callback;
 
 
 import com.zcolin.frame.util.GsonUtil;
+import com.zcolin.frame.util.LogUtil;
 
 import java.io.IOException;
 
@@ -29,6 +30,8 @@ public abstract class GsonCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response) throws IOException {
         String string = response.body()
                                 .string();
+        LogUtil.i("http response", string);
+        
         if (cls == String.class) {
             return (T) string;
         }

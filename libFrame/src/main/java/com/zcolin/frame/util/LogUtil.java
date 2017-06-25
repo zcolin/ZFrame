@@ -23,7 +23,7 @@ public class LogUtil {
 
     public static char    LOG_PRINT_TYPE            = 'v';                            // 输出日志类型，v输出所有信息，i输出（i、d、w、e）信息，d输出（d、w、e信息），w输出（w、e信息），e写入e信息
     public static char    LOG_WRITE_TYPE            = 'w';                            // 写入日志类型，v写入所有信息，i写入（i、d、w、e）信息，d写入（d、w、e信息），w写入（w、e信息），e写入e信息
-    public static boolean LOG_DEBUG                 = true;
+    public static boolean LOG_DEBUG                 = false;
     public static boolean LOG_WRITE                 = false;
     public static int     SDCARD_LOG_FILE_SAVE_DAYS = 30;                            // sd卡中日志文件的最多保存天数
     public static String  MYLOGFILEName             = "Log.txt";                    // 本类输出的日志文件名称

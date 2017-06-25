@@ -24,12 +24,12 @@ public class FramePathConst {
     private String PATH_FILE;//文件路径
     private String PATH_LOG; //日志路径
 
-    public static FramePathConst getInstance() {
-        return InstancesClass.instance;
+    private static class InstancesClass {
+        private static final FramePathConst instance = new FramePathConst();
     }
 
-    static class InstancesClass {
-        private static FramePathConst instance = new FramePathConst();
+    public static FramePathConst getInstance() {
+        return InstancesClass.instance;
     }
 
     public FramePathConst() {

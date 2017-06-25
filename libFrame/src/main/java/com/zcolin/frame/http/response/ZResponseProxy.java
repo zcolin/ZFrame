@@ -11,6 +11,7 @@ package com.zcolin.frame.http.response;
 
 import android.app.Activity;
 
+import com.google.gson.JsonSyntaxException;
 import com.zcolin.frame.app.BaseApp;
 import com.zcolin.frame.http.ZReply;
 import com.zcolin.frame.util.LogUtil;
@@ -55,6 +56,8 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
                 str = "连接服务器失败, 请检查网络或稍后重试";
             }
             zResponse.onError(0, str);
+        } else if (ex instanceof JsonSyntaxException) {
+            zResponse.onError(-1, "json conversion failed, code is : -1");
         } else {
             zResponse.onError(code, LogUtil.ExceptionToString(ex));
         }
@@ -62,10 +65,10 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
 
     @Override
     public void onSuccess(Response response, T reply) {
-        if (reply != null && reply.isSuccess()) {
+        if (reply == null) {
+            zResponse.onError(204, "response message is null, code is : 204");
+        }else if (reply.isSuccess()) {
             zResponse.onSuccess(response, reply);
-        } else if (reply == null) {
-            zResponse.onError(-1, "json对象解析失败！");
         } else {
             zResponse.onError(reply.getReplyCode(), reply.getErrorMessage());
         }
