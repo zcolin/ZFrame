@@ -25,9 +25,9 @@ public class CalendarUtil {
     public static final String DEF_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
-     * 缺省的日期时间显示格式：yyyy-MM-dd HH:mm:ss
+     * 日期时间显示格式：yyyy-MM-dd HH:mm:ss
      */
-    public static final String DEF_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DEF_DATETIME_FORMAT_SEC = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 只有时间的输出格式：HHmmss
@@ -35,14 +35,55 @@ public class CalendarUtil {
     public static final String DEF_ONLYTIME_FORMAT = "HHmmss";
 
     /**
+     * 缺省的日期时间显示格式：yyyy-MM-dd HH:mm:ss
+     */
+    public static final String DEF_DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+    /**
      * UTC格式
      */
     public static final String DEF_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     /**
+     * 默认DATETIME格式
+     */
+    private static String DATETIME_FORMAT = DEF_DATETIME_FORMAT_SEC;
+
+    /**
+     * 默认DATE格式
+     */
+    private static String DATE_FORMAT = DEF_DATE_FORMAT;
+
+    /**
+     * 默认ONLYTIME格式
+     */
+    private static String ONLYTIME_FORMAT = DEF_ONLYTIME_FORMAT;
+
+    /**
      * 私有构造方法，禁止对该类进行实例化
      */
     private CalendarUtil() {
+    }
+
+    /**
+     * 初始化DateTime输出样式
+     */
+    public static void initDateTimeFormat(String pattern) {
+        DATETIME_FORMAT = pattern;
+    }
+
+    /**
+     * 初始化Date输出样式
+     */
+    public static void initDateFormat(String pattern) {
+        DATE_FORMAT = pattern;
+    }
+
+    /**
+     * 初始化OnlyTime输出样式
+     */
+    public static void initOnlyTimeFormat(String pattern) {
+        ONLYTIME_FORMAT = pattern;
     }
 
     /**
@@ -56,12 +97,23 @@ public class CalendarUtil {
     }
 
     /**
+     * 得到系统当前日期时间
+     *
+     * @return 当前日期时间
+     */
+    public static Calendar getCalendar(long timeStamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeStamp);
+        return calendar;
+    }
+
+    /**
      * 得到用缺省方式格式化的当前日期
      *
      * @return 当前日期
      */
     public static String getDate() {
-        return getDateTime(DEF_DATE_FORMAT);
+        return getDateTime(DATE_FORMAT);
     }
 
     /**
@@ -70,7 +122,7 @@ public class CalendarUtil {
      * @return 当前日期及时间
      */
     public static String getDateTime() {
-        return getDateTime(DEF_DATETIME_FORMAT);
+        return getDateTime(DATETIME_FORMAT);
     }
 
     /**
@@ -79,36 +131,8 @@ public class CalendarUtil {
      * @return 当前时间
      */
     public static String getOnlyTime() {
-        return getDateTime(DEF_ONLYTIME_FORMAT);
+        return getDateTime(ONLYTIME_FORMAT);
     }
-
-    /**
-     * 得到用缺省方式格式化的当前日期
-     *
-     * @return 传入date格式化后的字符串
-     */
-    public static String getDate(Date date) {
-        return getDateTime(date, DEF_DATE_FORMAT);
-    }
-
-    /**
-     * 得到用缺省方式格式化的当前日期及时间
-     *
-     * @return 传入date格式化后的字符串
-     */
-    public static String getDateTime(Date date) {
-        return getDateTime(date, DEF_DATETIME_FORMAT);
-    }
-
-    /**
-     * 得到用缺省方式格式化的当前时间
-     *
-     * @return 传入date格式化后的字符串
-     */
-    public static String getOnlyTime(Date date) {
-        return getDateTime(date, DEF_ONLYTIME_FORMAT);
-    }
-
 
     /**
      * 得到系统当前日期及时间，并用指定的方式格式化
@@ -120,6 +144,33 @@ public class CalendarUtil {
         Date datetime = Calendar.getInstance()
                                 .getTime();
         return getDateTime(datetime, pattern);
+    }
+
+    /**
+     * 得到用缺省方式格式化的当前日期
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getDate(Date date) {
+        return getDateTime(date, DATE_FORMAT);
+    }
+
+    /**
+     * 得到用缺省方式格式化的当前日期及时间
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getDateTime(Date date) {
+        return getDateTime(date, DATETIME_FORMAT);
+    }
+
+    /**
+     * 得到用缺省方式格式化的当前时间
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getOnlyTime(Date date) {
+        return getDateTime(date, ONLYTIME_FORMAT);
     }
 
     /**
@@ -135,7 +186,7 @@ public class CalendarUtil {
         }
 
         if (null == pattern || "".equals(pattern)) {
-            pattern = DEF_DATETIME_FORMAT;
+            pattern = DATETIME_FORMAT;
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.CHINA);
         return dateFormat.format(date);
@@ -154,12 +205,51 @@ public class CalendarUtil {
         }
 
         if (null == pattern || "".equals(pattern)) {
-            pattern = DEF_DATETIME_FORMAT;
+            pattern = DATETIME_FORMAT;
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.CHINA);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(date);
     }
+
+    /**
+     * 得到用缺省方式格式化的当前日期
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getDate(long timeStamp) {
+        return getDate(getCalendar(timeStamp).getTime());
+    }
+
+    /**
+     * 得到用缺省方式格式化的当前日期及时间
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getDateTime(long timeStamp) {
+        return getDateTime(getCalendar(timeStamp).getTime());
+    }
+
+    /**
+     * 得到用缺省方式格式化的当前时间
+     *
+     * @return 传入date格式化后的字符串
+     */
+    public static String getOnlyTime(long timeStamp) {
+        return getOnlyTime(getCalendar(timeStamp).getTime());
+    }
+
+    /**
+     * 得到用指定方式格式化的日期
+     *
+     * @param timeStamp 时间戳
+     * @param pattern   显示格式
+     * @return 日期时间字符串
+     */
+    public static String getDateTime(long timeStamp, String pattern) {
+        return getDateTime(getCalendar(timeStamp).getTime(), pattern);
+    }
+
 
     /**
      * 得到当前年份
@@ -193,7 +283,8 @@ public class CalendarUtil {
     }
 
     /**
-     * 获取当前周天数    
+     * 获取当前周天数
+     *
      * @return 转换后的dayOfWeek
      */
     public static int getCurrentDayOfWeek() {
@@ -203,7 +294,8 @@ public class CalendarUtil {
     }
 
     /**
-     * 获取当前中文周天数 
+     * 获取当前中文周天数
+     *
      * @return 转换后的dayOfWeek
      */
     public static String getCurrentChineseCharDayOfWeek() {
@@ -480,7 +572,7 @@ public class CalendarUtil {
     public static Date parse(String datestr, String pattern) {
         Date date = null;
         if (null == pattern || "".equals(pattern)) {
-            pattern = DEF_DATE_FORMAT;
+            pattern = DATE_FORMAT;
         }
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.CHINA);
@@ -500,7 +592,7 @@ public class CalendarUtil {
     public static Date parseUTC(String datestr, String pattern) {
         Date date = null;
         if (null == pattern || "".equals(pattern)) {
-            pattern = DEF_DATE_FORMAT;
+            pattern = DATE_FORMAT;
         }
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.CHINA);
