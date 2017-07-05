@@ -179,6 +179,6 @@ public class NUriParseUtil {
     }
 
     private static String getProviderName() {
-        return BaseApp.APP_CONTEXT.getPackageName() + ".fileprovider";
+        return BaseApp.APP_CONTEXT.getPackageName() + ".zframe_fileprovider";
     }
 }
