@@ -25,9 +25,6 @@ import android.view.View;
 
 import com.zcolin.frame.app.BaseApp;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 /**
  * SpannableString字符串工具类
@@ -37,13 +34,19 @@ public class SpannableStringUtil {
     /**
      * 给某段字符设置下划线
      *
-     * @param str          整段字符串
-     * @param underLineStr 需要设置下划线的字符
+     * @param str       整段字符串
+     * @param effectStr 需要设置下划线的字符
      */
-    public static SpannableString underLine(String str, String underLineStr) {
-        int index = str.indexOf(underLineStr);
-        return new SpannableStringUtil.Builder(str).underLine(index, index + underLineStr.length())
-                                                   .build();
+    public static SpannableString underLine(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.underLine(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -57,13 +60,19 @@ public class SpannableStringUtil {
     /**
      * 给某段字符设置下划线
      *
-     * @param str              整段字符串
-     * @param strikethroughStr 需要设置中划线的字符
+     * @param str       整段字符串
+     * @param effectStr 需要设置中划线的字符
      */
-    public static SpannableString strikethroughLine(String str, String strikethroughStr) {
-        int index = str.indexOf(strikethroughStr);
-        return new SpannableStringUtil.Builder(str).strikethroughLine(index, index + strikethroughStr.length())
-                                                   .build();
+    public static SpannableString strikethroughLine(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.strikethroughLine(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -78,13 +87,19 @@ public class SpannableStringUtil {
      * 给某段字符设置点击事件
      *
      * @param str           整段字符串
-     * @param clickableStr  需要设置点击事件的字符
+     * @param effectStr     需要设置点击事件的字符
      * @param clickListener 点击事件回调
      */
-    public static SpannableString clickable(String str, String clickableStr, final View.OnClickListener clickListener) {
-        int index = str.indexOf(clickableStr);
-        return new SpannableStringUtil.Builder(str).clickable(index, index + clickableStr.length(), clickListener)
-                                                   .build();
+    public static SpannableString clickable(String str, String effectStr, final View.OnClickListener clickListener) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.clickable(start, end, clickListener);
+            index = end;
+        }
+        return builder.build();
     }
 
 
@@ -99,20 +114,26 @@ public class SpannableStringUtil {
     /**
      * 创建一个含有超链接的字符串
      *
-     * @param str      整段字符串
-     * @param clickStr 含有超链接的字符
-     * @param url      超链接地址 文本对应的链接地址，需要注意格式：
-     *                 （1）电话以"tel:"打头，比如"tel:02355692427"
-     *                 （2）邮件以"mailto:"打头，比如"mailto:zmywly8866@gmail.com"
-     *                 （3）短信以"sms:"打头，比如"sms:02355692427"
-     *                 （4）彩信以"mms:"打头，比如"mms:02355692427"
-     *                 （5）地图以"geo:"打头，比如"geo:68.426537,68.123456"
-     *                 （6）网络以"http://"打头，比如"http://www.google.com"
+     * @param str       整段字符串
+     * @param effectStr 含有超链接的字符
+     * @param url       超链接地址 文本对应的链接地址，需要注意格式：
+     *                  （1）电话以"tel:"打头，比如"tel:02355692427"
+     *                  （2）邮件以"mailto:"打头，比如"mailto:zmywly8866@gmail.com"
+     *                  （3）短信以"sms:"打头，比如"sms:02355692427"
+     *                  （4）彩信以"mms:"打头，比如"mms:02355692427"
+     *                  （5）地图以"geo:"打头，比如"geo:68.426537,68.123456"
+     *                  （6）网络以"http://"打头，比如"http://www.google.com"
      */
-    public static SpannableString link(String str, String clickStr, String url) {
-        int index = str.indexOf(clickStr);
-        return new SpannableStringUtil.Builder(str).link(index, index + clickStr.length(), url)
-                                                   .build();
+    public static SpannableString link(String str, String effectStr, String url) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.link(start, end, url);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -132,23 +153,22 @@ public class SpannableStringUtil {
     }
 
     /**
-     * 高亮所有关键字
+     * 高亮关键字
      *
      * @param str            整段字符串
-     * @param key            关键字
+     * @param effectStr      关键字
      * @param highlightColor 高亮颜色
      */
-    public static SpannableString highlightKeyword(String str, String key, int highlightColor) {
-        SpannableString sp = new SpannableString(str);
-        Pattern p = Pattern.compile(key);
-        Matcher m = p.matcher(str);
-
-        while (m.find()) {  //通过正则查找，逐个高亮
-            int start = m.start();
-            int end = m.end();
-            sp.setSpan(new ForegroundColorSpan(highlightColor), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    public static SpannableString highLight(String str, String effectStr, int highlightColor) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.highLight(start, end, highlightColor);
+            index = end;
         }
-        return sp;
+        return builder.build();
     }
 
     /**
@@ -172,29 +192,22 @@ public class SpannableStringUtil {
 
 
     /**
-     * 高亮一段文字
-     *
-     * @param str            整段字符串
-     * @param highLightStr   要高亮的代码段
-     * @param highlightColor 高亮颜色
-     */
-    public static SpannableString highLight(String str, String highLightStr, int highlightColor) {
-        int start = str.indexOf(highLightStr);
-        return new SpannableStringUtil.Builder(str).highLight(start, start + highLightStr.length(), highlightColor)
-                                                   .build();
-    }
-
-    /**
      * 给一段文字设置背景色
      *
      * @param str              整段字符串
-     * @param backgroundStr    要设置背景色的代码段
+     * @param effectStr        要设置背景色的代码段
      * @param basckgroundColor 背景颜色
      */
-    public static SpannableString backgroundColor(String str, String backgroundStr, int basckgroundColor) {
-        int start = str.indexOf(backgroundStr);
-        return new SpannableStringUtil.Builder(str).backgroundColor(start, start + backgroundStr.length(), basckgroundColor)
-                                                   .build();
+    public static SpannableString backgroundColor(String str, String effectStr, int basckgroundColor) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.backgroundColor(start, end, basckgroundColor);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -209,15 +222,21 @@ public class SpannableStringUtil {
     /**
      * 给一段文字设置字号
      *
-     * @param str         整段字符串
-     * @param textSizeStr 要设置字体大小的代码段
-     * @param textSize    字体大小  sp
+     * @param str       整段字符串
+     * @param effectStr 要设置字体大小的代码段
+     * @param textSize  字体大小  sp
      */
-    public static SpannableString textSize(String str, String textSizeStr, int textSize) {
+    public static SpannableString textSize(String str, String effectStr, int textSize) {
         textSize = DisplayUtil.sp2px(BaseApp.APP_CONTEXT, textSize);
-        int start = str.indexOf(textSizeStr);
-        return new SpannableStringUtil.Builder(str).textSize(start, start + textSizeStr.length(), textSize)
-                                                   .build();
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.backgroundColor(start, end, textSize);
+            index = end;
+        }
+        return builder.build();
     }
 
 
@@ -232,13 +251,19 @@ public class SpannableStringUtil {
     /**
      * 给一段文字设置下标
      *
-     * @param str          整段字符串
-     * @param subscriptStr 要设置下标字段
+     * @param str       整段字符串
+     * @param effectStr 要设置下标字段
      */
-    public static SpannableString subScript(String str, String subscriptStr) {
-        int start = str.indexOf(subscriptStr);
-        return new SpannableStringUtil.Builder(str).subScript(start, start + subscriptStr.length())
-                                                   .build();
+    public static SpannableString subScript(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.subScript(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -273,13 +298,19 @@ public class SpannableStringUtil {
     /**
      * 给一段文字设置加粗
      *
-     * @param str     整段字符串
-     * @param boldStr 要设置加粗字段
+     * @param str       整段字符串
+     * @param effectStr 要设置加粗字段
      */
-    public static SpannableString bold(String str, String boldStr) {
-        int start = str.indexOf(boldStr);
-        return new SpannableStringUtil.Builder(str).bold(start, start + boldStr.length())
-                                                   .build();
+    public static SpannableString bold(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.bold(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -294,12 +325,18 @@ public class SpannableStringUtil {
      * 给一段文字设置斜体
      *
      * @param str       整段字符串
-     * @param italicStr 要设置斜体字段
+     * @param effectStr 要设置斜体字段
      */
-    public static SpannableString italic(String str, String italicStr) {
-        int start = str.indexOf(italicStr);
-        return new SpannableStringUtil.Builder(str).italic(start, start + italicStr.length())
-                                                   .build();
+    public static SpannableString italic(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.italic(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -313,13 +350,19 @@ public class SpannableStringUtil {
     /**
      * 给一段文字设置斜体加粗
      *
-     * @param str           整段字符串
-     * @param italicBoldStr 要设置斜体加粗字段
+     * @param str       整段字符串
+     * @param effectStr 要设置斜体加粗字段
      */
-    public static SpannableString italicBold(String str, String italicBoldStr) {
-        int start = str.indexOf(italicBoldStr);
-        return new SpannableStringUtil.Builder(str).italicBold(start, start + italicBoldStr.length())
-                                                   .build();
+    public static SpannableString italicBold(String str, String effectStr) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.italicBold(start, end);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -333,14 +376,20 @@ public class SpannableStringUtil {
     /**
      * 给一段文字设置Style
      *
-     * @param str               整段字符串
-     * @param tetxtApperenceStr 要设置样式的字符串
-     * @param tetxtApperence    要设置样式
+     * @param str            整段字符串
+     * @param effectStr      要设置样式的字符串
+     * @param tetxtApperence 要设置样式
      */
-    public static SpannableString style(String str, String tetxtApperenceStr, int tetxtApperence) {
-        int start = str.indexOf(tetxtApperenceStr);
-        return new SpannableStringUtil.Builder(str).style(start, start + tetxtApperenceStr.length(), tetxtApperence)
-                                                   .build();
+    public static SpannableString style(String str, String effectStr, int tetxtApperence) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.style(start, end, tetxtApperence);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
@@ -354,14 +403,20 @@ public class SpannableStringUtil {
     /**
      * 插入图片
      *
-     * @param str      整段字符串
-     * @param imageStr 要设置斜体加粗字段
-     * @param drawable 图片
+     * @param str       整段字符串
+     * @param effectStr 要设置斜体加粗字段
+     * @param drawable  图片
      */
-    public static SpannableString image(String str, String imageStr, Drawable drawable) {
-        int start = str.indexOf(imageStr);
-        return new SpannableStringUtil.Builder(str).image(start, start + imageStr.length(), drawable)
-                                                   .build();
+    public static SpannableString image(String str, String effectStr, Drawable drawable) {
+        SpannableStringUtil.Builder builder = new SpannableStringUtil.Builder(str);
+        int index = 0;
+        while (index < str.length()) {
+            int start = str.indexOf(effectStr, index);
+            int end = start + effectStr.length();
+            builder.image(start, end, drawable);
+            index = end;
+        }
+        return builder.build();
     }
 
     /**
