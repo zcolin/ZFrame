@@ -42,6 +42,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.underLine(start, end);
             index = end;
@@ -68,6 +71,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.strikethroughLine(start, end);
             index = end;
@@ -95,6 +101,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.clickable(start, end, clickListener);
             index = end;
@@ -129,6 +138,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.link(start, end, url);
             index = end;
@@ -164,6 +176,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.highLight(start, end, highlightColor);
             index = end;
@@ -203,6 +218,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.backgroundColor(start, end, basckgroundColor);
             index = end;
@@ -232,6 +250,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.backgroundColor(start, end, textSize);
             index = end;
@@ -259,6 +280,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.subScript(start, end);
             index = end;
@@ -306,6 +330,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.bold(start, end);
             index = end;
@@ -332,6 +359,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.italic(start, end);
             index = end;
@@ -358,6 +388,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.italicBold(start, end);
             index = end;
@@ -385,6 +418,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.style(start, end, tetxtApperence);
             index = end;
@@ -412,6 +448,9 @@ public class SpannableStringUtil {
         int index = 0;
         while (index < str.length()) {
             int start = str.indexOf(effectStr, index);
+            if (start < 0) {
+                break;
+            }
             int end = start + effectStr.length();
             builder.image(start, end, drawable);
             index = end;
