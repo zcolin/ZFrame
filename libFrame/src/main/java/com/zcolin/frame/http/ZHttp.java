@@ -323,9 +323,15 @@ public class ZHttp {
     /**
      * 取消请求
      */
-    public static void cancelRequest(String tag) {
-        OkHttpUtils.getInstance()
-                   .cancelTag(tag);
+    public static void cancelRequest(String... tag) {
+        if (tag != null && tag.length > 0) {
+            for (String s : tag) {
+                if (s != null) {
+                    OkHttpUtils.getInstance()
+                               .cancelTag(tag);
+                }
+            }
+        }
     }
 
     public static GetBuilder get() {
