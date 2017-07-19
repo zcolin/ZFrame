@@ -328,7 +328,7 @@ public class ZHttp {
             for (String s : tag) {
                 if (s != null) {
                     OkHttpUtils.getInstance()
-                               .cancelTag(tag);
+                               .cancelTag(s);
                 }
             }
         }
