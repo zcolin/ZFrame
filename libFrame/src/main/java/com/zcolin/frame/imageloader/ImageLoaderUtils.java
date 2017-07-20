@@ -94,14 +94,14 @@ public class ImageLoaderUtils {
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv) {
         getDrawableTypeRequest(context, uri)
                 .asBitmap()
-                .transform(new CircleTransform((Context) context))
+                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
                 .into(iv);
     }
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int placeHolder) {
         getDrawableTypeRequest(context, uri)
                 .asBitmap()
-                .transform(new CircleTransform((Context) context))
+                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
                 .placeholder(placeHolder)
                 .into(iv);
     }
@@ -109,7 +109,7 @@ public class ImageLoaderUtils {
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
         getDrawableTypeRequest(context, uri)
                 .asBitmap()
-                .transform(new CircleTransform((Context) context))
+                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
                 .placeholder(placeHolder)
                 .into(iv);
     }
