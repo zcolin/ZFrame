@@ -8,7 +8,6 @@ package com.zcolin.frame.util;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -211,7 +210,7 @@ public class AppUtil {
             // 0代表是获取版本信息
             packInfo = packageManager.getPackageInfo(pckName, 0);
         } catch (Exception e) {
-            LogUtil.d("FCUtil--getPackageInfo", LogUtil.ExceptionToString(e));
+            e.printStackTrace();
         }
         return packInfo;
     }
@@ -328,43 +327,6 @@ public class AppUtil {
             }
         }
         return isRun;
-    }
-
-    /**
-     * 判断指定包中的Activity是否正在运行
-     *
-     * @param pckName 指定包的包名
-     * @return 是否有Activity运行
-     */
-    public static boolean isActivityRun(Context context, String pckName) {
-        boolean isActivityRun = false;
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<RunningTaskInfo> lstInfo = manager.getRunningTasks(100);
-        for (RunningTaskInfo info : lstInfo) {
-            if (info.topActivity.getPackageName()
-                                .startsWith(pckName) || info.baseActivity.getPackageName()
-                                                                         .startsWith(pckName)) {
-                isActivityRun = true;
-                break;
-            }
-        }
-        return isActivityRun;
-    }
-
-    /**
-     * 判断当前栈顶的Activity是否属于传入的包名
-     *
-     * @param pckName 指定包的包名
-     * @return 栈顶的Activity是否属于传入的包名
-     */
-    public static boolean isTopActivityFromPck(Context context, String pckName) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        RunningTaskInfo info = manager.getRunningTasks(1)
-                                      .get(0);
-        // String shortClassName = info.topActivity.getShortClassName(); // 类名
-        // String className = info.topActivity.getClassName(); // 完整类名
-        String activityPckName = info.topActivity.getPackageName(); // 包名
-        return activityPckName.startsWith(pckName);
     }
 
     /**

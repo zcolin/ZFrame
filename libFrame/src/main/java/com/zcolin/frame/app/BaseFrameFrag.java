@@ -54,7 +54,7 @@ public abstract class BaseFrameFrag extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
+        //        mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
     }
 
     @Nullable
