@@ -126,12 +126,19 @@ public class OkHttpUtils {
                                }
 
                                if (!finalCallback.validateReponse(response)) {
-                                   sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback);
+                                   sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), 
+                                           finalCallback);
                                    return;
                                }
 
                                Object o = finalCallback.parseNetworkResponse(response);
                                sendSuccessResultCallback(response, o, finalCallback);
+                           } catch (IOException e) {
+                               if ("Canceled".equals(e.getMessage())) {
+                                   sendCancelResultCallback(finalCallback);
+                               } else {
+                                   sendFailResultCallback(response.code(), call, e, finalCallback);
+                               }
                            } catch (Exception e) {
                                sendFailResultCallback(response.code(), call, e, finalCallback);
                            } finally {
