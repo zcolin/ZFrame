@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  fosung
+ *   email    wanglin2046@126.com
+ *   date     17-8-10 下午12:46
+ * ********************************************************
+ */
 
 package com.zcolin.frame.imageloader;
 
@@ -37,101 +39,157 @@ public class ImageLoaderUtils {
      * @param uri     传入Uri、File、res（int）、url(String), 否则抛出异常
      */
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv) {
-        getDrawableTypeRequest(context, uri)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, int placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, int placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .animate(anim)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .animate(anim)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, Drawable placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .animate(anim)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .animate(anim)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, int placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, Drawable placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .asBitmap()
-                .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .asBitmap()
+                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier) {
-        getDrawableTypeRequest(context, uri)
-                .thumbnail(sizeMultiplier)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .thumbnail(sizeMultiplier)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, int placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .thumbnail(sizeMultiplier)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .thumbnail(sizeMultiplier)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, Drawable placeHolder) {
-        getDrawableTypeRequest(context, uri)
-                .thumbnail(sizeMultiplier)
-                .placeholder(placeHolder)
-                .into(iv);
+        try {
+            getDrawableTypeRequest(context, uri)
+                    .thumbnail(sizeMultiplier)
+                    .placeholder(placeHolder)
+                    .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static <T, Z> DrawableTypeRequest<Z> getDrawableTypeRequest(T context, Z uri) {

@@ -106,7 +106,7 @@ public abstract class BaseFrameFrag extends Fragment {
      * 初始化view及数据,第一次调用onCreateView时调用
      */
     protected void createView(@Nullable Bundle savedInstanceState) {
-        
+
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class BaseFrameFrag extends Fragment {
     public <T extends View> T getView(int resId) {
         T view = (T) mViews.get(resId);
         if (view == null) {
-            view = (T)rootView.findViewById(resId);
+            view = (T) rootView.findViewById(resId);
             mViews.put(resId, view);
         }
         return view;
@@ -149,9 +149,7 @@ public abstract class BaseFrameFrag extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionsManager.getInstance()
                           .notifyPermissionsChange(permissions, grantResults);
     }
