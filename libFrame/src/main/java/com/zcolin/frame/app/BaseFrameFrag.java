@@ -34,6 +34,7 @@ public abstract class BaseFrameFrag extends Fragment {
     private final SparseArray<View> mViews = new SparseArray<>();
     protected Activity             mActivity;
     protected View                 rootView;
+    protected boolean              mIsDetached;
     private   ResultActivityHelper resultActivityHelper;
     private   boolean              isVisible;//Fragment当前状态是否可见
     private   boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
@@ -49,10 +50,12 @@ public abstract class BaseFrameFrag extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = getActivity();
+        mIsDetached = false;
     }
 
     @Override
     public void onDetach() {
+        mIsDetached = true;
         super.onDetach();
         //        mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
     }
