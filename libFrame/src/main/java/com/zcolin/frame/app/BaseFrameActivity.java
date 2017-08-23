@@ -34,10 +34,12 @@ public class BaseFrameActivity extends AppCompatActivity {
     private   ResultActivityHelper resultActivityHelper;
     protected Activity             mActivity;
     protected Bundle               mBundle; //Activity 销毁/恢复 时 保存/获取 数据
+    private   boolean              isDestroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isDestroyed = false;
         mActivity = this;
         ActivityUtil.addActivityToList(this);
         putExtra(savedInstanceState);
@@ -50,9 +52,15 @@ public class BaseFrameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        isDestroyed = true;
         super.onDestroy();
         mActivity = null;
         ActivityUtil.removeActivityFromList(this);
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return isDestroyed;
     }
 
     @Override
@@ -109,9 +117,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         PermissionsManager.getInstance()
                           .notifyPermissionsChange(permissions, grantResults);
     }
