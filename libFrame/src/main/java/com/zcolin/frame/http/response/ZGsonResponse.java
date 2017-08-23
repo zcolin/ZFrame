@@ -11,6 +11,7 @@ package com.zcolin.frame.http.response;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.Build;
 
 import com.zcolin.frame.app.BaseFrameActivity;
 import com.zcolin.frame.http.okhttp.callback.GsonCallback;
@@ -44,8 +45,8 @@ public abstract class ZGsonResponse<T> extends GsonCallback<T> {
     public ZGsonResponse(Class<T> cls, Activity barActy, String barMsg) {
         super(cls);
         if (barActy != null) {
-            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
-                proBar = ((BaseFrameActivity)barActy).getProgressDialog();
+            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity) barActy).getProgressDialog() != null) {
+                proBar = ((BaseFrameActivity) barActy).getProgressDialog();
             } else {
                 proBar = new ProgressDialog(barActy);
                 proBar.setCancelable(false);
@@ -64,9 +65,19 @@ public abstract class ZGsonResponse<T> extends GsonCallback<T> {
 
     @Override
     public void onFinished() {
-        if (proBar != null) {
-            proBar.dismiss();
-            barMsg = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (proBar != null && proBar.getWindow() != null && proBar.getWindow()
+                                                                      .getDecorView() != null && proBar.getWindow()
+                                                                                                       .getDecorView()
+                                                                                                       .isAttachedToWindow()) {
+                proBar.dismiss();
+                barMsg = null;
+            }
+        } else {
+            if (proBar != null) {
+                proBar.dismiss();
+                barMsg = null;
+            }
         }
     }
 }
