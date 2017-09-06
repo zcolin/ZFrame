@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  fosung
+ *   email    wanglin2046@126.com
+ *   date     17-9-6 上午9:29
+ * ********************************************************
+ */
 
 package com.zcolin.frame.imageloader;
 
@@ -19,6 +21,8 @@ import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+
+import java.security.MessageDigest;
 
 /**
  * Glide 灰度处理转换器
@@ -37,7 +41,7 @@ public class GrayscaleTransformation implements Transformation<Bitmap> {
     }
 
     @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
+    public Resource<Bitmap> transform(Context context, Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
 
         int width = source.getWidth();
@@ -61,7 +65,7 @@ public class GrayscaleTransformation implements Transformation<Bitmap> {
     }
 
     @Override
-    public String getId() {
-        return "GrayscaleTransformation()";
+    public void updateDiskCacheKey(MessageDigest messageDigest) {
+
     }
 }

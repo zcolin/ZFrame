@@ -3,7 +3,7 @@
  *   author   colin
  *   company  fosung
  *   email    wanglin2046@126.com
- *   date     17-8-10 下午12:46
+ *   date     17-9-6 上午9:29
  * ********************************************************
  */
 
@@ -18,10 +18,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.Util;
-import com.zcolin.frame.app.BaseApp;
+
+import java.util.HashMap;
 
 
 /**
@@ -33,6 +36,67 @@ import com.zcolin.frame.app.BaseApp;
  * 特殊需求直接使用Glide
  */
 public class ImageLoaderUtils {
+    private static HashMap<Object, RequestOptions> mapRequestOptions = new HashMap<>();
+
+    public static RequestOptions getRequestOption(int placeHolder) {
+        RequestOptions requestOptions = mapRequestOptions.get(placeHolder);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().placeholder(placeHolder);
+            mapRequestOptions.put(placeHolder, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getRequestOption(Drawable placeHolder) {
+        RequestOptions requestOptions = mapRequestOptions.get(placeHolder);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().placeholder(placeHolder);
+            mapRequestOptions.put(placeHolder, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getRoundCornerRequestOption(int corner) {
+        String key = "RoundCornerRequestOption" + corner;
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new RoundedCornersTransformation(corner));
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getRoundCornerRequestOption(int corner, int placeHolder) {
+        String key = "RoundCornerRequestOption" + corner + "holder" + placeHolder;
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new RoundedCornersTransformation(corner))
+                                                 .placeholder(placeHolder);
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getCircleRequestOption() {
+        String key = "CircleRequestOption";
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new CircleTransform());
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getCircleRequestOption(int placeHolder) {
+        String key = "CircleRequestOption" + "holder" + placeHolder;
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new CircleTransform())
+                                                 .placeholder(placeHolder);
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
 
     /**
      * @param context 传入Context、Fragment、FragmentActivity、Activity四项的实体及其子类 否则抛出异常
@@ -40,8 +104,8 @@ public class ImageLoaderUtils {
      */
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,9 +113,9 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, int placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,21 +123,30 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static <T, Z> void displayImage(T context, Z uri, ImageView iv, RequestOptions requestOptions) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .apply(requestOptions)
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, int placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .animate(anim)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .transition(new DrawableTransitionOptions().transition(anim))
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,21 +154,33 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, Drawable placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .animate(anim)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .transition(new DrawableTransitionOptions().transition(anim))
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, RequestOptions requestOptions) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .transition(new DrawableTransitionOptions().transition(anim))
+                                      .apply(requestOptions)
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                    .into(iv);
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getRoundCornerRequestOption(corner))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,23 +188,10 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, int placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                    .placeholder(placeHolder)
-                    .into(iv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, Drawable placeHolder) {
-        try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new RoundedCornersTransformation(BaseApp.APP_CONTEXT, corner))
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getRoundCornerRequestOption(corner, placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,10 +199,10 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                    .into(iv);
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getCircleRequestOption())
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,23 +210,10 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                    .placeholder(placeHolder)
-                    .into(iv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
-        try {
-            getDrawableTypeRequest(context, uri)
-                    .asBitmap()
-                    .transform(new CircleTransform(BaseApp.APP_CONTEXT))
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getCircleRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,9 +221,9 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .thumbnail(sizeMultiplier)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .thumbnail(sizeMultiplier)
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,10 +231,10 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, int placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .thumbnail(sizeMultiplier)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .thumbnail(sizeMultiplier)
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,38 +242,43 @@ public class ImageLoaderUtils {
 
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, Drawable placeHolder) {
         try {
-            getDrawableTypeRequest(context, uri)
-                    .thumbnail(sizeMultiplier)
-                    .placeholder(placeHolder)
-                    .into(iv);
+            getRequestManager(context).load(uri)
+                                      .thumbnail(sizeMultiplier)
+                                      .apply(getRequestOption(placeHolder))
+                                      .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static <T, Z> DrawableTypeRequest<Z> getDrawableTypeRequest(T context, Z uri) {
+    public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, RequestOptions requestOptions) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .thumbnail(sizeMultiplier)
+                                      .apply(requestOptions)
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static <T> RequestManager getRequestManager(T context) {
         if (context == null) {
             throw new IllegalArgumentException("You cannot start a load on a null Context");
         } else if (Util.isOnMainThread() && !(context instanceof Application)) {
             if (context instanceof FragmentActivity) {
-                return Glide.with(((FragmentActivity) context))
-                            .load(uri);
+                return Glide.with(((FragmentActivity) context));
             } else if (context instanceof Activity) {
-                return Glide.with(((Activity) context))
-                            .load(uri);
+                return Glide.with(((Activity) context));
             } else if (context instanceof Fragment) {
-                return Glide.with(((Fragment) context))
-                            .load(uri);
+                return Glide.with(((Fragment) context));
             } else if (context instanceof android.app.Fragment) {
-                return Glide.with((((android.app.Fragment) context)))
-                            .load(uri);
+                return Glide.with((((android.app.Fragment) context)));
             } else if (context instanceof ContextWrapper) {
-                return Glide.with((((ContextWrapper) context).getBaseContext()))
-                            .load(uri);
+                return Glide.with((((ContextWrapper) context).getBaseContext()));
             }
         }
-        return Glide.with((Context) context)
-                    .load(uri);
+        return Glide.with((Context) context);
     }
 }
    

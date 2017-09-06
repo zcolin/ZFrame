@@ -1,13 +1,14 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  fosung
+ *   email    wanglin2046@126.com
+ *   date     17-9-6 上午9:29
+ * ********************************************************
+ */
 
 package com.zcolin.frame.imageloader;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -17,6 +18,8 @@ import android.graphics.RectF;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+
+import java.security.MessageDigest;
 
 
 /**
@@ -28,22 +31,11 @@ public class RoundedCornersTransformation extends BitmapTransformation {
     private static float radius = 0f;
 
     /**
-     * 构造函数 默认圆角半径 4dp
-     *
-     * @param context Context
-     */
-    public RoundedCornersTransformation(Context context) {
-        this(context, 4);
-    }
-
-    /**
      * 构造函数
      *
-     * @param context Context
-     * @param dp      圆角半径
+     * @param dp 圆角半径
      */
-    public RoundedCornersTransformation(Context context, int dp) {
-        super(context);
+    public RoundedCornersTransformation(int dp) {
         radius = Resources.getSystem()
                           .getDisplayMetrics().density * dp;
     }
@@ -58,9 +50,6 @@ public class RoundedCornersTransformation extends BitmapTransformation {
             return null;
 
         Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-        if (result == null) {
-            result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-        }
 
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
@@ -72,7 +61,7 @@ public class RoundedCornersTransformation extends BitmapTransformation {
     }
 
     @Override
-    public String getId() {
-        return getClass().getName() + Math.round(radius);
+    public void updateDiskCacheKey(MessageDigest messageDigest) {
+
     }
 }

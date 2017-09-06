@@ -1,3 +1,12 @@
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  fosung
+ *   email    wanglin2046@126.com
+ *   date     17-9-6 上午9:29
+ * ********************************************************
+ */
+
 package com.zcolin.frame.imageloader;
 
 import android.os.AsyncTask;
