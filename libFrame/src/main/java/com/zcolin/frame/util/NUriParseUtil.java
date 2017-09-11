@@ -31,7 +31,7 @@ import java.util.Locale;
  * 适配Android7.0的Uri解析工具类
  */
 public class NUriParseUtil {
-
+    private static String applicationId;
     /**
      * 根据版本获取Uri, AndroidN之前直接返回，之后自动使用FileProvider转换提供的content uri
      */
@@ -179,6 +179,13 @@ public class NUriParseUtil {
     }
 
     private static String getProviderName() {
-        return BaseApp.APP_CONTEXT.getPackageName() + ".zframe_fileprovider";
+        return (applicationId == null ? BaseApp.APP_CONTEXT.getPackageName() : applicationId) + ".zframe_fileprovider";
+    }
+
+    /**
+     * 如果自定义此设置，则默认的providerName不生效，此配置用户applicationId和packageName不一样时使用
+     */
+    public static void setApplicationId(String name) {
+        applicationId = name;
     }
 }
