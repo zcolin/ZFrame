@@ -3,7 +3,7 @@
  *   author   colin
  *   company  fosung
  *   email    wanglin2046@126.com
- *   date     17-9-6 上午9:29
+ *   date     17-10-24 下午4:53
  * ********************************************************
  */
 
@@ -11,10 +11,10 @@ package com.zcolin.frame.imageloader;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
@@ -43,6 +43,16 @@ public class ImageLoaderUtils {
         if (requestOptions == null) {
             requestOptions = new RequestOptions().placeholder(placeHolder);
             mapRequestOptions.put(placeHolder, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getRequestOption(int placeHolder, int error) {
+        RequestOptions requestOptions = mapRequestOptions.get(placeHolder + "-" + error);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().placeholder(placeHolder)
+                                                 .error(error);
+            mapRequestOptions.put(placeHolder + "-" + error, requestOptions);
         }
         return requestOptions;
     }
@@ -77,6 +87,17 @@ public class ImageLoaderUtils {
         return requestOptions;
     }
 
+    public static RequestOptions getRoundCornerRequestOption(int corner, int placeHolder, int error) {
+        String key = "RoundCornerRequestOption" + corner + "holder" + placeHolder + "error" + error;
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new RoundedCornersTransformation(corner))
+                                                 .placeholder(placeHolder);
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
+
     public static RequestOptions getCircleRequestOption() {
         String key = "CircleRequestOption";
         RequestOptions requestOptions = mapRequestOptions.get(key);
@@ -89,6 +110,17 @@ public class ImageLoaderUtils {
 
     public static RequestOptions getCircleRequestOption(int placeHolder) {
         String key = "CircleRequestOption" + "holder" + placeHolder;
+        RequestOptions requestOptions = mapRequestOptions.get(key);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().transform(new CircleTransform())
+                                                 .placeholder(placeHolder);
+            mapRequestOptions.put(key, requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getCircleRequestOption(int placeHolder, int error) {
+        String key = "CircleRequestOption" + "holder" + placeHolder + "error" + error;
         RequestOptions requestOptions = mapRequestOptions.get(key);
         if (requestOptions == null) {
             requestOptions = new RequestOptions().transform(new CircleTransform())
@@ -121,6 +153,16 @@ public class ImageLoaderUtils {
         }
     }
 
+    public static <T, Z> void displayImage(T context, Z uri, ImageView iv, int placeHolder, int error) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .apply(getRequestOption(placeHolder, error))
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, Drawable placeHolder) {
         try {
             getRequestManager(context).load(uri)
@@ -146,6 +188,17 @@ public class ImageLoaderUtils {
             getRequestManager(context).load(uri)
                                       .transition(new DrawableTransitionOptions().transition(anim))
                                       .apply(getRequestOption(placeHolder))
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T, Z> void displayImageWithAnim(T context, Z uri, ImageView iv, int anim, int placeHolder, int error) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .transition(new DrawableTransitionOptions().transition(anim))
+                                      .apply(getRequestOption(placeHolder, error))
                                       .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,6 +250,17 @@ public class ImageLoaderUtils {
         }
     }
 
+    public static <T, Z> void displayRoundCornersImage(T context, Z uri, ImageView iv, int corner, int placeHolder, int error) {
+        try {
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getRoundCornerRequestOption(corner, placeHolder, error))
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv) {
         try {
             getRequestManager(context).asBitmap()
@@ -219,6 +283,17 @@ public class ImageLoaderUtils {
         }
     }
 
+    public static <T, Z> void displayCircleImage(T context, Z uri, ImageView iv, int placeHolder, int error) {
+        try {
+            getRequestManager(context).asBitmap()
+                                      .load(uri)
+                                      .apply(getCircleRequestOption(placeHolder, error))
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier) {
         try {
             getRequestManager(context).load(uri)
@@ -234,6 +309,17 @@ public class ImageLoaderUtils {
             getRequestManager(context).load(uri)
                                       .thumbnail(sizeMultiplier)
                                       .apply(getRequestOption(placeHolder))
+                                      .into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T, Z> void displayImageWithThumbnails(T context, Z uri, ImageView iv, float sizeMultiplier, int placeHolder, int error) {
+        try {
+            getRequestManager(context).load(uri)
+                                      .thumbnail(sizeMultiplier)
+                                      .apply(getRequestOption(placeHolder, error))
                                       .into(iv);
         } catch (Exception e) {
             e.printStackTrace();
