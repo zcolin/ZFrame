@@ -54,7 +54,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     protected void onDestroy() {
         isDestroyed = true;
         super.onDestroy();
-        mActivity = null;
+       //mActivity = null; //防止引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
         ActivityUtil.removeActivityFromList(this);
     }
 

@@ -35,10 +35,10 @@ public abstract class BaseFrameFrag extends Fragment {
     protected Activity             mActivity;
     protected View                 rootView;
     protected boolean              mIsDetached;
+    protected boolean              isVisible;//Fragment当前状态是否可见
+    protected boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
+    protected boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
     private   ResultActivityHelper resultActivityHelper;
-    private   boolean              isVisible;//Fragment当前状态是否可见
-    private   boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
-    private   boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
 
 
     /**
@@ -57,7 +57,7 @@ public abstract class BaseFrameFrag extends Fragment {
     public void onDetach() {
         mIsDetached = true;
         super.onDetach();
-        //        mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
+        //mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
     }
 
     @Nullable
@@ -153,7 +153,6 @@ public abstract class BaseFrameFrag extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        PermissionsManager.getInstance()
-                          .notifyPermissionsChange(permissions, grantResults);
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }
