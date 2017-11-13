@@ -96,7 +96,7 @@ public abstract class BaseFrameFrag extends Fragment {
     /**
      * 懒加载之前的判断
      */
-    private void onPreLoad(@Nullable Bundle savedInstanceState) {
+    protected void onPreLoad(@Nullable Bundle savedInstanceState) {
         if (!isVisible || !isPrepared || mHasLoadedOnce) {
             return;
         }
