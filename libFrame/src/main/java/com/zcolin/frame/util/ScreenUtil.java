@@ -35,8 +35,7 @@ public class ScreenUtil {
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay()
-          .getMetrics(outMetrics);
+        wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.widthPixels;
     }
 
@@ -47,8 +46,7 @@ public class ScreenUtil {
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
-        wm.getDefaultDisplay()
-          .getMetrics(outMetrics);
+        wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
     }
 
@@ -56,10 +54,7 @@ public class ScreenUtil {
      * 获取当前窗口的高度， 该高度是不包含导航栏和状态栏的
      */
     public static int getWindowHeight(Activity activity) {
-        return activity.getWindow()
-                       .getWindowManager()
-                       .getDefaultDisplay()
-                       .getHeight();
+        return activity.getWindow().getWindowManager().getDefaultDisplay().getHeight();
     }
 
     /**
@@ -74,9 +69,8 @@ public class ScreenUtil {
      *
      * @return 设备尺寸
      */
-    public static double getScreenPhysicalSize(Activity activity) {
-        DisplayMetrics dm = activity.getResources()
-                                    .getDisplayMetrics();
+    public static double getScreenPhysicalSize(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
         double diagonalPixels = Math.sqrt(Math.pow(dm.widthPixels, 2) + Math.pow(dm.heightPixels, 2));
         return diagonalPixels / (dm.densityDpi);
     }
@@ -85,8 +79,9 @@ public class ScreenUtil {
      * 判断是否是平板（官方用法）
      */
     public static boolean isTablet(Context context) {
-        return (context.getResources()
-                       .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+        double size = getScreenPhysicalSize(context);
+        return size >= 6.0 && ((context.getResources()
+                                       .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
 
     /**
@@ -121,9 +116,7 @@ public class ScreenUtil {
 
         if (statusBarHeight == 0) {
             Rect frame = new Rect();
-            context.getWindow()
-                   .getDecorView()
-                   .getWindowVisibleDisplayFrame(frame);
+            context.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
             statusBarHeight = frame.top;
         }
         return statusBarHeight;
@@ -133,8 +126,7 @@ public class ScreenUtil {
      * 获取当前屏幕截图，包含状态栏
      */
     public static Bitmap snapShotWithStatusBar(Activity activity) {
-        View view = activity.getWindow()
-                            .getDecorView();
+        View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap bmp = view.getDrawingCache();
@@ -150,15 +142,12 @@ public class ScreenUtil {
      * 获取当前屏幕截图，不包含状态栏
      */
     public static Bitmap snapShotWithoutStatusBar(Activity activity) {
-        View view = activity.getWindow()
-                            .getDecorView();
+        View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap bmp = view.getDrawingCache();
         Rect frame = new Rect();
-        activity.getWindow()
-                .getDecorView()
-                .getWindowVisibleDisplayFrame(frame);
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
         int statusBarHeight = frame.top;
         int width = getScreenWidth(activity);
         int height = getScreenHeight(activity);
@@ -195,8 +184,8 @@ public class ScreenUtil {
     public static boolean isAutoBrightness(ContentResolver aContentResolver) {
         boolean automicBrightness = false;
         try {
-            automicBrightness = Settings.System.getInt(aContentResolver,
-                    Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
+            automicBrightness = Settings.System.getInt(aContentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System
+                    .SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
@@ -210,8 +199,7 @@ public class ScreenUtil {
         int nowBrightnessValue = 0;
         ContentResolver resolver = activity.getContentResolver();
         try {
-            nowBrightnessValue = Settings.System.getInt(
-                    resolver, Settings.System.SCREEN_BRIGHTNESS);
+            nowBrightnessValue = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,39 +213,31 @@ public class ScreenUtil {
      */
     public static void setBrightness(Activity activity, float brightness) {
         stopAutoBrightness(activity);
-        WindowManager.LayoutParams lp = activity.getWindow()
-                                                .getAttributes();
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.screenBrightness = brightness * (1f / 255f);
-        activity.getWindow()
-                .setAttributes(lp);
+        activity.getWindow().setAttributes(lp);
     }
 
     /**
      * 停止自动亮度调节
      */
     public static void stopAutoBrightness(Activity activity) {
-        Settings.System.putInt(activity.getContentResolver(),
-                Settings.System.SCREEN_BRIGHTNESS_MODE,
-                Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
     }
 
     /**
      * 开启亮度自动调节
      */
     public static void startAutoBrightness(Activity activity) {
-        Settings.System.putInt(activity.getContentResolver(),
-                Settings.System.SCREEN_BRIGHTNESS_MODE,
-                Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
     }
 
     /**
      * 保存亮度设置状态
      */
     public static void saveBrightness(ContentResolver resolver, int brightness) {
-        Uri uri = Settings.System
-                .getUriFor("screen_brightness");
-        Settings.System.putInt(resolver, "screen_brightness",
-                brightness);
+        Uri uri = Settings.System.getUriFor("screen_brightness");
+        Settings.System.putInt(resolver, "screen_brightness", brightness);
         // resolver.registerContentObserver(uri, true, myContentObserver);
         resolver.notifyChange(uri, null);
     }
