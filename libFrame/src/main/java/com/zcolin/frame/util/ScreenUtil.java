@@ -30,6 +30,18 @@ import android.view.WindowManager;
 public class ScreenUtil {
 
     /**
+     * 获取屏幕宽度(较小的宽度，横屏时为屏幕高度)
+     */
+    public static int getSmallScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        int width = outMetrics.widthPixels;
+        int height = outMetrics.heightPixels;
+        return height > width ? width : height;
+    }
+    
+    /**
      * 获取屏幕宽度
      */
     public static int getScreenWidth(Context context) {
