@@ -18,6 +18,8 @@
 package com.zcolin.frame.util;
 
 
+import java.util.Locale;
+
 /**
  * 格式化工具类
  */
@@ -29,33 +31,48 @@ public class StringFormatUtil {
      * @param fData     需要格式的数据
      * @param precision 保留的位数
      */
-
-    public static String formatFloatPrecision(double fData, int precision) {
-        return String.format("%." + precision + "f", fData);
-    }
-
-    /**
-     * 获取float格式化的字符串
-     *
-     * @param fData 需要格式的数据
-     */
-
-    public static String formatStringInt(int fData) {
-        return String.format("%d", fData);
+    public static String formatPrecision(double fData, int precision) {
+        return String.format(Locale.CHINA, "%." + precision + "f", fData);
     }
 
     /**
      * 格式化成只有一位的格式
      */
-    public static String formatFloat(double data) {
-        return formatFloatPrecision(data, 1);
+    public static String formatPrecision(double data) {
+        return formatPrecision(data, 1);
     }
+
+    /**
+     * 格式化数据，将参数为null的使用“”代替
+     *
+     * @param args 需要格式的数据
+     */
+    public static String format(String str, Object... args) {
+        if (args != null && args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                args[i] = args[i] == null ? "" : args[i];
+            }
+            return String.format(Locale.CHINA, str, args);
+        } else {
+            return str;
+        }
+    }
+
+    /**
+     * 将Int格式化为字符串
+     *
+     * @param fData 需要格式的数据
+     */
+    public static String format(int fData) {
+        return String.format(Locale.CHINA, "%d", fData);
+    }
+
 
     /**
      * 格式化成金额形式
      */
-    public static String formatToMoney(double data) {
-        return String.format("￥%." + 1 + "f", data);
+    public static String formatMoney(double data) {
+        return String.format(Locale.CHINA, "￥%." + 1 + "f", data);
     }
 
     /**
@@ -64,6 +81,6 @@ public class StringFormatUtil {
      * @param precision 最小宽度
      */
     public static String formatFillZero(int data, int precision) {
-        return String.format("%0" + precision + "d", data);
+        return String.format(Locale.CHINA, "%0" + precision + "d", data);
     }
 }
