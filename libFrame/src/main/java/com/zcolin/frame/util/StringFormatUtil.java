@@ -54,7 +54,7 @@ public class StringFormatUtil {
             }
             return String.format(Locale.CHINA, str, args);
         } else {
-            return str;
+            return String.format(Locale.CHINA, str, "");
         }
     }
 
