@@ -20,29 +20,44 @@ import java.util.TimeZone;
 public class CalendarUtil {
 
     /**
-     * 缺省的日期显示格式： yyyy-MM-dd
+     * 缺省的日期显示格式
      */
     public static final String DEF_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
-     * 日期时间显示格式：yyyy-MM-dd HH:mm:ss
+     * 日期时间显示格式
      */
     public static final String DEF_DATETIME_FORMAT_SEC = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * 只有时间的输出格式：HHmmss
+     * 日期时间显示格式,带微秒
+     */
+    public static final String DEF_DATETIME_FORMAT_MSEC = "yyyy-MM-dd HH:mm:ss.sss";
+
+    /**
+     * 只有时间的输出格式
      */
     public static final String DEF_ONLYTIME_FORMAT = "HHmmss";
 
     /**
-     * 缺省的日期时间显示格式：yyyy-MM-dd HH:mm:ss
+     * 缺省的日期时间显示格式
      */
     public static final String DEF_DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+
+    /**
+     * 简写日期时间显示格式
+     */
+    public static final String DEF_DATETIME_SIMPLD = "yy-MM-dd HH:mm";
 
     /**
      * UTC格式
      */
     public static final String DEF_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    /**
+     * Iso格式
+     */
+    public static final String DEF_ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.sssZ";
 
     /**
      * 默认DATETIME格式
@@ -92,8 +107,7 @@ public class CalendarUtil {
      * @return 当前日期时间
      */
     public static Date getNow() {
-        return Calendar.getInstance()
-                       .getTime();
+        return Calendar.getInstance().getTime();
     }
 
     /**
@@ -141,8 +155,7 @@ public class CalendarUtil {
      * @return 当前日期及时间
      */
     public static String getDateTime(String pattern) {
-        Date datetime = Calendar.getInstance()
-                                .getTime();
+        Date datetime = Calendar.getInstance().getTime();
         return getDateTime(datetime, pattern);
     }
 
@@ -257,8 +270,7 @@ public class CalendarUtil {
      * @return 当前年份
      */
     public static int getCurrentYear() {
-        return Calendar.getInstance()
-                       .get(Calendar.YEAR);
+        return Calendar.getInstance().get(Calendar.YEAR);
     }
 
     /**
@@ -268,8 +280,7 @@ public class CalendarUtil {
      */
     public static int getCurrentMonth() {
         //用get得到的月份数比实际的小1，需要加上  
-        return Calendar.getInstance()
-                       .get(Calendar.MONTH) + 1;
+        return Calendar.getInstance().get(Calendar.MONTH) + 1;
     }
 
     /**
@@ -278,8 +289,7 @@ public class CalendarUtil {
      * @return 当前日
      */
     public static int getCurrentDay() {
-        return Calendar.getInstance()
-                       .get(Calendar.DATE);
+        return Calendar.getInstance().get(Calendar.DATE);
     }
 
     /**
