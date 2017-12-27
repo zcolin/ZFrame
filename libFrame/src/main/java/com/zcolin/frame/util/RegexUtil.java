@@ -90,7 +90,7 @@ public final class RegexUtil {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean isMobile(String mobile) {
-        String regex = "(\\+\\d+)?1[34578]\\d{9}$";
+        String regex = "(\\+\\d+)?1[345789]\\d{9}$";
         return Pattern.matches(regex, mobile);
     }
 
