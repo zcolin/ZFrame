@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-3-29 上午11:01
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -32,6 +32,7 @@ import java.util.Locale;
  */
 public class NUriParseUtil {
     private static String applicationId;
+
     /**
      * 根据版本获取Uri, AndroidN之前直接返回，之后自动使用FileProvider转换提供的content uri
      */
@@ -84,8 +85,7 @@ public class NUriParseUtil {
 
         String path;
         if (TextUtils.equals(uri.getAuthority(), getProviderName())) {
-            path = new File(uri.getPath()
-                               .replace("file_path/", "")).getAbsolutePath();
+            path = new File(uri.getPath().replace("file_path/", "")).getAbsolutePath();
         } else {
             path = uri.getPath();
         }
@@ -125,8 +125,7 @@ public class NUriParseUtil {
         String scheme = uri.getScheme();
         if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
             String[] filePathColumn = {dataType};
-            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver()
-                                               .query(uri, filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
+            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver().query(uri, filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
             boolean flag = false;
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -146,7 +145,7 @@ public class NUriParseUtil {
         }
         return TextUtils.isEmpty(picturePath) ? null : new File(picturePath);
     }
-    
+
 
     /**
      * 转换 content:// uri
@@ -154,24 +153,18 @@ public class NUriParseUtil {
     public static Uri getImageContentUri(File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver()
-                                           .query(
-                                                   MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                                   new String[]{MediaStore.Images.Media._ID},
-                                                   MediaStore.Images.Media.DATA + "=? ",
-                                                   new String[]{filePath}, null);
+                                           .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media._ID}, MediaStore.Images
+                                                   .Media.DATA + "=? ", new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             return Uri.withAppendedPath(baseUri, "" + id);
         } else {
             if (imageFile.exists()) {
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DATA, filePath);
-                return BaseApp.APP_CONTEXT.getContentResolver()
-                                          .insert(
-                                                  MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                return BaseApp.APP_CONTEXT.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             } else {
                 return null;
             }

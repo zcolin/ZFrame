@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 上午9:29
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -36,8 +36,7 @@ public class RoundedCornersTransformation extends BitmapTransformation {
      * @param dp 圆角半径
      */
     public RoundedCornersTransformation(int dp) {
-        radius = Resources.getSystem()
-                          .getDisplayMetrics().density * dp;
+        radius = Resources.getSystem().getDisplayMetrics().density * dp;
     }
 
     @Override

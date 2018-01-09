@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-24 上午11:19
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -16,9 +16,6 @@ import com.zcolin.frame.http.okhttp.cookie.store.MemoryCookieStore;
 import com.zcolin.frame.http.okhttp.https.HttpsUtils;
 
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 
 import okhttp3.OkHttpClient;
 
@@ -42,7 +39,7 @@ public class App extends BaseApp {
         //if (BuildConfig.DEBUG) {
         //    Stetho.initializeWithDefaults(this);
         //}
-        
+
         APP_CONTEXT = BaseApp.APP_CONTEXT;
         initHttpOptions();
     }
@@ -58,12 +55,7 @@ public class App extends BaseApp {
         OkHttpClient okHttpClient = builder.connectTimeout(10000L, TimeUnit.MILLISECONDS)
                                            .readTimeout(10000L, TimeUnit.MILLISECONDS)
                                            .cookieJar(cookieJar1)
-                                           .hostnameVerifier(new HostnameVerifier() {
-                                               @Override
-                                               public boolean verify(String hostname, SSLSession session) {
-                                                   return true;
-                                               }
-                                           })
+                                           .hostnameVerifier((hostname, session) -> true)
                                            .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                                            .build();
         OkHttpUtils.initClient(okHttpClient);

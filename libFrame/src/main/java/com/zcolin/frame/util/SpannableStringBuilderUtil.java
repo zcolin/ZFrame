@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-26 下午2:38
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.graphics.Typeface;

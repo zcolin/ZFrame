@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-21 下午12:01
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.http.response;
@@ -66,10 +66,9 @@ public abstract class ZGsonResponse<T> extends GsonCallback<T> {
     @Override
     public void onFinished() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (proBar != null && proBar.getWindow() != null && proBar.getWindow()
-                                                                      .getDecorView() != null && proBar.getWindow()
-                                                                                                       .getDecorView()
-                                                                                                       .isAttachedToWindow()) {
+            if (proBar != null && proBar.getWindow() != null && proBar.getWindow().getDecorView() != null && proBar.getWindow()
+                                                                                                                   .getDecorView()
+                                                                                                                   .isAttachedToWindow()) {
                 proBar.dismiss();
                 barMsg = null;
             }

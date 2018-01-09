@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.permission;
 
@@ -123,40 +125,20 @@ public abstract class PermissionsResultAction {
         mPermissions.remove(permission);
         if (result == Permissions.GRANTED) {
             if (mPermissions.isEmpty()) {
-                new Handler(mLooper).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        onGranted();
-                    }
-                });
+                new Handler(mLooper).post(() -> onGranted());
                 return true;
             }
         } else if (result == Permissions.DENIED) {
-            new Handler(mLooper).post(new Runnable() {
-                @Override
-                public void run() {
-                    onDenied(permission);
-                }
-            });
+            new Handler(mLooper).post(() -> onDenied(permission));
             return true;
         } else if (result == Permissions.NOT_FOUND) {
             if (shouldIgnorePermissionNotFound(permission)) {
                 if (mPermissions.isEmpty()) {
-                    new Handler(mLooper).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            onGranted();
-                        }
-                    });
+                    new Handler(mLooper).post(() -> onGranted());
                     return true;
                 }
             } else {
-                new Handler(mLooper).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        onDenied(permission);
-                    }
-                });
+                new Handler(mLooper).post(() -> onDenied(permission));
                 return true;
             }
         }

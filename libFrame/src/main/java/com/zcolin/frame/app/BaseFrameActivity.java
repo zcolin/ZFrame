@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.app;
 
@@ -54,7 +56,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     protected void onDestroy() {
         isDestroyed = true;
         super.onDestroy();
-       //mActivity = null; //防止引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
+        //mActivity = null; //防止引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
         ActivityUtil.removeActivityFromList(this);
     }
 
@@ -85,7 +87,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     public <T extends View> T getView(int resId) {
         T view = (T) mViews.get(resId);
         if (view == null) {
-            view = (T) findViewById(resId);
+            view = findViewById(resId);
             mViews.put(resId, view);
         }
         return view;
@@ -118,8 +120,7 @@ public class BaseFrameActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        PermissionsManager.getInstance()
-                          .notifyPermissionsChange(permissions, grantResults);
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 
 

@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-8 上午9:39
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -67,7 +67,7 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
     public void onSuccess(Response response, T reply) {
         if (reply == null) {
             zResponse.onError(204, "response message is null, code is : 204");
-        }else if (reply.isSuccess()) {
+        } else if (reply.isSuccess()) {
             zResponse.onSuccess(response, reply);
         } else {
             zResponse.onError(reply.getReplyCode(), reply.getErrorMessage());

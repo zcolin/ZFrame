@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-8 上午9:39
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -49,7 +49,7 @@ public abstract class ZResponse<T extends ZReply> {
     }
 
     public ZResponseProxy generatedProxy() {
-        return new ZResponseProxy<T>(cls, this, barActy, barMsg);
+        return new ZResponseProxy<>(cls, this, barActy, barMsg);
     }
 
     public abstract void onSuccess(Response response, T resObj);

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 
@@ -18,16 +20,14 @@ public class ReflectionUtil {
 
     /**
      * 设置字段值
-     * 
+     *
      * @param source 需要设置的对象
-     * @param name  字段名字
-     * @param obj
+     * @param name   字段名字
      */
     public static void setField(Object source, String name, Object obj) {
         Field field;
         try {
-            field = source.getClass()
-                          .getDeclaredField(name);
+            field = source.getClass().getDeclaredField(name);
             field.setAccessible(true);
             field.set(source, obj);
             field.setAccessible(false);
@@ -43,9 +43,7 @@ public class ReflectionUtil {
     public static void setSuperField(Object source, String name, Object obj) {
         Field field;
         try {
-            field = source.getClass()
-                          .getSuperclass()
-                          .getDeclaredField(name);
+            field = source.getClass().getSuperclass().getDeclaredField(name);
             field.setAccessible(true);
             field.set(source, obj);
             field.setAccessible(false);
@@ -61,8 +59,7 @@ public class ReflectionUtil {
         Field field;
         Object obj = null;
         try {
-            field = source.getClass()
-                          .getDeclaredField(name);
+            field = source.getClass().getDeclaredField(name);
             field.setAccessible(true);
             obj = field.get(source);
             field.setAccessible(false);
@@ -80,9 +77,7 @@ public class ReflectionUtil {
         Field field;
         Object obj = null;
         try {
-            field = source.getClass()
-                          .getSuperclass()
-                          .getDeclaredField(name);
+            field = source.getClass().getSuperclass().getDeclaredField(name);
             field.setAccessible(true);
             obj = field.get(source);
             field.setAccessible(false);
@@ -101,8 +96,7 @@ public class ReflectionUtil {
         Method method;
         Object result = null;
         try {
-            method = source.getClass()
-                           .getDeclaredMethod(name);
+            method = source.getClass().getDeclaredMethod(name);
             method.setAccessible(true);
             result = method.invoke(source);
             method.setAccessible(false);
@@ -122,8 +116,7 @@ public class ReflectionUtil {
         Method method;
         Object result = null;
         try {
-            method = source.getClass()
-                           .getDeclaredMethod(name, cls);
+            method = source.getClass().getDeclaredMethod(name, cls);
             method.setAccessible(true);
             result = method.invoke(source, obj);
             method.setAccessible(false);
@@ -142,9 +135,7 @@ public class ReflectionUtil {
         Method method;
         Object result = null;
         try {
-            method = source.getClass()
-                           .getSuperclass()
-                           .getDeclaredMethod(name);
+            method = source.getClass().getSuperclass().getDeclaredMethod(name);
             method.setAccessible(true);
             result = method.invoke(source);
             method.setAccessible(false);
@@ -163,9 +154,7 @@ public class ReflectionUtil {
         Method method;
         Object result = null;
         try {
-            method = source.getClass()
-                           .getSuperclass()
-                           .getDeclaredMethod(name, cls);
+            method = source.getClass().getSuperclass().getDeclaredMethod(name, cls);
             method.setAccessible(true);
             result = method.invoke(source, obj);
             method.setAccessible(false);

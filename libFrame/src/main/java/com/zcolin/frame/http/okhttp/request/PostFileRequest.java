@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.request;
 
@@ -49,27 +51,17 @@ public class PostFileRequest extends OkHttpRequest {
     protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
         if (callback == null)
             return requestBody;
-        CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody, new CountingRequestBody.Listener() {
-            @Override
-            public void onRequestProgress(final long bytesWritten, final long contentLength) {
-                OkHttpUtils.getInstance()
-                           .getHandler()
-                           .post(new Runnable() {
-                               @Override
-                               public void run() {
-                                   callback.onProgress(bytesWritten * 1.0f / contentLength, contentLength);
-                               }
-                           });
-
-            }
-        });
+        CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody, (bytesWritten, contentLength) -> OkHttpUtils.getInstance()
+                                                                                                                                   .getHandler()
+                                                                                                                                   .post(() -> callback
+                                                                                                                                           .onProgress
+                                                                                                                                                   (bytesWritten * 1.0f / contentLength, contentLength)));
         return countingRequestBody;
     }
 
     @Override
     protected Request buildRequest(RequestBody requestBody) {
-        return builder.post(requestBody)
-                      .build();
+        return builder.post(requestBody).build();
     }
 
 

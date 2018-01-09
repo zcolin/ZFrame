@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -46,10 +48,8 @@ public class PropertyUtil {
 
     //检查文件是否存在，不存在则创建
     private void checkFileExist(File file) {
-        if (!file.getParentFile()
-                 .exists()) {
-            file.getParentFile()
-                .mkdirs();
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
         if (!file.exists()) {
             try {

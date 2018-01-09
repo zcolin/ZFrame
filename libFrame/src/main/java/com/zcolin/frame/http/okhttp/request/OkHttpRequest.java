@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.request;
 
@@ -47,8 +49,7 @@ public abstract class OkHttpRequest {
      * 初始化一些基本参数 url , tag , headers
      */
     private void initBuilder() {
-        builder.url(url)
-               .tag(tag);
+        builder.url(url).tag(tag);
         appendHeaders();
     }
 

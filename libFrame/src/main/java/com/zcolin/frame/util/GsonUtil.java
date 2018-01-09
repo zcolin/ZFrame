@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -36,8 +38,7 @@ public class GsonUtil {
 
             @Override
             public boolean shouldSkipField(FieldAttributes fa) {
-                return fa.getName()
-                         .startsWith("__");
+                return fa.getName().startsWith("__");
             }
 
             @Override
@@ -45,8 +46,7 @@ public class GsonUtil {
                 return false;
             }
         };
-        gsonExclude = new GsonBuilder().setExclusionStrategies(myExclusionStrategy)
-                                       .create();
+        gsonExclude = new GsonBuilder().setExclusionStrategies(myExclusionStrategy).create();
     }
 
     private GsonUtil() {
@@ -90,9 +90,9 @@ public class GsonUtil {
      * 转成list
      */
     public static <T> List<T> stringToList(String gsonString, Class<T> cls) {
-        List<T> list =  new ArrayList<T>();
+        List<T> list = new ArrayList<>();
         JsonArray array = new JsonParser().parse(gsonString).getAsJsonArray();
-        for(final JsonElement elem : array){
+        for (final JsonElement elem : array) {
             list.add(new Gson().fromJson(elem, cls));
         }
         return list;

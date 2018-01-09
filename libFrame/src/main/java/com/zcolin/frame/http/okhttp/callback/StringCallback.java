@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.callback;
 
@@ -17,7 +19,6 @@ import okhttp3.Response;
 public abstract class StringCallback extends Callback<String> {
     @Override
     public String parseNetworkResponse(Response response) throws IOException {
-        return response.body()
-                       .string();
+        return response.body().string();
     }
 }

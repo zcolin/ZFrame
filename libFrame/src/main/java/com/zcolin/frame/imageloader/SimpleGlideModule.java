@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 上午9:29
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -36,15 +36,9 @@ public class SimpleGlideModule implements GlideModule {
         // 对于 Glide 使用者来说：你使用 Glide module 方法去改变解码规则。
         //  builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
         //设置缓存目录
-        File cacheDir = new File(FramePathConst.getInstance()
-                                               .getPathImgCache());
+        File cacheDir = new File(FramePathConst.getInstance().getPathImgCache());
         cache = DiskLruCacheWrapper.get(cacheDir, 100 * 1024 * 1024);// 100 MB 
-        builder.setDiskCache(new DiskCache.Factory() {
-            @Override
-            public DiskCache build() {
-                return cache;
-            }
-        });
+        builder.setDiskCache(() -> cache);
 
         //        builder.setMemoryCache(new LruResourceCache(customMemoryCacheSize));
         //        builder.setBitmapPool(new LruBitmapPool(customBitmapPoolSize));

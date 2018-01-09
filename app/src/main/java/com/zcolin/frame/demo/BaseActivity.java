@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-24 上午11:23
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -15,6 +15,6 @@ import com.zcolin.frame.app.BaseFrameActivity;
 /**
  * DBDemo
  */
-public class BaseActivity extends BaseFrameActivity{
+public class BaseActivity extends BaseFrameActivity {
 
 }

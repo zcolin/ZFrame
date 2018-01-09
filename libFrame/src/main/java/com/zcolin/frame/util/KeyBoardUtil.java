@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -42,12 +44,6 @@ public class KeyBoardUtil {
      * 延时弹出软键盘（软键盘即时弹出有时会出现bug）
      */
     public static void openKeybordWithDelay(final Context context, final View view) {
-        view.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                openKeybord(context, view);
-            }
-        }, 500);
+        view.postDelayed(() -> openKeybord(context, view), 500);
     }
 }  

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -130,7 +132,7 @@ public class StringUtil {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if (Character.isWhitespace(cs.charAt(i)) == false) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
                 return false;
             }
         }
@@ -532,7 +534,9 @@ public class StringUtil {
      *
      * @since 3.0
      */
-    // See also Lucene's ASCIIFoldingFilter (Lucene 2.9) that replaces accented characters by their unaccented equivalent (and uncommitted bug fix: https://issues.apache.org/jira/browse/LUCENE-1343?focusedCommentId=12858907&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#action_12858907).
+    // See also Lucene's ASCIIFoldingFilter (Lucene 2.9) that replaces accented characters by their unaccented equivalent (and uncommitted bug fix: 
+    // https://issues.apache.org/jira/browse/LUCENE-1343?focusedCommentId=12858907&page=com.atlassian.jira.plugin.system
+    // .issuetabpanels%3Acomment-tabpanel#action_12858907).
     public static String stripAccents(final String input) {
         if (input == null) {
             return null;
@@ -540,17 +544,16 @@ public class StringUtil {
         final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");//$NON-NLS-1$
         final String decomposed = Normalizer.normalize(input, Normalizer.Form.NFD);
         // Note that this doesn't correctly remove ligatures...
-        return pattern.matcher(decomposed)
-                      .replaceAll("");//$NON-NLS-1$
+        return pattern.matcher(decomposed).replaceAll("");//$NON-NLS-1$
     }
 
     /**
      * 将字符串数组转换为list
      */
     public static List<String> stringArray2List(String[] strArray) {
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < strArray.length; i++) {
-            list.add(strArray[i]);
+        List<String> list = new ArrayList<>();
+        for (String aStrArray : strArray) {
+            list.add(aStrArray);
         }
         return list;
     }

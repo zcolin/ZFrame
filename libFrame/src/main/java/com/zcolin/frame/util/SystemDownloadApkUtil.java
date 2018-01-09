@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-11 上午10:50
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.util;
@@ -84,8 +84,7 @@ public class SystemDownloadApkUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Notification点击
-            if (intent.getAction()
-                      .equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
+            if (intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
                 String extraID = DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS;
                 long[] references = intent.getLongArrayExtra(extraID);
                 for (long reference : references)
@@ -93,23 +92,19 @@ public class SystemDownloadApkUtil {
                     }
             }
             //下载完成
-            if (intent.getAction()
-                      .equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                 long completeDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if (completeDownloadId == myReference) {
-                    Cursor cursor = downloadManager.query(new DownloadManager.Query()
-                            .setFilterById(completeDownloadId));
+                    Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(completeDownloadId));
                     cursor.moveToFirst();
                     String filePath = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                     cursor.close();
                     if (filePath != null) {
                         if (filePath.contains(context.getPackageName())) {
-                            AppUtil.installBySys(context, new File(filePath.trim()
-                                                                           .substring(7)));
+                            AppUtil.installBySys(context, new File(filePath.trim().substring(7)));
                         }
                     } else {
-                        Toast.makeText(context, "网络不给力", Toast.LENGTH_SHORT)
-                             .show();
+                        Toast.makeText(context, "网络不给力", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

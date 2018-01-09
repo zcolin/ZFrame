@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.builder;
 
@@ -35,16 +37,14 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         if (url == null || params == null || params.isEmpty()) {
             return url;
         }
-        Uri.Builder builder = Uri.parse(url)
-                                 .buildUpon();
+        Uri.Builder builder = Uri.parse(url).buildUpon();
         Set<String> keys = params.keySet();
         Iterator<String> iterator = keys.iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             builder.appendQueryParameter(key, params.get(key));
         }
-        return builder.build()
-                      .toString();
+        return builder.build().toString();
     }
 
 

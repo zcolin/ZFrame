@@ -1,14 +1,17 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +170,7 @@ public class ArrayUtil {
         if (array == null) {
             return null;
         }
-        final Map<Object, Object> map = new HashMap<Object, Object>((int) (array.length * 1.5));
+        final Map<Object, Object> map = new HashMap<>((int) (array.length * 1.5));
         for (int i = 0; i < array.length; i++) {
             Object object = array[i];
             if (object instanceof Map.Entry) {
@@ -187,10 +190,8 @@ public class ArrayUtil {
     }
 
     public static List<Object> toList(Object[] array) {
-        List<Object> ret = new ArrayList<Object>();
-        for (Object o : array) {
-            ret.add(o);
-        }
+        List<Object> ret = new ArrayList<>();
+        ret.addAll(Arrays.asList(array));
         return ret;
     }
 
@@ -386,8 +387,7 @@ public class ArrayUtil {
             endIndexExclusive = array.length;
         }
         int newSize = endIndexExclusive - startIndexInclusive;
-        Class<?> type = array.getClass()
-                             .getComponentType();
+        Class<?> type = array.getClass().getComponentType();
         if (newSize <= 0) {
             return (Object[]) Array.newInstance(type, 0);
         }
@@ -731,10 +731,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(Object[] array1, Object[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -747,10 +745,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(long[] array1, long[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -763,10 +759,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(int[] array1, int[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -779,10 +773,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(short[] array1, short[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -795,10 +787,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(char[] array1, char[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -811,10 +801,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(byte[] array1, byte[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -827,10 +815,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(double[] array1, double[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -843,10 +829,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(float[] array1, float[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -859,10 +843,8 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(boolean[] array1, boolean[] array2) {
-        if ((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length)) {
-            return false;
-        }
-        return true;
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
+                array2 != null && array1.length != array2.length));
     }
 
     //-----------------------------------------------------------------------
@@ -909,10 +891,7 @@ public class ArrayUtil {
         if (array1 == null || array2 == null) {
             throw new IllegalArgumentException("The Array must not be null");
         }
-        return array1.getClass()
-                     .getName()
-                     .equals(array2.getClass()
-                                   .getName());
+        return array1.getClass().getName().equals(array2.getClass().getName());
     }
 
     // Reverse
@@ -2789,10 +2768,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static <T> boolean isEmpty(T[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2804,10 +2780,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(long[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2819,10 +2792,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(int[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2834,10 +2804,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(short[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2849,10 +2816,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(char[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2864,10 +2828,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(byte[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2879,10 +2840,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(double[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2894,10 +2852,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(float[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2909,10 +2864,7 @@ public class ArrayUtil {
      * @since 2.1
      */
     public static boolean isEmpty(boolean[] array) {
-        if (array == null || array.length == 0) {
-            return true;
-        }
-        return false;
+        return array == null || array.length == 0;
     }
 
     /**
@@ -2943,8 +2895,7 @@ public class ArrayUtil {
         } else if (array2 == null) {
             return clone(array1);
         }
-        Object[] joinedArray = (Object[]) Array.newInstance(array1.getClass()
-                                                                  .getComponentType(), array1.length + array2.length);
+        Object[] joinedArray = (Object[]) Array.newInstance(array1.getClass().getComponentType(), array1.length + array2.length);
         System.arraycopy(array1, 0, joinedArray, 0, array1.length);
         System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
         return joinedArray;
@@ -3457,8 +3408,7 @@ public class ArrayUtil {
     private static Object copyArrayGrow1(Object array, Class<?> newArrayComponentType) {
         if (array != null) {
             int arrayLength = Array.getLength(array);
-            Object newArray = Array.newInstance(array.getClass()
-                                                     .getComponentType(), arrayLength + 1);
+            Object newArray = Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
             System.arraycopy(array, 0, newArray, 0, arrayLength);
             return newArray;
         }
@@ -3497,8 +3447,7 @@ public class ArrayUtil {
     public static Object[] add(Object[] array, int index, Object element) {
         Class<?> clss = null;
         if (array != null) {
-            clss = array.getClass()
-                        .getComponentType();
+            clss = array.getClass().getComponentType();
         } else if (element != null) {
             clss = element.getClass();
         } else {
@@ -4428,8 +4377,7 @@ public class ArrayUtil {
             throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
         }
 
-        Object result = Array.newInstance(array.getClass()
-                                               .getComponentType(), length - 1);
+        Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
         System.arraycopy(array, 0, result, 0, index);
         if (index < length - 1) {
             System.arraycopy(array, index + 1, result, index, length - index - 1);

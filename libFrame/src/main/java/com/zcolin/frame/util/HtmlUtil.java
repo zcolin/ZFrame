@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 下午4:52
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -43,8 +43,7 @@ public class HtmlUtil {
             builder = new SpannableStringBuilder(spanned);
         }
 
-        if (builder.length() > 2 && "\n\n".equals(builder.subSequence(builder.length() - 2, builder.length())
-                                                         .toString())) {
+        if (builder.length() > 2 && "\n\n".equals(builder.subSequence(builder.length() - 2, builder.length()).toString())) {
             builder.delete(builder.length() - 2, builder.length());
         }
 
@@ -57,11 +56,9 @@ public class HtmlUtil {
     public static String toHtml(Spanned spanned) {
         String strHtmlContent;
         if (Build.VERSION.SDK_INT >= 24) {
-            strHtmlContent = Html.toHtml(spanned, TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
-                                 .replace(" dir=\"ltr\"", "");
+            strHtmlContent = Html.toHtml(spanned, TO_HTML_PARAGRAPH_LINES_CONSECUTIVE).replace(" dir=\"ltr\"", "");
         } else {
-            strHtmlContent = Html.toHtml(spanned)
-                                 .replace(" dir=\"ltr\"", "");
+            strHtmlContent = Html.toHtml(spanned).replace(" dir=\"ltr\"", "");
         }
 
         if (strHtmlContent.endsWith("\n")) {
@@ -79,13 +76,9 @@ public class HtmlUtil {
         }
 
         if (Build.VERSION.SDK_INT >= 24) {
-            return Html.fromHtml(str, FROM_HTML_MODE_LEGACY)
-                       .toString()
-                       .replaceAll("\\s*", "");
+            return Html.fromHtml(str, FROM_HTML_MODE_LEGACY).toString().replaceAll("\\s*", "");
         } else {
-            return Html.fromHtml(str)
-                       .toString()
-                       .replaceAll("\\s*", "");
+            return Html.fromHtml(str).toString().replaceAll("\\s*", "");
         }
     }
 }

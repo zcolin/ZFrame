@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-24 上午10:41
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -118,8 +118,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
             currentSortType = 0;
             queryBuilder.orderAsc(EmployeeDao.Properties.Date);
         }
-        List<Employee> list = getDaoHelper()
-                .queryObjects(queryBuilder);
+        List<Employee> list = getDaoHelper().queryObjects(queryBuilder);
         setText(list);
     }
 

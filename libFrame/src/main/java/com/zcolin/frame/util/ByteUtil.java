@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -86,8 +88,8 @@ public class ByteUtil {
         }
 
         StringBuilder stringBuilder = new StringBuilder("");
-        for (int i = 0; i < src.length; i++) {
-            String hv = Integer.toHexString(src[i] & 0xFF);
+        for (byte aSrc : src) {
+            String hv = Integer.toHexString(aSrc & 0xFF);
             if (hv.length() == 1) {
                 stringBuilder.append(0);
             }

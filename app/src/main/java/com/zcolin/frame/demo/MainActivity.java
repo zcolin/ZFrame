@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-4 下午5:28
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.zcolin.frame.app.FramePathConst;
-import com.zcolin.frame.app.ResultActivityHelper;
 import com.zcolin.frame.imageloader.ImageLoaderUtils;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
@@ -75,18 +74,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (v == listButton.get(1)) {
             ActivityUtil.startActivity(this, DbDemoActivity.class);
         } else if (v == listButton.get(2)) {
-            PermissionHelper.requestPermission(mActivity, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
+            PermissionHelper.requestPermission(mActivity, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.CAMERA}, new 
+                    PermissionsResultAction() {
                 @Override
                 public void onGranted() {
                     Intent intent = new Intent(mActivity, PermissionAndActivityResultActivity.class);
                     intent.putExtra("data", "传入数据-xxx");
-                    startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                        @Override
-                        public void onResult(int resultCode, Intent data) {
-                            if (resultCode == RESULT_OK) {
-                                if (data != null) {
-                                    ToastUtil.toastShort(data.getStringExtra("data"));
-                                }
+                    startActivityWithCallback(intent, (resultCode, data) -> {
+                        if (resultCode == RESULT_OK) {
+                            if (data != null) {
+                                ToastUtil.toastShort(data.getStringExtra("data"));
                             }
                         }
                     });
@@ -98,8 +95,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
         } else if (v == listButton.get(3)) {
-            final String savePath = FramePathConst.getInstance()
-                                                  .getTempFilePath("jpg");
+            final String savePath = FramePathConst.getInstance().getTempFilePath("jpg");
             SystemIntentUtil.takePhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
                 @Override
                 public void onSelected(Uri fileProviderUri) {
@@ -113,8 +109,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
         } else if (v == listButton.get(4)) {
-            final String savePath = FramePathConst.getInstance()
-                                                  .getTempFilePath("jpg");
+            final String savePath = FramePathConst.getInstance().getTempFilePath("jpg");
             SystemIntentUtil.selectPhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
                 @Override
                 public void onSelected(Uri fileProviderUri) {

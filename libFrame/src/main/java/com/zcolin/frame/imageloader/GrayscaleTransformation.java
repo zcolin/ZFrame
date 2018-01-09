@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 上午9:29
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -32,8 +32,7 @@ public class GrayscaleTransformation implements Transformation<Bitmap> {
     private BitmapPool mBitmapPool;
 
     public GrayscaleTransformation(Context context) {
-        this(Glide.get(context)
-                  .getBitmapPool());
+        this(Glide.get(context).getBitmapPool());
     }
 
     public GrayscaleTransformation(BitmapPool pool) {
@@ -47,8 +46,7 @@ public class GrayscaleTransformation implements Transformation<Bitmap> {
         int width = source.getWidth();
         int height = source.getHeight();
 
-        Bitmap.Config config =
-                source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
+        Bitmap.Config config = source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
         Bitmap bitmap = mBitmapPool.get(width, height, config);
         if (bitmap == null) {
             bitmap = Bitmap.createBitmap(width, height, config);

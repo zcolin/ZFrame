@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -27,8 +29,7 @@ public class LogUtil {
     public static boolean LOG_WRITE                 = false;
     public static int     SDCARD_LOG_FILE_SAVE_DAYS = 30;                            // sd卡中日志文件的最多保存天数
     public static String  MYLOGFILEName             = "Log.txt";                    // 本类输出的日志文件名称
-    public static String  PATH_LOG                  = FramePathConst.getInstance()
-                                                                    .getPathLog();
+    public static String  PATH_LOG                  = FramePathConst.getInstance().getPathLog();
 
     /**
      * 设置文件写入路径
@@ -172,8 +173,7 @@ public class LogUtil {
      * 删除指定日期前的日志文件
      */
     public static void delFile() {
-        long beforeTime = CalendarUtil.addDays(-SDCARD_LOG_FILE_SAVE_DAYS)
-                                      .getTime();
+        long beforeTime = CalendarUtil.addDays(-SDCARD_LOG_FILE_SAVE_DAYS).getTime();
         File dirFile = new File(PATH_LOG);
         File files[] = dirFile.listFiles();
         if (files != null) {

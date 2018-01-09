@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-21 下午12:01
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.http.response;
@@ -42,9 +42,9 @@ public abstract class ZStringResponse extends StringCallback {
      */
     public ZStringResponse(Activity barActy, String barMsg) {
         if (barActy != null) {
-            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity)barActy).getProgressDialog() != null) {
-                proBar = ((BaseFrameActivity)barActy).getProgressDialog();
-            }  else {
+            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity) barActy).getProgressDialog() != null) {
+                proBar = ((BaseFrameActivity) barActy).getProgressDialog();
+            } else {
                 proBar = new ProgressDialog(barActy);
                 proBar.setCancelable(false);
             }

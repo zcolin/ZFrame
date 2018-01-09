@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.app;
 
@@ -33,14 +35,11 @@ public class FramePathConst {
     }
 
     public FramePathConst() {
-        boolean sdCardExist = Environment.getExternalStorageState()
-                                         .equals(Environment.MEDIA_MOUNTED);   //判断sd卡是否存在 
+        boolean sdCardExist = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);   //判断sd卡是否存在 
         if (sdCardExist) {
-            PATH_SDCARD = Environment.getExternalStorageDirectory()
-                                     .getPath();//获取根目录 
+            PATH_SDCARD = Environment.getExternalStorageDirectory().getPath();//获取根目录 
         } else {
-            PATH_SDCARD = Environment.getRootDirectory()
-                                     .getAbsolutePath();//获取根目录
+            PATH_SDCARD = Environment.getRootDirectory().getAbsolutePath();//获取根目录
         }
 
         PATH_SDCARD_APP = PATH_SDCARD + "/frame/";
@@ -75,7 +74,6 @@ public class FramePathConst {
     }
 
     public String getTempFilePath(String suffix) {
-        return getPathTemp() + UUID.randomUUID()
-                                   .toString() + "." + suffix;
+        return getPathTemp() + UUID.randomUUID().toString() + "." + suffix;
     }
 }

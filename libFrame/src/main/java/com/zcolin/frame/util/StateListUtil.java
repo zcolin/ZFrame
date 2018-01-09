@@ -1,3 +1,12 @@
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
+
 package com.zcolin.frame.util;
 
 import android.content.Context;
@@ -76,8 +85,7 @@ public class StateListUtil {
 
         StateListDrawable statesListDrawable = new StateListDrawable();
         for (int i = 0; i < resources.length; i++) {
-            statesListDrawable.addState(states[i], context.getResources()
-                                                          .getDrawable(resources[i]));
+            statesListDrawable.addState(states[i], context.getResources().getDrawable(resources[i]));
         }
         return statesListDrawable;
     }

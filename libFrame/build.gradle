@@ -8,8 +8,8 @@ android {
         abortOnError false
     }
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 24
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
     }
     buildTypes {
         release {
@@ -19,16 +19,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided 'com.android.support:appcompat-v7:24.2.1'
+    compile "com.android.support:appcompat-v7:$supprotVersion"
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'org.greenrobot:greendao:3.2.0'
 }
 

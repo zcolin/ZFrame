@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.db;
 
@@ -72,12 +74,9 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
         }
 
         try {
-            daoSession.runInTx(new Runnable() {
-                @Override
-                public void run() {
-                    for (T object : objects) {
-                        daoSession.insertOrReplace(object);
-                    }
+            daoSession.runInTx(() -> {
+                for (T object : objects) {
+                    daoSession.insertOrReplace(object);
                 }
             });
             flag = true;
@@ -113,12 +112,9 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
             return;
         }
         try {
-            daoSession.runInTx(new Runnable() {
-                @Override
-                public void run() {
-                    for (T object : objects) {
-                        daoSession.update(object);
-                    }
+            daoSession.runInTx(() -> {
+                for (T object : objects) {
+                    daoSession.update(object);
                 }
             });
         } catch (Exception e) {
@@ -164,12 +160,9 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
         }
 
         try {
-            daoSession.runInTx(new Runnable() {
-                @Override
-                public void run() {
-                    for (T object : objects) {
-                        daoSession.delete(object);
-                    }
+            daoSession.runInTx(() -> {
+                for (T object : objects) {
+                    daoSession.delete(object);
                 }
             });
             flag = true;
@@ -183,8 +176,7 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      * 根据ID进行数据库的删除操作
      */
     private <T, K> void deleteById(Class<T> cls, K id) {
-        @SuppressWarnings("unchecked")
-        AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
+        @SuppressWarnings("unchecked") AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
         dao.deleteByKey(id);
     }
 
@@ -193,8 +185,7 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      * 根据ID同步删除数据库操作
      */
     private <T, K> void deleteByIds(Class<T> cls, List<K> ids) {
-        @SuppressWarnings("unchecked")
-        AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
+        @SuppressWarnings("unchecked") AbstractDao<T, K> dao = (AbstractDao<T, K>) daoSession.getDao(cls);
         dao.deleteByKeyInTx(ids);
     }
     /*********************************** 改  end  **********************************************/
@@ -205,8 +196,7 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      * 获得某个表名
      */
     public <T> String getTableName(Class<T> object) {
-        return daoSession.getDao(object)
-                         .getTablename();
+        return daoSession.getDao(object).getTablename();
     }
 
     /**
@@ -217,8 +207,7 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
     public <T> boolean isExitObject(Class<T> object, WhereCondition condition) {
         QueryBuilder<T> qb = daoSession.queryBuilder(object);
         qb.where(condition);
-        long length = qb.buildCount()
-                        .count();
+        long length = qb.buildCount().count();
         return length > 0;
     }
 
@@ -308,16 +297,14 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      * 执行Sql查询语句
      */
     public Cursor rawQuery(String sql, String[] selectionArgs) {
-        return daoSession.getDatabase()
-                         .rawQuery(sql, selectionArgs);
+        return daoSession.getDatabase().rawQuery(sql, selectionArgs);
     }
 
     /**
      * 执行Sql语句
      */
     public void rawQuery(String sql) {
-        daoSession.getDatabase()
-                  .execSQL(sql);
+        daoSession.getDatabase().execSQL(sql);
     }
 
 
@@ -325,7 +312,6 @@ public class DaoHelper<T1 extends AbstractDaoSession> {
      * 执行Sql语句
      */
     public void rawQuery(String sql, Object[] bindArgs) {
-        daoSession.getDatabase()
-                  .execSQL(sql, bindArgs);
+        daoSession.getDatabase().execSQL(sql, bindArgs);
     }
 }

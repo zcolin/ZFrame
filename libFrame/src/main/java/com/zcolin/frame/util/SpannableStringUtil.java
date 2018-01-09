@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.graphics.drawable.Drawable;
@@ -56,8 +58,7 @@ public class SpannableStringUtil {
      * 给某段字符设置下划线
      */
     public static SpannableString underLine(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).underLine(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).underLine(start, end).build();
     }
 
     /**
@@ -85,8 +86,7 @@ public class SpannableStringUtil {
      * 给某段字符设置下划线
      */
     public static SpannableString strikethroughLine(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).strikethroughLine(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).strikethroughLine(start, end).build();
     }
 
     /**
@@ -116,8 +116,7 @@ public class SpannableStringUtil {
      * 给某段字符设置点击事件
      */
     public static SpannableString clickable(SpannableString sp, int start, int end, final View.OnClickListener clickListener) {
-        return new SpannableStringUtil.Builder(sp).clickable(start, end, clickListener)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).clickable(start, end, clickListener).build();
     }
 
     /**
@@ -160,8 +159,7 @@ public class SpannableStringUtil {
      *            （6）网络以"http://"打头，比如"http://www.google.com"
      */
     public static SpannableString link(SpannableString sp, int start, int end, String url) {
-        return new SpannableStringUtil.Builder(sp).link(start, end, url)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).link(start, end, url).build();
     }
 
     /**
@@ -193,16 +191,14 @@ public class SpannableStringUtil {
      * @param highlightColor 高亮颜色
      */
     public static SpannableString highLight(String str, int highlightColor) {
-        return new SpannableStringUtil.Builder(str).highLight(0, str.length(), highlightColor)
-                                                   .build();
+        return new SpannableStringUtil.Builder(str).highLight(0, str.length(), highlightColor).build();
     }
 
     /**
      * 高亮整段字符串
      */
     public static SpannableString highLight(SpannableString sp, int start, int end, int highlightColor) {
-        return new SpannableStringUtil.Builder(sp).highLight(start, end, highlightColor)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).highLight(start, end, highlightColor).build();
     }
 
 
@@ -232,8 +228,7 @@ public class SpannableStringUtil {
      * 给一段文字设置背景色
      */
     public static SpannableString backgroundColor(SpannableString sp, int start, int end, int basckgroundColor) {
-        return new SpannableStringUtil.Builder(sp).backgroundColor(start, end, basckgroundColor)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).backgroundColor(start, end, basckgroundColor).build();
     }
 
 
@@ -265,8 +260,7 @@ public class SpannableStringUtil {
      * 给一段文字设置字号
      */
     public static SpannableString textSize(SpannableString sp, int start, int end, int textSize) {
-        return new SpannableStringUtil.Builder(sp).textSize(start, end, textSize)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).textSize(start, end, textSize).build();
     }
 
     /**
@@ -294,8 +288,7 @@ public class SpannableStringUtil {
      * 给一段文字设置下标
      */
     public static SpannableString subScript(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).subScript(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).subScript(start, end).build();
     }
 
 
@@ -307,16 +300,14 @@ public class SpannableStringUtil {
      */
     public static SpannableString superScript(String str, String superScriptStr) {
         int start = str.indexOf(superScriptStr);
-        return new SpannableStringUtil.Builder(str).superScript(start, start + superScriptStr.length())
-                                                   .build();
+        return new SpannableStringUtil.Builder(str).superScript(start, start + superScriptStr.length()).build();
     }
 
     /**
      * 给一段文字设置上标
      */
     public static SpannableString superScript(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).superScript(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).superScript(start, end).build();
     }
 
     /**
@@ -344,8 +335,7 @@ public class SpannableStringUtil {
      * 给一段文字设置加粗
      */
     public static SpannableString bold(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).bold(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).bold(start, end).build();
     }
 
     /**
@@ -373,8 +363,7 @@ public class SpannableStringUtil {
      * 给一段文字设置斜体
      */
     public static SpannableString italic(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).italic(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).italic(start, end).build();
     }
 
     /**
@@ -402,8 +391,7 @@ public class SpannableStringUtil {
      * 给一段文字设置斜体加粗
      */
     public static SpannableString italicBold(SpannableString sp, int start, int end) {
-        return new SpannableStringUtil.Builder(sp).italicBold(start, end)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).italicBold(start, end).build();
     }
 
     /**
@@ -432,8 +420,7 @@ public class SpannableStringUtil {
      * 给一段文字设置Style
      */
     public static SpannableString style(SpannableString sp, int start, int end, int textApperence) {
-        return new SpannableStringUtil.Builder(sp).style(start, end, textApperence)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).style(start, end, textApperence).build();
     }
 
     /**
@@ -462,8 +449,7 @@ public class SpannableStringUtil {
      * 插入图片
      */
     public static SpannableString image(SpannableString sp, int start, int end, Drawable drawable) {
-        return new SpannableStringUtil.Builder(sp).image(start, end, drawable)
-                                                  .build();
+        return new SpannableStringUtil.Builder(sp).image(start, end, drawable).build();
     }
 
 

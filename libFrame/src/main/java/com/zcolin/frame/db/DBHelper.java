@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.db;
 
@@ -148,8 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return true if success
      */
-    public static synchronized boolean insertWithTransaction(String table, String nullColumnHack,
-                                                             List<ContentValues> listValues) {
+    public static synchronized boolean insertWithTransaction(String table, String nullColumnHack, List<ContentValues> listValues) {
         SQLiteDatabase dataBase = DBHelper.getInstance().dataBase;
         if (dataBase == null || listValues == null || listValues.size() == 0) {
             return false;
@@ -176,8 +177,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @return true if success
      */
-    public static synchronized long update(String table, ContentValues values,
-                                           String whereCaseValue, String[] whereArgs) {
+    public static synchronized long update(String table, ContentValues values, String whereCaseValue, String[] whereArgs) {
         SQLiteDatabase dataBase = DBHelper.getInstance().dataBase;
         if (dataBase == null) {
             return -1;

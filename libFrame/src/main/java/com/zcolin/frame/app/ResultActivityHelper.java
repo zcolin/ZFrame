@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-22 上午9:50
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.app;
 
 import android.app.Activity;
@@ -13,9 +15,9 @@ import android.util.SparseArray;
 
 /**
  * 用于管理startActivityForResult, 可以实现不需要重写onActivityResult，直接通过回调函数回调
- * 
- * @see BaseFrameActivity#startActivityWithCallback(Intent, ResultActivityListener) 
- * @see BaseFrameFrag#startActivityWithCallback(Intent, ResultActivityListener) 
+ *
+ * @see BaseFrameActivity#startActivityWithCallback(Intent, ResultActivityListener)
+ * @see BaseFrameFrag#startActivityWithCallback(Intent, ResultActivityListener)
  */
 
 public class ResultActivityHelper {
@@ -55,6 +57,6 @@ public class ResultActivityHelper {
     }
 
     public interface ResultActivityListener {
-        public void onResult(int resultCode, Intent data);
+        void onResult(int resultCode, Intent data);
     }
 }

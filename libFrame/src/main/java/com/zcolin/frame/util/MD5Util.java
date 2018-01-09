@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -56,8 +58,7 @@ public class MD5Util {
             messageDigest.reset();
             messageDigest.update(arrbyte);
             byte[] byteArray = messageDigest.digest();
-            strMd5 = ByteUtil.toHexString(byteArray)
-                             .toString();
+            strMd5 = ByteUtil.toHexString(byteArray).toString();
         } catch (Exception e) {
             strMd5 = "";
         }
@@ -85,8 +86,7 @@ public class MD5Util {
             MappedByteBuffer byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
             messageDigest.update(byteBuffer);
             byte[] byteArray = messageDigest.digest();
-            strMd5 = ByteUtil.toHexString(byteArray)
-                             .toString();
+            strMd5 = ByteUtil.toHexString(byteArray).toString();
         } catch (Exception e) {
             strMd5 = "";
         } finally {

@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 上午9:29
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -47,13 +47,9 @@ public class GetDiskCacheSizeTask extends AsyncTask<File, Long, Long> {
             return totalSize;
         } catch (RuntimeException ex) {
             final String message = String.format("Cannot get size of %s: %s", Arrays.toString(dirs), ex);
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    resultView.setText("0M");
-                    Toast.makeText(resultView.getContext(), message, Toast.LENGTH_LONG)
-                         .show();
-                }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                resultView.setText("0M");
+                Toast.makeText(resultView.getContext(), message, Toast.LENGTH_LONG).show();
             });
         }
         return 0L;

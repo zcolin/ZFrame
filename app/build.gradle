@@ -11,7 +11,7 @@ android {
         //daoPackage 'com.greendao.gen'  //dao包名
         //targetGenDir 'src/main/java'  //生成目录
     }
-    
+
     //lint配置
     lintOptions {
         checkReleaseBuilds false
@@ -46,15 +46,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':libFrame')
 
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile "com.android.support:appcompat-v7:$supprotVersion"
 }
 
 

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.cookie.store;
 
@@ -63,12 +65,12 @@ public class PersistentCookieStore implements CookieStore {
      */
     public PersistentCookieStore(Context context) {
         cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
-        cookies = new HashMap<String, ConcurrentHashMap<String, Cookie>>();
+        cookies = new HashMap<>();
 
         // Load any previously stored cookies into the store
         Map<String, ?> prefsMap = cookiePrefs.getAll();
         for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            if (((String) entry.getValue()) != null && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX)) {
+            if (entry.getValue() != null && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX)) {
                 String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
                 for (String name : cookieNames) {
                     String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
@@ -76,9 +78,8 @@ public class PersistentCookieStore implements CookieStore {
                         Cookie decodedCookie = decodeCookie(encodedCookie);
                         if (decodedCookie != null) {
                             if (!cookies.containsKey(entry.getKey()))
-                                cookies.put(entry.getKey(), new ConcurrentHashMap<String, Cookie>());
-                            cookies.get(entry.getKey())
-                                   .put(name, decodedCookie);
+                                cookies.put(entry.getKey(), new ConcurrentHashMap<>());
+                            cookies.get(entry.getKey()).put(name, decodedCookie);
                         }
                     }
                 }
@@ -96,14 +97,12 @@ public class PersistentCookieStore implements CookieStore {
 
         if (cookie.persistent()) {
             if (!cookies.containsKey(uri.host())) {
-                cookies.put(uri.host(), new ConcurrentHashMap<String, Cookie>());
+                cookies.put(uri.host(), new ConcurrentHashMap<>());
             }
-            cookies.get(uri.host())
-                   .put(name, cookie);
+            cookies.get(uri.host()).put(name, cookie);
         } else {
             if (cookies.containsKey(uri.host())) {
-                cookies.get(uri.host())
-                       .remove(name);
+                cookies.get(uri.host()).remove(name);
             } else {
                 return;
             }
@@ -111,8 +110,7 @@ public class PersistentCookieStore implements CookieStore {
 
         // Save cookie into persistent store
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-        prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host())
-                                                                     .keySet()));
+        prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host()).keySet()));
         prefsWriter.putString(COOKIE_NAME_PREFIX + name, encodeCookie(new SerializableHttpCookie(cookie)));
         prefsWriter.apply();
     }
@@ -130,10 +128,9 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public List<Cookie> get(HttpUrl uri) {
-        ArrayList<Cookie> ret = new ArrayList<Cookie>();
+        ArrayList<Cookie> ret = new ArrayList<>();
         if (cookies.containsKey(uri.host())) {
-            Collection<Cookie> cookies = this.cookies.get(uri.host())
-                                                     .values();
+            Collection<Cookie> cookies = this.cookies.get(uri.host()).values();
             for (Cookie cookie : cookies) {
                 if (isCookieExpired(cookie)) {
                     remove(uri, cookie);
@@ -160,17 +157,14 @@ public class PersistentCookieStore implements CookieStore {
     public boolean remove(HttpUrl uri, Cookie cookie) {
         String name = getCookieToken(cookie);
 
-        if (cookies.containsKey(uri.host()) && cookies.get(uri.host())
-                                                      .containsKey(name)) {
-            cookies.get(uri.host())
-                   .remove(name);
+        if (cookies.containsKey(uri.host()) && cookies.get(uri.host()).containsKey(name)) {
+            cookies.get(uri.host()).remove(name);
 
             SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
             if (cookiePrefs.contains(COOKIE_NAME_PREFIX + name)) {
                 prefsWriter.remove(COOKIE_NAME_PREFIX + name);
             }
-            prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host())
-                                                                         .keySet()));
+            prefsWriter.putString(uri.host(), TextUtils.join(",", cookies.get(uri.host()).keySet()));
             prefsWriter.apply();
 
             return true;
@@ -181,10 +175,9 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public List<Cookie> getCookies() {
-        ArrayList<Cookie> ret = new ArrayList<Cookie>();
+        ArrayList<Cookie> ret = new ArrayList<>();
         for (String key : cookies.keySet())
-            ret.addAll(cookies.get(key)
-                              .values());
+            ret.addAll(cookies.get(key).values());
 
         return ret;
     }
@@ -237,8 +230,7 @@ public class PersistentCookieStore implements CookieStore {
             }
             sb.append(Integer.toHexString(v));
         }
-        return sb.toString()
-                 .toUpperCase(Locale.US);
+        return sb.toString().toUpperCase(Locale.US);
     }
 
     /**

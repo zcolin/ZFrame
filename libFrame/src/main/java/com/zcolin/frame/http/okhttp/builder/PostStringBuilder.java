@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.builder;
 
@@ -17,7 +19,7 @@ import okhttp3.MediaType;
  * Created by zhy on 15/12/14.
  */
 public class PostStringBuilder extends OkHttpRequestBuilder<PostStringBuilder> {
-    private String    content;
+    private String content;
 
     public PostStringBuilder content(String content) {
         this.content = content;

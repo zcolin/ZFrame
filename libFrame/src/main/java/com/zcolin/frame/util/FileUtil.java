@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -69,8 +71,8 @@ public class FileUtil {
             } else if (file.isDirectory()) {
                 File files[] = file.listFiles();
                 if (files != null) {
-                    for (int i = 0; i < files.length; i++) {
-                        delete(files[i]);
+                    for (File file1 : files) {
+                        delete(file1);
                     }
                 }
                 file.delete();
@@ -198,8 +200,7 @@ public class FileUtil {
         if (isIgnore || !file.exists()) {
             InputStream input;
             try {
-                input = context.getResources()
-                               .openRawResource(rawID);
+                input = context.getResources().openRawResource(rawID);
                 copyFile(input, file);
                 flag = true;
             } catch (IOException e) {
@@ -239,9 +240,7 @@ public class FileUtil {
     public static void copyDirFromAssets(Context context, String assetDir, String targetDir) {
         String[] files;
         try {
-            files = context.getResources()
-                           .getAssets()
-                           .list(assetDir);
+            files = context.getResources().getAssets().list(assetDir);
         } catch (IOException e1) {
             return;
         }
@@ -265,8 +264,7 @@ public class FileUtil {
         File outFile = new File(targetPath);
         InputStream in;
         try {
-            in = context.getAssets()
-                        .open(assetPath);
+            in = context.getAssets().open(assetPath);
             copyFile(in, outFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -424,8 +422,7 @@ public class FileUtil {
             String[] projection = {"_data"};
             Cursor cursor = null;
             try {
-                cursor = context.getContentResolver()
-                                .query(uri, projection, null, null, null);
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
                 int column_index = cursor.getColumnIndexOrThrow("_data");
                 if (cursor.moveToFirst()) {
                     return cursor.getString(column_index);

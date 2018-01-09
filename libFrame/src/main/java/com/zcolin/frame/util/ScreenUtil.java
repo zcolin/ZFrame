@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.annotation.TargetApi;
@@ -40,7 +42,7 @@ public class ScreenUtil {
         int height = outMetrics.heightPixels;
         return height > width ? width : height;
     }
-    
+
     /**
      * 获取屏幕宽度
      */

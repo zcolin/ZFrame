@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.app;
 
@@ -127,7 +129,7 @@ public abstract class BaseFrameFrag extends Fragment {
     public <T extends View> T getView(int resId) {
         T view = (T) mViews.get(resId);
         if (view == null) {
-            view = (T) rootView.findViewById(resId);
+            view = rootView.findViewById(resId);
             mViews.put(resId, view);
         }
         return view;

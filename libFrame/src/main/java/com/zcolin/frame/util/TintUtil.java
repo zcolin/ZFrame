@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-21 下午3:17
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.content.Context;
@@ -16,8 +18,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
  */
 public class TintUtil {
     public static Drawable tintDrawable(Context context, int resDrawable, int color) {
-        return tintDrawable(context.getResources()
-                                   .getDrawable(resDrawable), ColorStateList.valueOf(color));
+        return tintDrawable(context.getResources().getDrawable(resDrawable), ColorStateList.valueOf(color));
     }
 
     public static Drawable tintDrawable(Drawable drawable, int color) {
@@ -28,16 +29,14 @@ public class TintUtil {
      * 不改变原来内存中的图片状态，另起一份
      */
     public static Drawable tintDrawable(Drawable drawable, ColorStateList colors) {
-        final Drawable wrappedDrawable = DrawableCompat.wrap(drawable)
-                                                       .mutate();
+        final Drawable wrappedDrawable = DrawableCompat.wrap(drawable).mutate();
         DrawableCompat.setTintList(wrappedDrawable, colors);
         return wrappedDrawable;
     }
 
 
     public static Drawable tintDrawableWithMemory(Context context, int resDrawable, int color) {
-        return tintDrawableWithMemory(context.getResources()
-                                             .getDrawable(resDrawable), ColorStateList.valueOf(color));
+        return tintDrawableWithMemory(context.getResources().getDrawable(resDrawable), ColorStateList.valueOf(color));
     }
 
     public static Drawable tintDrawableWithMemory(Drawable drawable, int color) {

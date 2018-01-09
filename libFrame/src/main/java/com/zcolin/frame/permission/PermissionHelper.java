@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-14 上午10:47
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.permission;
@@ -26,24 +26,21 @@ public class PermissionHelper {
      */
     public static void requestPermission(Object context, String[] arrayPermission, PermissionsResultAction action) {
         if (context instanceof BaseFrameActivity) {
-            PermissionsManager.getInstance()
-                              .requestPermissionsIfNecessaryForResult((BaseFrameActivity) context, arrayPermission, action);
+            PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult((BaseFrameActivity) context, arrayPermission, action);
         } else if (context instanceof BaseFrameFrag) {
-            PermissionsManager.getInstance()
-                              .requestPermissionsIfNecessaryForResult((BaseFrameFrag) context, arrayPermission, action);
+            PermissionsManager.getInstance().requestPermissionsIfNecessaryForResult((BaseFrameFrag) context, arrayPermission, action);
         } else {
             throw new IllegalArgumentException("context 必须是BaseFrameFrag或者BaseFrameActivity的子类");
         }
     }
 
-    /** 
+    /**
      * 申请定位权限
      *
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestLocationPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, action);
+        requestPermission(context, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, action);
     }
 
     /**
@@ -52,8 +49,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestWriteSdCardPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, action);
+        requestPermission(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, action);
     }
 
     /**
@@ -62,8 +58,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadSdCardPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, action);
+        requestPermission(context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, action);
     }
 
     /**
@@ -72,8 +67,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadWriteSdCardPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, action);
+        requestPermission(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, action);
     }
 
     /**
@@ -82,8 +76,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestCameraPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.CAMERA}, action);
+        requestPermission(context, new String[]{Manifest.permission.CAMERA}, action);
     }
 
     /**
@@ -92,8 +85,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadContactsPermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.READ_CONTACTS}, action);
+        requestPermission(context, new String[]{Manifest.permission.READ_CONTACTS}, action);
     }
 
     /**
@@ -102,8 +94,7 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestReadPhoneStatePermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.READ_PHONE_STATE}, action);
+        requestPermission(context, new String[]{Manifest.permission.READ_PHONE_STATE}, action);
     }
 
     /**
@@ -112,7 +103,6 @@ public class PermissionHelper {
      * @param context 只能是BaseFrameActivity或者BaseFrameFrag 的子类
      */
     public static void requestCallPhonePermission(Object context, PermissionsResultAction action) {
-        requestPermission(context,
-                new String[]{Manifest.permission.CALL_PHONE}, action);
+        requestPermission(context, new String[]{Manifest.permission.CALL_PHONE}, action);
     }
 }

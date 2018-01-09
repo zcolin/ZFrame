@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-11 上午10:04
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 package com.zcolin.frame.util;
 
@@ -61,8 +61,7 @@ public final class RegexUtil {
 
     public static boolean isVehicleNo(String vehicleNo) {
         Pattern pattern = Pattern.compile("^[\u4e00-\u9fa5]{1}[a-zA-Z]{1}[a-zA-Z_0-9]{5}$");
-        return pattern.matcher(vehicleNo)
-                      .find();
+        return pattern.matcher(vehicleNo).find();
 
     }
 
@@ -228,8 +227,7 @@ public final class RegexUtil {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean isVideo(String str) {
-        String regex = "^(.*)\\.(mpeg-4|h.264|h.265|rmvb|xvid|vp6|h.263|mpeg-1|mpeg-2|avi|" +
-                "mov|mkv|flv|3gp|3g2|asf|wmv|mp4|m4v|tp|ts|mtp|m2t)$";
+        String regex = "^(.*)\\.(mpeg-4|h.264|h.265|rmvb|xvid|vp6|h.263|mpeg-1|mpeg-2|avi|" + "mov|mkv|flv|3gp|3g2|asf|wmv|mp4|m4v|tp|ts|mtp|m2t)$";
         return Pattern.matches(regex, str);
     }
 

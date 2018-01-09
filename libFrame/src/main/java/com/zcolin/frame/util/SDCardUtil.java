@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.util;
 
@@ -24,8 +26,7 @@ public class SDCardUtil {
      * 判断SDCard是否可用
      */
     public static boolean isSDCardEnable() {
-        return Environment.getExternalStorageState()
-                          .equals(Environment.MEDIA_MOUNTED);
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 
     }
 
@@ -33,8 +34,7 @@ public class SDCardUtil {
      * 获取SD卡路径
      */
     public static String getSDCardPath() {
-        return Environment.getExternalStorageDirectory()
-                          .getAbsolutePath() + File.separator;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
     }
 
     /**
@@ -62,18 +62,17 @@ public class SDCardUtil {
         if (filePath.startsWith(getSDCardPath())) {
             filePath = getSDCardPath();
         } else {// 如果是内部存储的路径，则获取内存存储的可用容量
-            filePath = Environment.getDataDirectory()
-                                  .getAbsolutePath();
+            filePath = Environment.getDataDirectory().getAbsolutePath();
         }
         StatFs stat = new StatFs(filePath);
         long availableBlocks = (long) stat.getAvailableBlocks() - 4;
         return stat.getBlockSize() * availableBlocks;
     }
+
     /**
      * 获取系统存储路径
      */
     public static String getRootDirectoryPath() {
-        return Environment.getRootDirectory()
-                          .getAbsolutePath() + File.separator;
+        return Environment.getRootDirectory().getAbsolutePath() + File.separator;
     }
 }

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.content.Context;
@@ -27,7 +29,7 @@ public class AppSigningUtil {
      * 返回一个签名的对应类型的字符串
      */
     public static ArrayList<String> getSingInfo(Context context, String packageName, String type) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         try {
             Signature[] signs = getSignatures(context, packageName);
             for (Signature sig : signs) {
@@ -53,8 +55,7 @@ public class AppSigningUtil {
     public static Signature[] getSignatures(Context context, String packageName) {
         PackageInfo packageInfo = null;
         try {
-            packageInfo = context.getPackageManager()
-                                 .getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
             return packageInfo.signatures;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

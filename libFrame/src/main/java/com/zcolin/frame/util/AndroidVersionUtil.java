@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-9-6 下午4:52
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 package com.zcolin.frame.util;

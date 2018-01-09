@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-11 上午10:31
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.util;
@@ -22,8 +22,6 @@ public class UriUtil {
 
     /**
      * 将 content://media/external/images/media/32073 格式路径转为文件绝对路径
-     * @param uri
-     * @return
      */
     public static String convertToFilePath(Context context, Uri uri) {
         String[] proj = {MediaStore.Images.Media.DATA};

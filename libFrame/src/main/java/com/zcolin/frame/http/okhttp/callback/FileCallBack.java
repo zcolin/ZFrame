@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.callback;
 
@@ -45,10 +47,8 @@ public abstract class FileCallBack extends Callback<File> {
         int len = 0;
         FileOutputStream fos = null;
         try {
-            is = response.body()
-                         .byteStream();
-            final long total = response.body()
-                                       .contentLength();
+            is = response.body().byteStream();
+            final long total = response.body().contentLength();
 
             long sum = 0;
 
@@ -58,14 +58,7 @@ public abstract class FileCallBack extends Callback<File> {
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
-                OkHttpUtils.getInstance()
-                           .getHandler()
-                           .post(new Runnable() {
-                               @Override
-                               public void run() {
-                                   onProgress(finalSum * 1.0f / total, total);
-                               }
-                           });
+                OkHttpUtils.getInstance().getHandler().post(() -> onProgress(finalSum * 1.0f / total, total));
             }
             fos.flush();
 
@@ -73,8 +66,7 @@ public abstract class FileCallBack extends Callback<File> {
 
         } finally {
             try {
-                response.body()
-                        .close();
+                response.body().close();
                 if (is != null)
                     is.close();
             } catch (IOException e) {

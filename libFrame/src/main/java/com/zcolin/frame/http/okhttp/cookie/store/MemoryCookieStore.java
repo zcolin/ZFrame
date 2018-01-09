@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.cookie.store;
 
@@ -30,11 +32,9 @@ public class MemoryCookieStore implements CookieStore {
             Iterator<Cookie> itNew = cookies.iterator();
             Iterator<Cookie> itOld = oldCookies.iterator();
             while (itNew.hasNext()) {
-                String va = itNew.next()
-                                 .name();
+                String va = itNew.next().name();
                 while (va != null && itOld.hasNext()) {
-                    String v = itOld.next()
-                                    .name();
+                    String v = itOld.next().name();
                     if (v != null && va.equals(v)) {
                         itOld.remove();
                     }
@@ -79,10 +79,7 @@ public class MemoryCookieStore implements CookieStore {
     @Override
     public boolean remove(HttpUrl uri, Cookie cookie) {
         List<Cookie> cookies = allCookies.get(uri.host());
-        if (cookie != null) {
-            return cookies.remove(cookie);
-        }
-        return false;
+        return cookie != null && cookies.remove(cookie);
     }
 
 

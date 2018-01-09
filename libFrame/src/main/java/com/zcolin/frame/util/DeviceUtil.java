@@ -1,3 +1,12 @@
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
+
 package com.zcolin.frame.util;
 
 import android.app.KeyguardManager;
@@ -31,8 +40,7 @@ public class DeviceUtil {
     public static String getUUID() {
         String str = SPUtil.getString("device_app_uuid", null);
         if (str == null) {
-            str = UUID.randomUUID()
-                      .toString();
+            str = UUID.randomUUID().toString();
             SPUtil.putString("device_app_uuid", str);
         }
         return str;
@@ -117,8 +125,8 @@ public class DeviceUtil {
     public static void acquireWakeLock(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if (!pm.isScreenOn()) {
-            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                    PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
+                    "SimpleTimer");
             if (!wl.isHeld()) {
                 wl.acquire();
                 wl.release();

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.builder;
 
@@ -45,9 +47,9 @@ public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
         return (T) this;
     }
 
-    public T mimeType(String mimeType){
+    public T mimeType(String mimeType) {
         this.mimeType = mimeType;
-        return (T)this;
+        return (T) this;
     }
 
     public T addHeader(String key, String val) {

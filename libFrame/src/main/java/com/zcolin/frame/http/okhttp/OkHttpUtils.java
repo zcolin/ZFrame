@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp;
 
@@ -106,60 +108,55 @@ public class OkHttpUtils {
         final Callback finalCallback = callback;
         // final int id = requestCall.getOkHttpRequest().getId();
 
-        requestCall.getCall()
-                   .enqueue(new okhttp3.Callback() {
-                       @Override
-                       public void onFailure(Call call, final IOException e) {
-                           if (call.isCanceled()) {
-                               sendCancelResultCallback(finalCallback);
-                               return;
-                           }
-                           sendFailResultCallback(0, call, e, finalCallback);
-                       }
+        requestCall.getCall().enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                if (call.isCanceled()) {
+                    sendCancelResultCallback(finalCallback);
+                    return;
+                }
+                sendFailResultCallback(0, call, e, finalCallback);
+            }
 
-                       @Override
-                       public void onResponse(final Call call, final Response response) {
-                           try {
-                               if (call.isCanceled()) {
-                                   sendCancelResultCallback(finalCallback);
-                                   return;
-                               }
+            @Override
+            public void onResponse(final Call call, final Response response) {
+                try {
+                    if (call.isCanceled()) {
+                        sendCancelResultCallback(finalCallback);
+                        return;
+                    }
 
-                               if (!finalCallback.validateReponse(response)) {
-                                   sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), 
-                                           finalCallback);
-                                   return;
-                               }
+                    if (!finalCallback.validateReponse(response)) {
+                        sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), 
+                                finalCallback);
+                        return;
+                    }
 
-                               Object o = finalCallback.parseNetworkResponse(response);
-                               sendSuccessResultCallback(response, o, finalCallback);
-                           } catch (IOException e) {
-                               if ("Canceled".equals(e.getMessage())) {
-                                   sendCancelResultCallback(finalCallback);
-                               } else {
-                                   sendFailResultCallback(response.code(), call, e, finalCallback);
-                               }
-                           } catch (Exception e) {
-                               sendFailResultCallback(response.code(), call, e, finalCallback);
-                           } finally {
-                               if (response.body() != null)
-                                   response.body()
-                                           .close();
-                           }
+                    Object o = finalCallback.parseNetworkResponse(response);
+                    sendSuccessResultCallback(response, o, finalCallback);
+                } catch (IOException e) {
+                    if ("Canceled".equals(e.getMessage())) {
+                        sendCancelResultCallback(finalCallback);
+                    } else {
+                        sendFailResultCallback(response.code(), call, e, finalCallback);
+                    }
+                } catch (Exception e) {
+                    sendFailResultCallback(response.code(), call, e, finalCallback);
+                } finally {
+                    if (response.body() != null)
+                        response.body().close();
+                }
 
-                       }
-                   });
+            }
+        });
     }
 
     public void sendCancelResultCallback(final Callback callback) {
         if (callback == null)
             return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                callback.onCanceled();
-                callback.onFinished();
-            }
+        handler.post(() -> {
+            callback.onCanceled();
+            callback.onFinished();
         });
     }
 
@@ -167,39 +164,29 @@ public class OkHttpUtils {
         if (callback == null)
             return;
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                callback.onError(code, call, e);
-                callback.onFinished();
-            }
+        handler.post(() -> {
+            callback.onError(code, call, e);
+            callback.onFinished();
         });
     }
 
     public void sendSuccessResultCallback(final Response response, final Object object, final Callback callback) {
         if (callback == null)
             return;
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                callback.onSuccess(response, object);
-                callback.onFinished();
-            }
+        handler.post(() -> {
+            callback.onSuccess(response, object);
+            callback.onFinished();
         });
     }
 
     public void cancelTag(Object tag) {
-        for (Call call : mOkHttpClient.dispatcher()
-                                      .queuedCalls()) {
-            if (tag.equals(call.request()
-                               .tag())) {
+        for (Call call : mOkHttpClient.dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
         }
-        for (Call call : mOkHttpClient.dispatcher()
-                                      .runningCalls()) {
-            if (tag.equals(call.request()
-                               .tag())) {
+        for (Call call : mOkHttpClient.dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
         }

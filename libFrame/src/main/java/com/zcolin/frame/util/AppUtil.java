@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 package com.zcolin.frame.util;
 
 import android.app.Activity;
@@ -65,14 +67,10 @@ public class AppUtil {
     public static void restartSystem(final Activity acty, final Class<?> cls) {
         quitSystem();
         if (cls != null) {
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    Intent intent = new Intent(acty, cls);
-                    intent.putExtra("notPlaySplash", true);
-                    acty.startActivity(intent);
-                }
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(acty, cls);
+                intent.putExtra("notPlaySplash", true);
+                acty.startActivity(intent);
             }, 500);
         }
     }
@@ -103,8 +101,7 @@ public class AppUtil {
      */
     public static String getAppLabel(Context context, ApplicationInfo info) {
         PackageManager pManager = context.getPackageManager();
-        return pManager.getApplicationLabel(info)
-                       .toString();
+        return pManager.getApplicationLabel(info).toString();
     }
 
     /**
@@ -134,8 +131,7 @@ public class AppUtil {
     public static Bundle getApplicationMetaData(Context context) {
         Bundle bundle = null;
         try {
-            ApplicationInfo appInfo = context.getPackageManager()
-                                             .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             bundle = appInfo.metaData;
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,9 +144,7 @@ public class AppUtil {
      */
     public static String getActivityMetaData(Activity activity, String key) {
         try {
-            return activity.getPackageManager()
-                           .getActivityInfo(activity.getComponentName(), PackageManager.GET_META_DATA)
-                    .metaData.getString(key);
+            return activity.getPackageManager().getActivityInfo(activity.getComponentName(), PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -164,9 +158,7 @@ public class AppUtil {
      */
     public static String getServiceMetaData(Context context, Class<? extends Service> serviceClazz, String key) {
         try {
-            return context.getPackageManager()
-                          .getServiceInfo(new ComponentName(context, serviceClazz), PackageManager.GET_META_DATA)
-                    .metaData.getString(key);
+            return context.getPackageManager().getServiceInfo(new ComponentName(context, serviceClazz), PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -180,9 +172,7 @@ public class AppUtil {
      */
     public static String getBroadCasetMetaData(Context context, Class<? extends BroadcastReceiver> receiverClazz, String key) {
         try {
-            return context.getPackageManager()
-                          .getReceiverInfo(new ComponentName(context, receiverClazz), PackageManager.GET_META_DATA)
-                    .metaData.getString(key);
+            return context.getPackageManager().getReceiverInfo(new ComponentName(context, receiverClazz), PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -320,8 +310,7 @@ public class AppUtil {
         List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(Integer.MAX_VALUE);
         int size = serviceList.size();
         for (int i = 0; i < size; i++) {
-            if (serviceList.get(i).service.getClassName()
-                                          .equals(clazz.getName())) {
+            if (serviceList.get(i).service.getClassName().equals(clazz.getName())) {
                 isRun = true;
                 break;
             }
@@ -361,11 +350,10 @@ public class AppUtil {
      * 获取应用程序下所有Activity
      */
     public static ArrayList<ActivityInfo> getAppAllActivities(Context ctx) {
-        ArrayList<ActivityInfo> result = new ArrayList<ActivityInfo>();
+        ArrayList<ActivityInfo> result = new ArrayList<>();
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.setPackage(ctx.getPackageName());
-        for (ResolveInfo info : ctx.getPackageManager()
-                                   .queryIntentActivities(intent, 0)) {
+        for (ResolveInfo info : ctx.getPackageManager().queryIntentActivities(intent, 0)) {
             result.add(info.activityInfo);
         }
         return result;
@@ -387,8 +375,7 @@ public class AppUtil {
     public static boolean isInstall(Context context, String packageName) {
         PackageInfo packageInfo = null;
         try {
-            packageInfo = context.getPackageManager()
-                                 .getPackageInfo(packageName, 0);
+            packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
             //            e.printStackTrace();
         }
@@ -399,7 +386,7 @@ public class AppUtil {
      * 查询手机内非系统应用
      */
     public static List<PackageInfo> getAllNoSystemApps(Context context) {
-        List<PackageInfo> apps = new ArrayList<PackageInfo>();
+        List<PackageInfo> apps = new ArrayList<>();
         PackageManager pManager = context.getPackageManager();
         //获取手机内所有应用
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
@@ -474,8 +461,7 @@ public class AppUtil {
     public static String getSourcePath(Context context, String packageName) {
         ApplicationInfo appInfo = null;
         try {
-            appInfo = context.getPackageManager()
-                             .getApplicationInfo(packageName, 0);
+            appInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
             return appInfo.sourceDir;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

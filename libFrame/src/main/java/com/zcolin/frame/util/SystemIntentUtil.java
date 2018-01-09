@@ -1,10 +1,10 @@
 /*
- * **********************************************************
- *   author   colin
- *   company  fosung
- *   email    wanglin2046@126.com
- *   date     16-10-14 下午1:54
  * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
  */
 
 package com.zcolin.frame.util;
@@ -18,7 +18,6 @@ import android.provider.MediaStore;
 import com.zcolin.frame.app.BaseFrameActivity;
 import com.zcolin.frame.app.BaseFrameFrag;
 import com.zcolin.frame.app.FramePathConst;
-import com.zcolin.frame.app.ResultActivityHelper;
 import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
 
@@ -37,8 +36,7 @@ public class SystemIntentUtil {
      * 名称为：TEMP_PATH/zz_takephoto_yyyy-MM-dd HH:mm:ss.jpg
      */
     public static String getTempTakePhotoPath() {
-        return FramePathConst.getInstance()
-                             .getPathTemp() + "zz_takephoto_" + CalendarUtil.getDateTime() + ".jpg";
+        return FramePathConst.getInstance().getPathTemp() + "zz_takephoto_" + CalendarUtil.getDateTime() + ".jpg";
     }
 
     /**
@@ -53,50 +51,44 @@ public class SystemIntentUtil {
             return;
         }
 
-        PermissionHelper.requestPermission(object,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
-                    @Override
-                    public void onGranted() {
-                        FileUtil.checkFilePath(savePath, false);
-                        final Uri uri = getUriFromPath(savePath);
-                        if (uri != null) {
-                            final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                            if (object instanceof BaseFrameActivity) {
-                                ((BaseFrameActivity) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                                    @Override
-                                    public void onResult(int resultCode, Intent data) {
-                                        if (onCompleteLisenter != null) {
-                                            if (resultCode == Activity.RESULT_OK) {
-                                                onCompleteLisenter.onSelected(uri);
-                                            } else {
-                                                onCompleteLisenter.onCancel();
-                                            }
-                                        }
-                                    }
-                                });
-                            } else if (object instanceof BaseFrameFrag) {
-                                ((BaseFrameFrag) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                                    @Override
-                                    public void onResult(int resultCode, Intent data) {
-                                        if (onCompleteLisenter != null) {
-                                            if (resultCode == Activity.RESULT_OK) {
-                                                onCompleteLisenter.onSelected(uri);
-                                            } else {
-                                                onCompleteLisenter.onCancel();
-                                            }
-                                        }
-                                    }
-                                });
+        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new 
+                PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+                FileUtil.checkFilePath(savePath, false);
+                final Uri uri = getUriFromPath(savePath);
+                if (uri != null) {
+                    final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    if (object instanceof BaseFrameActivity) {
+                        ((BaseFrameActivity) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
+                                }
                             }
-                        }
+                        });
+                    } else if (object instanceof BaseFrameFrag) {
+                        ((BaseFrameFrag) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
+                                }
+                            }
+                        });
                     }
+                }
+            }
 
-                    @Override
-                    public void onDenied(String permission) {
-                        ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
-                    }
-                });
+            @Override
+            public void onDenied(String permission) {
+                ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
+            }
+        });
     }
 
     /**
@@ -112,26 +104,20 @@ public class SystemIntentUtil {
                 intent.setAction(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 if (context instanceof BaseFrameActivity) {
-                    ((BaseFrameActivity) context).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                        @Override
-                        public void onResult(int resultCode, Intent data) {
-                            if (resultCode == Activity.RESULT_OK) {
-                                onCompleteLisenter.onSelected(data.getData());
-                            } else {
-                                onCompleteLisenter.onCancel();
-                            }
-
+                    ((BaseFrameActivity) context).startActivityWithCallback(intent, (resultCode, data) -> {
+                        if (resultCode == Activity.RESULT_OK) {
+                            onCompleteLisenter.onSelected(data.getData());
+                        } else {
+                            onCompleteLisenter.onCancel();
                         }
+
                     });
                 } else if (context instanceof BaseFrameFrag) {
-                    ((BaseFrameFrag) context).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                        @Override
-                        public void onResult(int resultCode, Intent data) {
-                            if (resultCode == Activity.RESULT_OK) {
-                                onCompleteLisenter.onSelected(data.getData());
-                            } else {
-                                onCompleteLisenter.onCancel();
-                            }
+                    ((BaseFrameFrag) context).startActivityWithCallback(intent, (resultCode, data) -> {
+                        if (resultCode == Activity.RESULT_OK) {
+                            onCompleteLisenter.onSelected(data.getData());
+                        } else {
+                            onCompleteLisenter.onCancel();
                         }
                     });
                 }
@@ -145,10 +131,9 @@ public class SystemIntentUtil {
     }
 
 
-    public static void takePhotoWithCrop(final Object object, final String savePath, final int cropX,
-                                         final int cropY, final OnCompleteLisenter onCompleteLisenter) {
-        final String tempPath = FramePathConst.getInstance()
-                                              .getTempFilePath("jpg");
+    public static void takePhotoWithCrop(final Object object, final String savePath, final int cropX, final int cropY,
+            final OnCompleteLisenter onCompleteLisenter) {
+        final String tempPath = FramePathConst.getInstance().getTempFilePath("jpg");
         takePhoto(object, tempPath, new OnCompleteLisenter() {
             @Override
             public void onSelected(Uri fileProviderUri) {
@@ -164,8 +149,8 @@ public class SystemIntentUtil {
         });
     }
 
-    public static void selectPhotoWithCrop(final Object object, final String savePath, final int cropX,
-                                           final int cropY, final OnCompleteLisenter onCompleteLisenter) {
+    public static void selectPhotoWithCrop(final Object object, final String savePath, final int cropX, final int cropY,
+            final OnCompleteLisenter onCompleteLisenter) {
         selectPhoto(object, new OnCompleteLisenter() {
             @Override
             public void onSelected(Uri fileProviderUri) {
@@ -191,8 +176,8 @@ public class SystemIntentUtil {
      * @param cropY              y像素
      * @param onCompleteLisenter 完成后回调
      */
-    public static void cropPhoto(final Object object, final File file, final String savePath, final int cropX,
-                                 final int cropY, final OnCompleteLisenter onCompleteLisenter) {
+    public static void cropPhoto(final Object object, final File file, final String savePath, final int cropX, final int cropY,
+            final OnCompleteLisenter onCompleteLisenter) {
         if (!SDCardUtil.isSDCardEnable()) {
             return;
         }
@@ -219,28 +204,22 @@ public class SystemIntentUtil {
                     //是否要返回值。
                     //intent.putExtra("return-data", true);
                     if (object instanceof BaseFrameActivity) {
-                        ((BaseFrameActivity) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                            @Override
-                            public void onResult(int resultCode, Intent data) {
-                                if (onCompleteLisenter != null) {
-                                    if (resultCode == Activity.RESULT_OK) {
-                                        onCompleteLisenter.onSelected(uri);
-                                    } else {
-                                        onCompleteLisenter.onCancel();
-                                    }
+                        ((BaseFrameActivity) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
                                 }
                             }
                         });
                     } else if (object instanceof BaseFrameFrag) {
-                        ((BaseFrameFrag) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                            @Override
-                            public void onResult(int resultCode, Intent data) {
-                                if (onCompleteLisenter != null) {
-                                    if (resultCode == Activity.RESULT_OK) {
-                                        onCompleteLisenter.onSelected(uri);
-                                    } else {
-                                        onCompleteLisenter.onCancel();
-                                    }
+                        ((BaseFrameFrag) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
                                 }
                             }
                         });
@@ -323,8 +302,7 @@ public class SystemIntentUtil {
      * 名称为：TEMP_PATH/zz_takephoto_yyyy-MM-dd HH:mm:ss.jpg
      */
     public static String getTempVideoCapturePath() {
-        return FramePathConst.getInstance()
-                             .getPathTemp() + "zz_videoCapture_" + CalendarUtil.getDateTime() + ".mp4";
+        return FramePathConst.getInstance().getPathTemp() + "zz_videoCapture_" + CalendarUtil.getDateTime() + ".mp4";
     }
 
     /**
@@ -334,55 +312,49 @@ public class SystemIntentUtil {
      * @return 视频保存路径
      */
     public static void videoCapture(final Object object, final String savePath, final int durationLimit, final boolean isHighQuality,
-                                    final OnCompleteLisenter onCompleteLisenter) {
-        PermissionHelper.requestPermission(object,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new PermissionsResultAction() {
-                    @Override
-                    public void onGranted() {
-                        FileUtil.checkFilePath(savePath, false);
-                        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                        final Uri uri = getUriFromPath(savePath);
-                        if (uri != null) {
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, isHighQuality ? 1 : 0);
-                            if (durationLimit > 0) {
-                                intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit);
-                            }
-                            if (object instanceof BaseFrameActivity) {
-                                ((BaseFrameActivity) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                                    @Override
-                                    public void onResult(int resultCode, Intent data) {
-                                        if (onCompleteLisenter != null) {
-                                            if (resultCode == Activity.RESULT_OK) {
-                                                onCompleteLisenter.onSelected(uri);
-                                            } else {
-                                                onCompleteLisenter.onCancel();
-                                            }
-                                        }
-                                    }
-                                });
-                            } else if (object instanceof BaseFrameFrag) {
-                                ((BaseFrameFrag) object).startActivityWithCallback(intent, new ResultActivityHelper.ResultActivityListener() {
-                                    @Override
-                                    public void onResult(int resultCode, Intent data) {
-                                        if (onCompleteLisenter != null) {
-                                            if (resultCode == Activity.RESULT_OK) {
-                                                onCompleteLisenter.onSelected(uri);
-                                            } else {
-                                                onCompleteLisenter.onCancel();
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
+            final OnCompleteLisenter onCompleteLisenter) {
+        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new 
+                PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+                FileUtil.checkFilePath(savePath, false);
+                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                final Uri uri = getUriFromPath(savePath);
+                if (uri != null) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, isHighQuality ? 1 : 0);
+                    if (durationLimit > 0) {
+                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit);
                     }
+                    if (object instanceof BaseFrameActivity) {
+                        ((BaseFrameActivity) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
+                                }
+                            }
+                        });
+                    } else if (object instanceof BaseFrameFrag) {
+                        ((BaseFrameFrag) object).startActivityWithCallback(intent, (resultCode, data) -> {
+                            if (onCompleteLisenter != null) {
+                                if (resultCode == Activity.RESULT_OK) {
+                                    onCompleteLisenter.onSelected(uri);
+                                } else {
+                                    onCompleteLisenter.onCancel();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
 
-                    @Override
-                    public void onDenied(String permission) {
-                        ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
-                    }
-                });
+            @Override
+            public void onDenied(String permission) {
+                ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
+            }
+        });
         return;
     }
 

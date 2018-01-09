@@ -1,9 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  fosung
+ *   company  telchina
  *   email    wanglin2046@126.com
- *   date     17-2-24 上午10:53
+ *   date     18-1-9 上午9:59
  * ********************************************************
  */
 
@@ -11,7 +11,6 @@ package com.zcolin.frame.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,13 +32,9 @@ public class PermissionAndActivityResultActivity extends BaseActivity {
         }
 
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActivity.setResult(RESULT_OK, new Intent().putExtra("data", editText.getText()
-                                                                                     .toString()));
-                mActivity.finish();
-            }
+        btn.setOnClickListener(v -> {
+            mActivity.setResult(RESULT_OK, new Intent().putExtra("data", editText.getText().toString()));
+            mActivity.finish();
         });
     }
 }

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.permission;
 
@@ -32,11 +34,11 @@ import java.util.Set;
  */
 public class PermissionsManager {
 
-    private static final String TAG = PermissionsManager.class.getSimpleName();
-    private static PermissionsManager mInstance = null;
-    private final Set<String>                                  mPendingRequests = new HashSet<>(1);
-    private final Set<String>                                  mPermissions     = new HashSet<>(1);
-    private final List<WeakReference<PermissionsResultAction>> mPendingActions  = new ArrayList<>(1);
+    private static final String                                       TAG              = PermissionsManager.class.getSimpleName();
+    private static       PermissionsManager                           mInstance        = null;
+    private final        Set<String>                                  mPendingRequests = new HashSet<>(1);
+    private final        Set<String>                                  mPermissions     = new HashSet<>(1);
+    private final        List<WeakReference<PermissionsResultAction>> mPendingActions  = new ArrayList<>(1);
 
     private PermissionsManager() {
         initializePermissionsMap();
@@ -84,8 +86,7 @@ public class PermissionsManager {
         List<String> list = new ArrayList<>(1);
         try {
             Log.d(TAG, activity.getPackageName());
-            packageInfo = activity.getPackageManager()
-                                  .getPackageInfo(activity.getPackageName(), PackageManager.GET_PERMISSIONS);
+            packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_PERMISSIONS);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "A problem occurred when retrieving permissions", e);
         }
@@ -111,8 +112,7 @@ public class PermissionsManager {
      * @param permissions the required permissions for the action to be executed.
      * @param action      the action to add to the current list of pending actions.
      */
-    private synchronized void addPendingAction(@NonNull String[] permissions,
-                                               @Nullable PermissionsResultAction action) {
+    private synchronized void addPendingAction(@NonNull String[] permissions, @Nullable PermissionsResultAction action) {
         if (action == null) {
             return;
         }
@@ -129,8 +129,7 @@ public class PermissionsManager {
      * @param action the action to remove
      */
     private synchronized void removePendingAction(@Nullable PermissionsResultAction action) {
-        for (Iterator<WeakReference<PermissionsResultAction>> iterator = mPendingActions.iterator();
-             iterator.hasNext(); ) {
+        for (Iterator<WeakReference<PermissionsResultAction>> iterator = mPendingActions.iterator(); iterator.hasNext(); ) {
             WeakReference<PermissionsResultAction> weakRef = iterator.next();
             if (weakRef.get() == action || weakRef.get() == null) {
                 iterator.remove();
@@ -152,8 +151,8 @@ public class PermissionsManager {
      */
     @SuppressWarnings("unused")
     public synchronized boolean hasPermission(@Nullable Context context, @NonNull String permission) {
-        return context != null && (ActivityCompat.checkSelfPermission(context, permission)
-                == PackageManager.PERMISSION_GRANTED || !mPermissions.contains(permission));
+        return context != null && (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED || !mPermissions.contains
+                (permission));
     }
 
     /**
@@ -195,8 +194,7 @@ public class PermissionsManager {
      * @param action   the PermissionsResultAction used to notify you of permissions being accepted.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestAllManifestPermissionsIfNecessary(final @Nullable Activity activity,
-                                                                      final @Nullable PermissionsResultAction action) {
+    public synchronized void requestAllManifestPermissionsIfNecessary(final @Nullable Activity activity, final @Nullable PermissionsResultAction action) {
         if (activity == null) {
             return;
         }
@@ -219,9 +217,8 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity,
-                                                                    @NonNull String[] permissions,
-                                                                    @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity, @NonNull String[] permissions,
+            @Nullable PermissionsResultAction action) {
         if (activity == null) {
             return;
         }
@@ -255,9 +252,8 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment,
-                                                                    @NonNull String[] permissions,
-                                                                    @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment, @NonNull String[] permissions,
+            @Nullable PermissionsResultAction action) {
         Activity activity = fragment.getActivity();
         if (activity == null) {
             return;
@@ -298,8 +294,7 @@ public class PermissionsManager {
         }
         Iterator<WeakReference<PermissionsResultAction>> iterator = mPendingActions.iterator();
         while (iterator.hasNext()) {
-            PermissionsResultAction action = iterator.next()
-                                                     .get();
+            PermissionsResultAction action = iterator.next().get();
             for (int n = 0; n < size; n++) {
                 if (action == null || action.onResult(permissions[n], results[n])) {
                     iterator.remove();
@@ -321,15 +316,12 @@ public class PermissionsManager {
      * @param action      the callback work object, containing what we what to do after
      *                    permission check
      */
-    private void doPermissionWorkBeforeAndroidM(@NonNull Activity activity,
-                                                @NonNull String[] permissions,
-                                                @Nullable PermissionsResultAction action) {
+    private void doPermissionWorkBeforeAndroidM(@NonNull Activity activity, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
         for (String perm : permissions) {
             if (action != null) {
                 if (!mPermissions.contains(perm)) {
                     action.onResult(perm, Permissions.NOT_FOUND);
-                } else if (ActivityCompat.checkSelfPermission(activity, perm)
-                        != PackageManager.PERMISSION_GRANTED) {
+                } else if (ActivityCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED) {
                     action.onResult(perm, Permissions.DENIED);
                 } else {
                     action.onResult(perm, Permissions.GRANTED);
@@ -350,9 +342,7 @@ public class PermissionsManager {
      * @return a list of permissions names that are not granted yet
      */
     @NonNull
-    private List<String> getPermissionsListToRequest(@NonNull Activity activity,
-                                                     @NonNull String[] permissions,
-                                                     @Nullable PermissionsResultAction action) {
+    private List<String> getPermissionsListToRequest(@NonNull Activity activity, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
         List<String> permList = new ArrayList<>(permissions.length);
         for (String perm : permissions) {
             if (!mPermissions.contains(perm)) {

@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.app;
 
@@ -89,8 +91,7 @@ final class CrashHandler implements UncaughtExceptionHandler {
      * 将异常日志写入文件
      */
     private void writeExceptionToFile(String message) {
-        File crashFile = new File(FramePathConst.getInstance()
-                                                .getPathLog() + "/crash_" + CalendarUtil.getDate() + mExceptionFileName);
+        File crashFile = new File(FramePathConst.getInstance().getPathLog() + "/crash_" + CalendarUtil.getDate() + mExceptionFileName);
         if (!crashFile.exists()) {
             FileUtil.createFile(crashFile.getPath());
         }

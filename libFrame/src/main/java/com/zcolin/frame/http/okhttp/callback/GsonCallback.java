@@ -1,9 +1,11 @@
-/***********************************************************
- * author   colin
- * company  fosung
- * email    wanglin2046@126.com
- * date     16-7-15 下午4:41
- **********************************************************/
+/*
+ * *********************************************************
+ *   author   colin
+ *   company  telchina
+ *   email    wanglin2046@126.com
+ *   date     18-1-9 上午9:59
+ * ********************************************************
+ */
 
 package com.zcolin.frame.http.okhttp.callback;
 
@@ -28,10 +30,9 @@ public abstract class GsonCallback<T> extends Callback<T> {
 
     @Override
     public T parseNetworkResponse(Response response) throws IOException {
-        String string = response.body()
-                                .string();
+        String string = response.body().string();
         LogUtil.i("http response", string);
-        
+
         if (cls == String.class) {
             return (T) string;
         }
