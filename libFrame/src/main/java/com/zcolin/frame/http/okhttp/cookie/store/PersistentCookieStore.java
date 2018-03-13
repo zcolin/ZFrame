@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
@@ -55,7 +54,7 @@ public class PersistentCookieStore implements CookieStore {
     private static final String COOKIE_PREFS       = "CookiePrefsFile";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
 
-    private final HashMap<String, ConcurrentHashMap<String, Cookie>> cookies;
+    private final HashMap<String, HashMap<String, Cookie>> cookies;
     private final SharedPreferences                                  cookiePrefs;
 
     /**
@@ -78,7 +77,7 @@ public class PersistentCookieStore implements CookieStore {
                         Cookie decodedCookie = decodeCookie(encodedCookie);
                         if (decodedCookie != null) {
                             if (!cookies.containsKey(entry.getKey()))
-                                cookies.put(entry.getKey(), new ConcurrentHashMap<>());
+                                cookies.put(entry.getKey(), new HashMap<>());
                             cookies.get(entry.getKey()).put(name, decodedCookie);
                         }
                     }
@@ -97,7 +96,7 @@ public class PersistentCookieStore implements CookieStore {
 
         if (cookie.persistent()) {
             if (!cookies.containsKey(uri.host())) {
-                cookies.put(uri.host(), new ConcurrentHashMap<>());
+                cookies.put(uri.host(), new HashMap<>());//ConcurrentHashMap 暂时替换为HashMap
             }
             cookies.get(uri.host()).put(name, cookie);
         } else {
