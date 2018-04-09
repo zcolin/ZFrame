@@ -3,7 +3,7 @@
  *   author   colin
  *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     18-4-9 下午5:30
  * ********************************************************
  */
 
@@ -16,6 +16,7 @@ package com.zcolin.frame.util;
  * <p>
  * 字符串以及文件加密处理
  */
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +41,11 @@ import javax.crypto.Cipher;
 public class RSAUtil {
 
     private static String RSA = "RSA";
+
+    /**
+     * 貌似默认是RSA/NONE/PKCS1Padding，未验证
+     */
+    private static final String CIPHER_ALGORITHM = "RSA/ECB/PKCS1Padding";
 
     /**
      * 随机生成RSA密钥对(默认密钥长度为1024)
@@ -75,7 +81,7 @@ public class RSAUtil {
      */
     public static byte[] encryptData(byte[] data, PublicKey publicKey) {
         try {
-            Cipher cipher = Cipher.getInstance(RSA);
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             // 编码前设定编码方式及密钥
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             // 传入编码数据并返回编码结果
@@ -94,7 +100,7 @@ public class RSAUtil {
      */
     public static byte[] decryptData(byte[] encryptedData, PrivateKey privateKey) {
         try {
-            Cipher cipher = Cipher.getInstance(RSA);
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return cipher.doFinal(encryptedData);
         } catch (Exception e) {
