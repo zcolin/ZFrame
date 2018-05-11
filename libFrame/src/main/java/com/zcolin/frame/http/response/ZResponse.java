@@ -23,9 +23,17 @@ import okhttp3.Response;
  * 返回网络对象，使用gons解析好，并通过状态码做成功失败分发
  */
 public abstract class ZResponse<T extends ZReply> {
+    static ZResponseIntercept RESPONSEINTERCEPT;
     String   barMsg;        //进度条上的文字
     Activity barActy;       //进度条的Activity
     Class<T> cls;
+
+    /**
+     * 设置返回拦截器
+     */
+    public static void setResponseIntercept(ZResponseIntercept intercept) {
+        RESPONSEINTERCEPT = intercept;
+    }
 
     public ZResponse(Class<T> cls) {
         this(cls, null);

@@ -55,22 +55,34 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
             } else {
                 str = "连接服务器失败, 请检查网络或稍后重试";
             }
-            zResponse.onError(0, str);
+            error(0, str);
         } else if (ex instanceof JsonSyntaxException) {
-            zResponse.onError(-1, "json conversion failed, code is : -1");
+            error(-1, "json conversion failed, code is : -1");
         } else {
-            zResponse.onError(code, LogUtil.ExceptionToString(ex));
+            error(code, LogUtil.ExceptionToString(ex));
         }
     }
 
     @Override
     public void onSuccess(Response response, T reply) {
         if (reply == null) {
-            zResponse.onError(204, "response message is null, code is : 204");
+            error(204, "response message is null, code is : 204");
         } else if (reply.isSuccess()) {
-            zResponse.onSuccess(response, reply);
+            success(response, reply);
         } else {
-            zResponse.onError(reply.getReplyCode(), reply.getErrorMessage());
+            error(reply.getReplyCode(), reply.getErrorMessage());
+        }
+    }
+
+    private void error(int code, String message) {
+        if (ZResponse.RESPONSEINTERCEPT == null || !ZResponse.RESPONSEINTERCEPT.onErrorIntercept(code, message)) {
+            zResponse.onError(code, message);
+        }
+    }
+
+    private void success(Response response, T reply) {
+        if (ZResponse.RESPONSEINTERCEPT == null || !ZResponse.RESPONSEINTERCEPT.onSuccessIntercept(response, reply)) {
+            zResponse.onSuccess(response, reply);
         }
     }
 
