@@ -45,10 +45,21 @@ public class PostFormRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
         if (files == null || files.isEmpty()) {
-            FormBody.Builder builder = new FormBody.Builder();
-            addParams(builder);
-            FormBody formBody = builder.build();
-            return formBody;
+            StringBuilder stringBuffer = new StringBuilder();
+            if (params != null && !params.isEmpty()) {
+                for (String key : params.keySet()) {
+                    stringBuffer.append(key).append("=").append(params.get(key)).append("&");
+                }
+                if (stringBuffer.length() > 0) {
+                    stringBuffer.delete(stringBuffer.length() - 1, stringBuffer.length());
+                }
+            }
+            return RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"), stringBuffer.toString());
+            //            此方法没有默认设置charset=utf-8，会导致中文乱码问题
+            //            FormBody.Builder builder = new FormBody.Builder();
+            //            addParams(builder);
+            //            FormBody formBody = builder.build();
+            //            return formBody;
         } else {
             MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
             addParams(builder);
