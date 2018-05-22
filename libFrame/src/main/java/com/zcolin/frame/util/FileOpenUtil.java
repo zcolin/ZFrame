@@ -60,7 +60,7 @@ public class FileOpenUtil {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), type);
+        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(file)), type);
         context.startActivity(intent);
     }
 

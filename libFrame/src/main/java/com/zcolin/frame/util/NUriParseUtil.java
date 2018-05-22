@@ -40,7 +40,7 @@ public class NUriParseUtil {
         if (uri == null)
             return null;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || BaseApp.APP_CONTEXT.getApplicationInfo().targetSdkVersion <= 23) {
             return uri;
         } else if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
             return getUriFromPath(uri.getPath());
