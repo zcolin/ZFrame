@@ -11,7 +11,6 @@ package com.zcolin.frame.imageloader;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
@@ -344,8 +343,10 @@ public class ImageLoaderUtils {
                 return Glide.with(((FragmentActivity) context));
             } else if (context instanceof Activity) {
                 return Glide.with(((Activity) context));
-            } else if (context instanceof Fragment) {
-                return Glide.with(((Fragment) context));
+            } else if (context instanceof android.app.Fragment) {
+                return Glide.with(((android.app.Fragment) context));
+            } else if (context instanceof android.support.v4.app.Fragment) {
+                return Glide.with(((android.support.v4.app.Fragment) context));
             } else if (context instanceof ContextWrapper) {
                 return Glide.with((((ContextWrapper) context).getBaseContext()));
             }
