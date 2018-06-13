@@ -38,6 +38,24 @@ import java.util.HashMap;
 public class ImageLoaderUtils {
     private static HashMap<Object, RequestOptions> mapRequestOptions = new HashMap<>();
 
+    public static RequestOptions getCenterCropRequestOption() {
+        RequestOptions requestOptions = mapRequestOptions.get("CenterCropOption");
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().centerCrop();
+            mapRequestOptions.put("CenterCropOption", requestOptions);
+        }
+        return requestOptions;
+    }
+
+    public static RequestOptions getCenterCropRequestOption(int placeHolder) {
+        RequestOptions requestOptions = mapRequestOptions.get("CenterCropOption" + "-" + placeHolder);
+        if (requestOptions == null) {
+            requestOptions = new RequestOptions().centerCrop().placeholder(placeHolder);
+            mapRequestOptions.put("CenterCropOption" + "-" + placeHolder, requestOptions);
+        }
+        return requestOptions;
+    }
+
     public static RequestOptions getRequestOption(int placeHolder) {
         RequestOptions requestOptions = mapRequestOptions.get(placeHolder);
         if (requestOptions == null) {
@@ -137,9 +155,33 @@ public class ImageLoaderUtils {
         }
     }
 
+    /**
+     * @param context 传入Context、Fragment、FragmentActivity、Activity四项的实体及其子类 否则抛出异常
+     * @param uri     传入Uri、File、res（int）、url(String), 否则抛出异常
+     */
+    public static <T, Z> void displayImageCenterCrop(T context, Z uri, ImageView iv) {
+        try {
+            getRequestManager(context).load(uri).apply(getCenterCropRequestOption()).into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, int placeHolder) {
         try {
             getRequestManager(context).load(uri).apply(getRequestOption(placeHolder)).into(iv);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param context 传入Context、Fragment、FragmentActivity、Activity四项的实体及其子类 否则抛出异常
+     * @param uri     传入Uri、File、res（int）、url(String), 否则抛出异常
+     */
+    public static <T, Z> void displayImageCenterCrop(T context, Z uri, ImageView iv, int placeHolder) {
+        try {
+            getRequestManager(context).load(uri).apply(getCenterCropRequestOption(placeHolder)).into(iv);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,6 +202,7 @@ public class ImageLoaderUtils {
             e.printStackTrace();
         }
     }
+
 
     public static <T, Z> void displayImage(T context, Z uri, ImageView iv, RequestOptions requestOptions) {
         try {
@@ -303,8 +346,6 @@ public class ImageLoaderUtils {
                 return Glide.with(((Activity) context));
             } else if (context instanceof Fragment) {
                 return Glide.with(((Fragment) context));
-            } else if (context instanceof android.app.Fragment) {
-                return Glide.with((((android.app.Fragment) context)));
             } else if (context instanceof ContextWrapper) {
                 return Glide.with((((ContextWrapper) context).getBaseContext()));
             }
