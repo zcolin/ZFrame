@@ -10,7 +10,7 @@
 package com.zcolin.frame.app;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -96,7 +96,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     /**
      * 因为核心库中需要使用ProgressDialog, 如果应用模块自定义ProgressDialog， 则需要在应用模块重写次函数返回自定义的ProgressDialog
      */
-    public ProgressDialog getProgressDialog() {
+    public Dialog getProgressDialog() {
         return null;
     }
 

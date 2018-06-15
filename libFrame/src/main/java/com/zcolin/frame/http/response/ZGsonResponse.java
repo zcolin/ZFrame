@@ -10,6 +10,7 @@
 package com.zcolin.frame.http.response;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Build;
 
@@ -24,8 +25,8 @@ import okhttp3.Request;
  */
 public abstract class ZGsonResponse<T> extends GsonCallback<T> {
 
-    private ProgressDialog proBar;        //请求过程中的进度条
-    private String         barMsg;        //进度条上的文字
+    private Dialog proBar;        //请求过程中的进度条
+    private String barMsg;        //进度条上的文字
 
     public ZGsonResponse(Class<T> cls) {
         super(cls);
@@ -59,7 +60,9 @@ public abstract class ZGsonResponse<T> extends GsonCallback<T> {
     public void onStart(Request request) {
         if (proBar != null) {
             proBar.show();
-            proBar.setMessage(barMsg);
+            if (proBar instanceof ProgressDialog) {
+                ((ProgressDialog) proBar).setMessage(barMsg);
+            }
         }
     }
 

@@ -10,6 +10,7 @@
 package com.zcolin.frame.http.response;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import com.zcolin.frame.app.BaseFrameActivity;
@@ -23,8 +24,8 @@ import okhttp3.Request;
  */
 public abstract class ZFileResponse extends FileCallBack {
 
-    private ProgressDialog proBar;        //请求过程中的进度条
-    private String         barMsg;        //进度条上的文字
+    private Dialog proBar;        //请求过程中的进度条
+    private String barMsg;        //进度条上的文字
 
     public ZFileResponse(String destPath) {
         this(destPath, null);
@@ -58,7 +59,9 @@ public abstract class ZFileResponse extends FileCallBack {
     public void onStart(Request request) {
         if (proBar != null) {
             proBar.show();
-            proBar.setMessage(barMsg);
+            if (proBar instanceof ProgressDialog) {
+                ((ProgressDialog) proBar).setMessage(barMsg);
+            }
         }
     }
 
@@ -73,7 +76,9 @@ public abstract class ZFileResponse extends FileCallBack {
     public void setBarMsg(String barMsg) {
         if (proBar != null) {
             if (proBar.isShowing()) {
-                proBar.setMessage(barMsg);
+                if (proBar instanceof ProgressDialog) {
+                    ((ProgressDialog) proBar).setMessage(barMsg);
+                }
             } else {
                 this.barMsg = barMsg;
             }
