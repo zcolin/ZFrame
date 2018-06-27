@@ -3,9 +3,9 @@
     <paths>
         <!--对应设备的根目录-->
         <root-path
-            name="file_path"
-            path=""/>
-        
+            name="name"
+            path="path"/>
+
         <!--对应Context.getFilesDir-->
         <files-path
             name="name"
