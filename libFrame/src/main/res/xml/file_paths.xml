@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <paths>
-        <!--对应设备的根目录-->
+        <!--对应设备的根目录，SD卡根目录会使用此配置-->
         <root-path
             name="z-root-path"
             path=""/>
@@ -9,7 +9,7 @@
         <files-path
             name="z-file_path"
             path=""/>
-        <!--对应getCacheDir-->
+        <!--对应对应Context.getCacheDir-->
         <cache-path
             name="z-cache-path"
             path=""/>
@@ -17,7 +17,7 @@
         <external-path
             name="z-external-path"
             path=""/>
-        <!--getExternalFilesDir(String)-->
+        <!--对应Context.getExternalFilesDir(String)-->
         <external-files-path
             name="z-external-files-path"
             path=""/>

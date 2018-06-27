@@ -327,6 +327,10 @@ public class AppUtil {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
         intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
         context.startActivity(intent);
     }
