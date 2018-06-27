@@ -85,7 +85,12 @@ public class NUriParseUtil {
 
         String path;
         if (TextUtils.equals(uri.getAuthority(), getProviderName())) {
-            path = new File(uri.getPath().replace("file_path/", "")).getAbsolutePath();
+            path = new File(uri.getPath().replace("z-root-path/", "")).getAbsolutePath();
+            path = new File(path.replace("z-file_path/", "")).getAbsolutePath();
+            path = new File(path.replace("z-cache-path/", "")).getAbsolutePath();
+            path = new File(path.replace("z-external-path/", "")).getAbsolutePath();
+            path = new File(path.replace("z-external-files-path/", "")).getAbsolutePath();
+            path = new File(path.replace("z-external-cache-path/", "")).getAbsolutePath();
         } else {
             path = uri.getPath();
         }
