@@ -4,5 +4,8 @@
         <root-path
             name="file_path"
             path=""/>
+        <external-path
+            name="file_path"
+            path=""/>
     </paths>
 </resources>
