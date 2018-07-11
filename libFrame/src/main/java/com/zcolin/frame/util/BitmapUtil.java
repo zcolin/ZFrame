@@ -32,6 +32,7 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
@@ -164,21 +165,34 @@ public class BitmapUtil {
     /**
      * 图片缩放（等比缩放）
      *
-     * @param resID  源图片资源
-     * @param width  缩放后宽度
-     * @param height 缩放后高度
+     * @param resID      源图片资源
+     * @param width      缩放后宽度
+     * @param height     缩放后高度
+     * @param errorRange 误差范围
      * @return 缩放后的Bitmap对象
      */
-    public static Bitmap decodeBitmap(Resources res, int resID, int width, int height) {
+    public static Bitmap decodeBitmap(Resources res, int resID, int width, int height, int errorRange) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         // 设为true，BitmapFactory.decodeFile(Stringpath, Options opt)并不会真的返回一个Bitmap给你，仅会把它的宽，高取回
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resID, options);
 
         // 计算缩放比例
-        options.inSampleSize = calculateOriginal(options, width, height);
+        options.inSampleSize = calculateOriginal(options, width, height, errorRange);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resID, options);
+    }
+
+    /**
+     * 图片缩放（等比缩放）
+     *
+     * @param resID  源图片资源
+     * @param width  缩放后宽度
+     * @param height 缩放后高度
+     * @return 缩放后的Bitmap对象
+     */
+    public static Bitmap decodeBitmap(Resources res, int resID, int width, int height) {
+        return decodeBitmap(res, resID, width, height, 200);
     }
 
     /**
@@ -194,19 +208,29 @@ public class BitmapUtil {
     /**
      * 图片缩放（等比缩放）
      *
-     * @param fileName 图片文件路径
+     * @param fileName   图片文件路径
+     * @param errorRange 误差范围
      */
-    public static Bitmap decodeBitmap(String fileName, int width, int height) {
+    public static Bitmap decodeBitmap(String fileName, int width, int height, int errorRange) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         // 设为true，BitmapFactory.decodeFile(Stringpath, Options opt)并不会真的返回一个Bitmap给你，仅会把它的宽，高取回
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(fileName, options);
 
         // 计算缩放比例
-        options.inSampleSize = calculateOriginal(options, width, height);
+        options.inSampleSize = calculateOriginal(options, width, height, errorRange);
         options.inJustDecodeBounds = false;
         System.out.println("samplesize:" + options.inSampleSize);
         return BitmapFactory.decodeFile(fileName, options);
+    }
+
+    /**
+     * 图片缩放（等比缩放）
+     *
+     * @param fileName 图片文件路径
+     */
+    public static Bitmap decodeBitmap(String fileName, int width, int height) {
+        return decodeBitmap(fileName, width, height, 200);
     }
 
     /**
@@ -226,7 +250,7 @@ public class BitmapUtil {
         BitmapFactory.decodeFile(fileName, options);
 
         // 计算缩放比例
-        options.inSampleSize = calculateOriginal(options, width, height);
+        options.inSampleSize = calculateOriginal(options, width, height, 100);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(fileName, options);
     }
@@ -240,17 +264,26 @@ public class BitmapUtil {
 
     /**
      * 图片缩放（等比缩放）
+     *
+     * @param errorRange 误差范围
      */
-    public static Bitmap decodeBitmap(byte[] arrayByte, int width, int height) {
+    public static Bitmap decodeBitmap(byte[] arrayByte, int width, int height, int errorRange) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         // 设为true，BitmapFactory.decodeFile(Stringpath, Options opt)并不会真的返回一个Bitmap给你，仅会把它的宽，高取回
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(arrayByte, 0, arrayByte.length, options);
 
         // 计算缩放比例
-        options.inSampleSize = calculateOriginal(options, width, height);
+        options.inSampleSize = calculateOriginal(options, width, height, errorRange);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeByteArray(arrayByte, 0, arrayByte.length, options);
+    }
+
+    /**
+     * 图片缩放（等比缩放）
+     */
+    public static Bitmap decodeBitmap(byte[] arrayByte, int width, int height) {
+        return decodeBitmap(arrayByte, width, height, 200);
     }
 
     /**
@@ -275,14 +308,19 @@ public class BitmapUtil {
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
 
+    private static int calculateOriginal(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        return calculateOriginal(options, reqWidth, reqHeight, 200);
+    }
+
     /**
      * 计算图片缩放比例,只能缩放2的指数
      *
-     * @param reqWidth  缩放后的宽度
-     * @param reqHeight 缩放后的高度
+     * @param reqWidth   缩放后的宽度
+     * @param reqHeight  缩放后的高度
+     * @param errorRange 误差范围
      * @return 计算的缩放比例
      */
-    private static int calculateOriginal(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private static int calculateOriginal(BitmapFactory.Options options, int reqWidth, int reqHeight, int errorRange) {
         //TODO 如果出现height或者width为-1的情况，请参考以下进行调整
         //        if (options.outHeight == -1 || options.outWidth == -1) {
         //            try {
@@ -317,16 +355,17 @@ public class BitmapUtil {
         if (height > reqHeight || width > reqWidth) {
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
-            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+            //允许200误差
+            while (Math.abs((halfHeight / inSampleSize) - reqHeight) > errorRange && Math.abs((halfWidth / inSampleSize) - reqWidth) > errorRange) {
                 inSampleSize *= 2;
             }
 
-            long totalPixels = width / inSampleSize * height / inSampleSize;
-            final long totalReqPixelsCap = reqWidth * reqHeight;
-            while (totalPixels > totalReqPixelsCap) {
-                inSampleSize *= 2;
-                totalPixels /= 4;
-            }
+            //            long totalPixels = width / inSampleSize * height / inSampleSize;
+            //            final long totalReqPixelsCap = reqWidth * reqHeight;
+            //            while (totalPixels > totalReqPixelsCap) {
+            //                inSampleSize *= 2;
+            //                totalPixels /= 4;
+            //            }
         }
         return inSampleSize;
     }
@@ -442,11 +481,30 @@ public class BitmapUtil {
     }
 
     /**
+     * toBase64
+     */
+    public static String toBase64(String path) {
+        Bitmap bitmap = decodeBitmap(path);
+        byte[] bytes = bitmapToByte(bitmap);
+        byte[] encode = Base64.encode(bytes, Base64.DEFAULT);
+        return new String(encode);
+    }
+
+    /**
+     * toBase64
+     */
+    public static String toBase64(Bitmap bitmap) {
+        byte[] bytes = bitmapToByte(bitmap);
+        byte[] encode = Base64.encode(bytes, Base64.DEFAULT);
+        return new String(encode);
+    }
+
+    /**
      * BitMap2Byte
      */
     public static byte[] bitmapToByte(Bitmap bitmap) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         try {
             out.flush();
             out.close();
