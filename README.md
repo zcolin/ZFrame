@@ -18,7 +18,7 @@ Orm数据库采用GreenDao, Http采用OkHttp, 图片加载采用Glide, 这三个
 ## reference library version
 1. GeeenDao ：3.2.0
 1. OkHtpp : 3.5.0
-1. Glide : 3.7.0
+1. Glide : 4.0.0
 1. Gson : 2.7
 
 ## Gradle
@@ -31,11 +31,11 @@ dependencies {
 工程的build.gradle中添加
 ```
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
 
 ## Usage
@@ -163,6 +163,33 @@ PermissionHelper.requestPermission(this, new String[]{Manifest.permission.CAMERA
 });
 
 ```
+#### 常用工具类介绍与使用 在Frame框架Utils包中，可以查看源码或者查看生成的JavaDoc。 常用包括：
+ActivityUtil ：Activity 相关操作 工具类。
+AppUtil：APP管理工具类，如获取应用相关信息，应用退出 重启 安装 卸载.判断程序运行状况等函数的定义。
+ArrayUtils: 数组操作工具类。
+BitmapUtil: Bitmap工具类，如图片缩放，保存图片，复制图片，圆角处理等。
+CalendarUtil：日期操作工具类，主要格式化时间。
+DeviceUtil：设备操作工具类，如获取设备识别码，获取设置屏保时间，获取设置字体缩放大小等。
+DisplayUtil：像素转换工具类，如px互转dp，获取设备density等。
+FastClickUtils：防止控件被重复点击的辅助类。
+FileOpenUtil：使用第三方程序打开文件操作工具类。
+FileUtil：文件操作工具类,如文件拷贝，文件读写操作。
+GsonUtil：使用gson对Json数据和对象互转的工具类。
+KeyBoardUtil：软键盘操作如弹出、关闭工具类。
+LogUtil：日志操作工具类。
+MD5Util&RSAUtils:加密解密工具类。
+RegexUtil：正则工具类，匹配常用的如邮箱，手机号等。
+ScreenUtil：屏幕工具类，如获取屏幕宽高，获取截图等。
+SDCardUtil:SD卡工具类，如获取sd卡是否可用，获取sd可用容量等。
+SpannableStringBuilderUtil：SpannableStringBuilder的工具类。
+SpannableStringUtil：SpannableString的工具类。
+SPUtil：SharedPreferences配置文件读写封装。
+StateListUtil：StateList的构建类。
+StringFormatUtil：字符串格式化工具类。
+StringUtil：String相关操作工具类。
+SystemDownloadApk：托管系统下载工具类。
+SystemIntentUtil：调用系统Intent工具类。
+ToastUtil：Toast工具类，可以在子线程调用。
 
 ## copyright
 本软件使用 Apache License 2.0 协议，请严格遵照协议内容：
