@@ -356,7 +356,7 @@ public class BitmapUtil {
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
             //允许200误差
-            while (Math.abs((halfHeight / inSampleSize) - reqHeight) > errorRange && Math.abs((halfWidth / inSampleSize) - reqWidth) > errorRange) {
+            while (halfHeight / inSampleSize - reqHeight > -errorRange && halfWidth / inSampleSize - reqWidth > -errorRange) {
                 inSampleSize *= 2;
             }
 
