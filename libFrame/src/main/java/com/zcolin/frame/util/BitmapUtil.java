@@ -483,19 +483,33 @@ public class BitmapUtil {
     /**
      * toBase64
      */
-    public static String toBase64(String path) {
+    public static String toBase64(String path, int flags) {
         Bitmap bitmap = decodeBitmap(path);
         byte[] bytes = bitmapToByte(bitmap);
-        byte[] encode = Base64.encode(bytes, Base64.DEFAULT);
+        byte[] encode = Base64.encode(bytes, flags);
         return new String(encode);
     }
 
     /**
      * toBase64
      */
+    public static String toBase64(String path) {
+        return toBase64(path, Base64.NO_WRAP);
+    }
+
+    /**
+     * toBase64
+     */
     public static String toBase64(Bitmap bitmap) {
+        return toBase64(bitmap, Base64.NO_WRAP);
+    }
+
+    /**
+     * toBase64
+     */
+    public static String toBase64(Bitmap bitmap, int flags) {
         byte[] bytes = bitmapToByte(bitmap);
-        byte[] encode = Base64.encode(bytes, Base64.DEFAULT);
+        byte[] encode = Base64.encode(bytes, flags);
         return new String(encode);
     }
 
