@@ -9,11 +9,15 @@
 
 package com.zcolin.frame.util;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -30,8 +34,6 @@ import java.util.Locale;
  * 适配Android7.0的Uri解析工具类
  */
 public class NUriParseUtil {
-    private static String applicationId;
-
     /**
      * 根据版本获取Uri, AndroidN之前直接返回，之后自动使用FileProvider转换提供的content uri
      */
@@ -96,45 +98,6 @@ public class NUriParseUtil {
         return path;
     }
 
-    /**
-     * 通过URI获取文件
-     */
-    public static File getFileFromUri(Uri uri) {
-        String filePath = getFilePathFromUri(uri);
-        if (TextUtils.isEmpty(filePath))
-            throw new IllegalArgumentException("uri parse fail");
-        return TextUtils.isEmpty(filePath) ? null : new File(filePath);
-    }
-
-    /**
-     * 通过URI获取文件路径
-     */
-    public static String getFilePathFromUri(Uri uri) {
-        String picturePath = null;
-        String scheme = uri.getScheme();
-        if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            String[] filePathColumn = {"_data"};
-            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver().query(uri, filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
-            boolean flag = false;
-            if (cursor != null) {
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                if (columnIndex >= 0) {
-                    picturePath = cursor.getString(columnIndex);  //获取文件路径
-                    flag = true;
-                }
-                cursor.close();
-            }
-
-            if (!flag && TextUtils.equals(uri.getAuthority(), getProviderName())) {
-                picturePath = parseOwnUri(uri);
-            }
-        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            picturePath = uri.getPath();
-        }
-        return picturePath;
-    }
-
 
     /**
      * 转换 content:// uri
@@ -160,14 +123,90 @@ public class NUriParseUtil {
         }
     }
 
-    private static String getProviderName() {
-        return (applicationId == null ? BaseApp.APP_CONTEXT.getPackageName() : applicationId) + ".zframe_fileprovider";
+    /**
+     * 通过URI获取文件
+     */
+    public static File getFileFromUri(Uri uri) {
+        String filePath = getFilePathFromUri(uri);
+        if (TextUtils.isEmpty(filePath))
+            throw new IllegalArgumentException("uri parse fail");
+        return TextUtils.isEmpty(filePath) ? null : new File(filePath);
     }
 
     /**
-     * 如果自定义此设置，则默认的providerName不生效，此配置用户applicationId和packageName不一样时使用
+     * 获取文件真实路径
      */
-    public static void setApplicationId(String name) {
-        applicationId = name;
+    @SuppressLint("NewApi")
+    public static String getFilePathFromUri(final Uri uri) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(BaseApp.APP_CONTEXT, uri)) {
+            if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {   // ExternalStorageProvider
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {   // DownloadsProvider
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                return getDataColumn(contentUri, null, null);
+            } else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {   // MediaProvider
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{split[1]};
+                return getDataColumn(contentUri, selection, selectionArgs);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme()) || Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {  // MediaStore (and general)
+            return getDataColumn(uri, null, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {    // File
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    /**
+     * 通过URI获取文件路径
+     */
+    public static String getDataColumn(Uri uri, String selection, String[] selectionArgs) {
+        String picturePath = null;
+        String scheme = uri.getScheme();
+        if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            String[] filePathColumn = {"_data"};
+            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver().query(uri, filePathColumn, selection, selectionArgs, null);//从系统表中查询指定Uri对应的照片
+            boolean flag = false;
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                if (columnIndex >= 0) {
+                    picturePath = cursor.getString(columnIndex);  //获取文件路径
+                    flag = true;
+                }
+                cursor.close();
+            }
+
+            if (!flag && TextUtils.equals(uri.getAuthority(), getProviderName())) {
+                picturePath = parseOwnUri(uri);
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            picturePath = uri.getPath();
+        }
+        return picturePath;
+    }
+
+    private static String getProviderName() {
+        return BaseApp.APP_CONTEXT.getPackageName() + ".zframe_fileprovider";
     }
 }
