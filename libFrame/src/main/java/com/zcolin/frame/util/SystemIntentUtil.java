@@ -155,7 +155,7 @@ public class SystemIntentUtil {
         selectPhoto(object, new OnCompleteLisenter() {
             @Override
             public void onSelected(Uri fileProviderUri) {
-                SystemIntentUtil.cropPhoto(object, NUriParseUtil.getImageFileFromUri(fileProviderUri), savePath, cropX, cropY, onCompleteLisenter);
+                SystemIntentUtil.cropPhoto(object, NUriParseUtil.getFileFromUri(fileProviderUri), savePath, cropX, cropY, onCompleteLisenter);
             }
 
             @Override
@@ -362,7 +362,7 @@ public class SystemIntentUtil {
 
     public interface OnCompleteLisenter {
         /**
-         * @param fileProviderUri FileProvider的Uri，如果要获取实际路径需要使用 {@link NUriParseUtil#getFileFromUri(String, Uri)}
+         * @param fileProviderUri FileProvider的Uri，如果要获取实际路径需要使用 {@link NUriParseUtil#getFileFromUri(Uri)}
          */
         void onSelected(Uri fileProviderUri);
 
