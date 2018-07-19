@@ -9,7 +9,6 @@
 
 package com.zcolin.frame.util;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -97,39 +96,24 @@ public class NUriParseUtil {
         return path;
     }
 
-    public static File getImageFileFromUri(Uri uri) throws IllegalArgumentException {
-        return getFileFromUri(MediaStore.Images.Media.DATA, uri);
-    }
-
-    public static File getVideoFileFromUri(Uri uri, Activity activity) throws IllegalArgumentException {
-        return getFileFromUri(MediaStore.Video.Media.DATA, uri);
-    }
-
-    /**
-     * 通过URI获取文件的路径
-     */
-    public static String getFilePathFromUri(String dataType, Uri uri) throws IllegalArgumentException {
-        if (uri == null) {
-            throw new IllegalArgumentException("uri is null,activity may have been recovered?");
-        }
-
-        File file = getFileFromUri(dataType, uri);
-        String filePath = file == null ? null : file.getPath();
-        if (TextUtils.isEmpty(filePath))
-            throw new IllegalArgumentException("uri parse fail");
-        return filePath;
-    }
-
     /**
      * 通过URI获取文件
-     *
-     * @param dataType ex:MediaStore.Images.Media.DATA/MediaStore.Video.Media.DATA
      */
-    public static File getFileFromUri(String dataType, Uri uri) {
+    public static File getFileFromUri(Uri uri) {
+        String filePath = getFilePathFromUri(uri);
+        if (TextUtils.isEmpty(filePath))
+            throw new IllegalArgumentException("uri parse fail");
+        return TextUtils.isEmpty(filePath) ? null : new File(filePath);
+    }
+
+    /**
+     * 通过URI获取文件路径
+     */
+    public static String getFilePathFromUri(Uri uri) {
         String picturePath = null;
         String scheme = uri.getScheme();
         if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            String[] filePathColumn = {dataType};
+            String[] filePathColumn = {"_data"};
             Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver().query(uri, filePathColumn, null, null, null);//从系统表中查询指定Uri对应的照片
             boolean flag = false;
             if (cursor != null) {
@@ -148,7 +132,7 @@ public class NUriParseUtil {
         } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
             picturePath = uri.getPath();
         }
-        return TextUtils.isEmpty(picturePath) ? null : new File(picturePath);
+        return picturePath;
     }
 
 
