@@ -57,7 +57,7 @@ public class GsonUtil {
      */
     public static String beanToString(Object object) {
         String gsonString = null;
-        if (gson != null) {
+        if (gson != null && object != null) {
             gsonString = gson.toJson(object);
         }
         return gsonString;
@@ -69,7 +69,7 @@ public class GsonUtil {
      */
     public static String beanToStringWithExclued(Object object) {
         String gsonString = null;
-        if (gsonExclude != null) {
+        if (gsonExclude != null && object != null) {
             gsonString = gsonExclude.toJson(object);
         }
         return gsonString;
@@ -81,7 +81,11 @@ public class GsonUtil {
     public static <T> T stringToBean(String gsonString, Class<T> cls) {
         T t = null;
         if (gson != null) {
-            t = gson.fromJson(gsonString, cls);
+            try {
+                t = gson.fromJson(gsonString, cls);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return t;
     }
@@ -90,10 +94,15 @@ public class GsonUtil {
      * 转成list
      */
     public static <T> List<T> stringToList(String gsonString, Class<T> cls) {
-        List<T> list = new ArrayList<>();
-        JsonArray array = new JsonParser().parse(gsonString).getAsJsonArray();
-        for (final JsonElement elem : array) {
-            list.add(new Gson().fromJson(elem, cls));
+        List<T> list = null;
+        try {
+            JsonArray array = new JsonParser().parse(gsonString).getAsJsonArray();
+            list = new ArrayList<>();
+            for (final JsonElement elem : array) {
+                list.add(new Gson().fromJson(elem, cls));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -103,9 +112,13 @@ public class GsonUtil {
      */
     public static <T> List<Map<String, T>> stringToListMaps(String gsonString) {
         List<Map<String, T>> list = null;
-        if (gson != null) {
-            list = gson.fromJson(gsonString, new TypeToken<List<Map<String, T>>>() {
-            }.getType());
+        try {
+            if (gson != null) {
+                list = gson.fromJson(gsonString, new TypeToken<List<Map<String, T>>>() {
+                }.getType());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -115,9 +128,13 @@ public class GsonUtil {
      */
     public static <T> Map<String, T> stringToMaps(String gsonString) {
         Map<String, T> map = null;
-        if (gson != null) {
-            map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
-            }.getType());
+        try {
+            if (gson != null) {
+                map = gson.fromJson(gsonString, new TypeToken<Map<String, T>>() {
+                }.getType());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return map;
     }
