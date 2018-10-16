@@ -23,6 +23,8 @@ import java.util.Map;
 
 /**
  * Created by zhy on 15/12/14.
+ * 
+ * update by zcolin
  */
 public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> implements HasParamsable {
     private List<FileInput> files = new ArrayList<>();

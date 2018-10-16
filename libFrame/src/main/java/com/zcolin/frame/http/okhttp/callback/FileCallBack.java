@@ -67,13 +67,15 @@ public abstract class FileCallBack extends Callback<File> {
         } finally {
             try {
                 response.body().close();
-                if (is != null)
+                if (is != null) {
                     is.close();
+                }
             } catch (IOException e) {
             }
             try {
-                if (fos != null)
+                if (fos != null) {
                     fos.close();
+                }
             } catch (IOException e) {
             }
 

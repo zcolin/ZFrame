@@ -20,6 +20,8 @@ import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/11/6.
+ * <p>
+ * Request请求基类
  */
 public abstract class OkHttpRequest {
     protected String              url;
@@ -74,8 +76,9 @@ public abstract class OkHttpRequest {
 
     protected void appendHeaders() {
         Headers.Builder headerBuilder = new Headers.Builder();
-        if (headers == null || headers.isEmpty())
+        if (headers == null || headers.isEmpty()) {
             return;
+        }
 
         for (String key : headers.keySet()) {
             headerBuilder.add(key, headers.get(key));

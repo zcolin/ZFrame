@@ -62,15 +62,20 @@ public class GetDiskCacheSizeTask extends AsyncTask<File, Long, Long> {
     }
 
     private static long calculateSize(File dir) {
-        if (dir == null)
+        if (dir == null) {
             return 0;
-        if (!dir.isDirectory())
+        }
+        if (!dir.isDirectory()) {
             return dir.length();
+        }
+        
         long result = 0;
         File[] children = dir.listFiles();
-        if (children != null)
-            for (File child : children)
+        if (children != null) {
+            for (File child : children) {
                 result += calculateSize(child);
+            }
+        }
         return result;
     }
 }

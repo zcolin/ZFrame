@@ -103,8 +103,9 @@ public class OkHttpUtils {
     }
 
     public void execute(final RequestCall requestCall, Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             callback = Callback.CALLBACK_DEFAULT;
+        }
         final Callback finalCallback = callback;
         // final int id = requestCall.getOkHttpRequest().getId();
 
@@ -143,8 +144,9 @@ public class OkHttpUtils {
                 } catch (Exception e) {
                     sendFailResultCallback(response.code(), call, e, finalCallback);
                 } finally {
-                    if (response.body() != null)
+                    if (response.body() != null) {
                         response.body().close();
+                    }
                 }
 
             }
@@ -152,8 +154,9 @@ public class OkHttpUtils {
     }
 
     public void sendCancelResultCallback(final Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             return;
+        }
         handler.post(() -> {
             callback.onCanceled();
             callback.onFinished();
@@ -161,8 +164,9 @@ public class OkHttpUtils {
     }
 
     public void sendFailResultCallback(final int code, final Call call, final Exception e, final Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             return;
+        }
 
         handler.post(() -> {
             callback.onError(code, call, e);
@@ -171,8 +175,9 @@ public class OkHttpUtils {
     }
 
     public void sendSuccessResultCallback(final Response response, final Object object, final Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             return;
+        }
         handler.post(() -> {
             callback.onSuccess(response, object);
             callback.onFinished();

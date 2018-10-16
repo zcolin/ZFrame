@@ -15,7 +15,16 @@ package com.zcolin.frame.permission;
  * has a granted and denied state.
  */
 enum Permissions {
+    /**
+     * 授权
+     */
     GRANTED,
+    /**
+     * 拒绝
+     */
     DENIED,
+    /**
+     * 权限信息未发现
+     */
     NOT_FOUND
 }

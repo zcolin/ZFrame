@@ -22,5 +22,4 @@ public abstract class BitmapCallback extends Callback<Bitmap> {
     public Bitmap parseNetworkResponse(Response response) throws Exception {
         return BitmapFactory.decodeStream(response.body().byteStream());
     }
-
 }

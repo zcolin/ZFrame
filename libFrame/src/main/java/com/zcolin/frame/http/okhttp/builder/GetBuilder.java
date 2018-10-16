@@ -14,13 +14,15 @@ import android.net.Uri;
 import com.zcolin.frame.http.okhttp.request.GetRequest;
 import com.zcolin.frame.http.okhttp.request.RequestCall;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by zhy on 15/12/14.
+ * <p>
+ * get请求构造类
+ * update by zcolin
  */
 public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasParamsable {
 
@@ -39,9 +41,7 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         }
         Uri.Builder builder = Uri.parse(url).buildUpon();
         Set<String> keys = params.keySet();
-        Iterator<String> iterator = keys.iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
+        for (String key : keys) {
             builder.appendQueryParameter(key, params.get(key));
         }
         return builder.build().toString();
@@ -62,6 +62,4 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         params.put(key, val);
         return this;
     }
-
-
 }

@@ -48,9 +48,6 @@ public class GrayscaleTransformation implements Transformation<Bitmap> {
 
         Bitmap.Config config = source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
         Bitmap bitmap = mBitmapPool.get(width, height, config);
-        if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(width, height, config);
-        }
 
         Canvas canvas = new Canvas(bitmap);
         ColorMatrix saturation = new ColorMatrix();

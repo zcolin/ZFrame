@@ -125,7 +125,7 @@ public abstract class PermissionsResultAction {
         mPermissions.remove(permission);
         if (result == Permissions.GRANTED) {
             if (mPermissions.isEmpty()) {
-                new Handler(mLooper).post(() -> onGranted());
+                new Handler(mLooper).post(this::onGranted);
                 return true;
             }
         } else if (result == Permissions.DENIED) {
@@ -134,7 +134,7 @@ public abstract class PermissionsResultAction {
         } else if (result == Permissions.NOT_FOUND) {
             if (shouldIgnorePermissionNotFound(permission)) {
                 if (mPermissions.isEmpty()) {
-                    new Handler(mLooper).post(() -> onGranted());
+                    new Handler(mLooper).post(this::onGranted);
                     return true;
                 }
             } else {

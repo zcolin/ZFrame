@@ -17,6 +17,8 @@ import okhttp3.MediaType;
 
 /**
  * Created by zhy on 15/12/14.
+ * 
+ * update by zcolin
  */
 public class PostStringBuilder extends OkHttpRequestBuilder<PostStringBuilder> {
     private String content;

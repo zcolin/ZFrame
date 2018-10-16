@@ -17,6 +17,8 @@ import java.util.Map;
 
 /**
  * Created by zhy on 15/12/14.
+ * 
+ * update by zcolin
  */
 public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
     protected String                        url;

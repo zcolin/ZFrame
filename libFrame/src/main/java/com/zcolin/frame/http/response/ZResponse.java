@@ -39,6 +39,10 @@ public abstract class ZResponse<T extends ZReply> {
         this(cls, null);
     }
 
+    public ZResponseProxy generatedProxy() {
+        return new ZResponseProxy<>(cls, this, barActy, barMsg);
+    }
+
     /**
      * @param barActy 进度条Atvicity实体
      */
@@ -56,10 +60,12 @@ public abstract class ZResponse<T extends ZReply> {
         this.barMsg = barMsg;
     }
 
-    public ZResponseProxy generatedProxy() {
-        return new ZResponseProxy<>(cls, this, barActy, barMsg);
-    }
-
+    /**
+     * 请求成功回调
+     *
+     * @param response response实例
+     * @param resObj   返回的数据实体
+     */
     public abstract void onSuccess(Response response, T resObj);
 
     public void onError(int code, String error) {

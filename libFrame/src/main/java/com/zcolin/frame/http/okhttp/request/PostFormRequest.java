@@ -30,13 +30,14 @@ import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
+ * <p>
+ * 表单post请求
  */
 public class PostFormRequest extends OkHttpRequest {
     private List<PostFormBuilder.FileInput> files;
     private String                          mimeType;
 
-    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files, int id,
-            String mimeType) {
+    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files, int id, String mimeType) {
         super(url, tag, params, headers, id);
         this.files = files;
         this.mimeType = mimeType;
@@ -54,7 +55,9 @@ public class PostFormRequest extends OkHttpRequest {
                     stringBuffer.delete(stringBuffer.length() - 1, stringBuffer.length());
                 }
             }
-            return RequestBody.create(MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"), stringBuffer.toString());
+
+            MediaType mime = mimeType == null ? MediaType.parse("application/x-www-form-urlencoded; charset=utf-8") : MediaType.parse(mimeType);
+            return RequestBody.create(mime, stringBuffer.toString());
             //            此方法没有默认设置charset=utf-8，会导致中文乱码问题
             //            FormBody.Builder builder = new FormBody.Builder();
             //            addParams(builder);
@@ -76,14 +79,12 @@ public class PostFormRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             return requestBody;
-        CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody, (bytesWritten, contentLength) -> OkHttpUtils.getInstance()
-                                                                                                                                   .getHandler()
-                                                                                                                                   .post(() -> callback
-                                                                                                                                           .onProgress
-                                                                                                                                                   (bytesWritten * 1.0f / contentLength, contentLength)));
-        return countingRequestBody;
+        }
+        return new CountingRequestBody(requestBody, (bytesWritten, contentLength) -> OkHttpUtils.getInstance()
+                                                                                                .getHandler()
+                                                                                                .post(() -> callback.onProgress(bytesWritten * 1.0f / contentLength, contentLength)));
     }
 
     @Override

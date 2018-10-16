@@ -31,7 +31,7 @@ public class GsonUtil {
 
     static {
 
-        /**
+        /*
          * 字段排除策略，如果想不解析某个字段，以“__”开头就可以了
          */
         ExclusionStrategy myExclusionStrategy = new ExclusionStrategy() {
@@ -67,7 +67,7 @@ public class GsonUtil {
     /**
      * 转成json
      */
-    public static String beanToStringWithExclued(Object object) {
+    public static String beanToStringWithExcluded(Object object) {
         String gsonString = null;
         if (gsonExclude != null && object != null) {
             gsonString = gsonExclude.toJson(object);

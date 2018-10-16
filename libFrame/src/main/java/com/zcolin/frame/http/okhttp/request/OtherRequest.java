@@ -22,6 +22,8 @@ import okhttp3.internal.http.HttpMethod;
 
 /**
  * Created by zhy on 16/2/23.
+ * <p>
+ * 除get、post之外的http请求
  */
 public class OtherRequest extends OkHttpRequest {
     private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
@@ -30,8 +32,7 @@ public class OtherRequest extends OkHttpRequest {
     private String      method;
     private String      content;
 
-    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers,
-            int id) {
+    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers, int id) {
         super(url, tag, params, headers, id);
         this.requestBody = requestBody;
         this.method = method;
@@ -57,10 +58,11 @@ public class OtherRequest extends OkHttpRequest {
         if (method.equals(OkHttpUtils.METHOD.PUT)) {
             builder.put(requestBody);
         } else if (method.equals(OkHttpUtils.METHOD.DELETE)) {
-            if (requestBody == null)
+            if (requestBody == null) {
                 builder.delete();
-            else
+            } else {
                 builder.delete(requestBody);
+            }
         } else if (method.equals(OkHttpUtils.METHOD.HEAD)) {
             builder.head();
         } else if (method.equals(OkHttpUtils.METHOD.PATCH)) {
