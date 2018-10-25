@@ -20,6 +20,7 @@ import com.zcolin.frame.util.GsonUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -256,12 +257,12 @@ public class ZHttp {
     }
 
     public static String downLoadFileWithHeader(String url, LinkedHashMap<String, String> headers, ZFileResponse response) {
-        return downLoadFileWithHeader(url, null, null, response);
+        return downLoadFileWithHeader(url, headers, null, response);
     }
 
     public static String downLoadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams, ZFileResponse response) {
         String cancelTag = UUID.randomUUID().toString();
-        OkHttpUtils.get().url(url).headers(headers).tag(cancelTag).build().execute(response);
+        OkHttpUtils.get().url(url).headers(headers).params(contentParams).tag(cancelTag).build().execute(response);
         return cancelTag;
     }
 
@@ -319,8 +320,21 @@ public class ZHttp {
             try {
                 Object object = field.get(bean);
                 if (object != null) {
-                    String value = String.valueOf(field.get(bean));
-                    result.put(key, value);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    //如果是list，转为，分割的字符串
+                    if (object instanceof Collection) {
+                        Collection list = ((Collection) object);
+                        for (Object o : list) {
+                            stringBuilder.append(String.valueOf(list)).append(",");
+                        }
+
+                        if (stringBuilder.length() > 0) {
+                            stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+                        }
+                    } else {
+                        stringBuilder.append(String.valueOf(field.get(bean)));
+                    }
+                    result.put(key, stringBuilder.toString());
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
