@@ -441,7 +441,7 @@ public class ZHttp {
     }
 
     public static void removeNullValue(Map<String, String> hashMap) {
-        if (!IS_CLEAR_EMPTY_VALUE && !IS_CLEAR_NULL_VALUE) {
+        if ((!IS_CLEAR_EMPTY_VALUE && !IS_CLEAR_NULL_VALUE) || hashMap == null) {
             return;
         }
 
