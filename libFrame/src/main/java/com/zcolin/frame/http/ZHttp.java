@@ -17,11 +17,13 @@ import com.zcolin.frame.http.response.ZFileResponse;
 import com.zcolin.frame.http.response.ZResponse;
 import com.zcolin.frame.http.response.ZStringResponse;
 import com.zcolin.frame.util.GsonUtil;
+import com.zcolin.frame.util.StringUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -33,6 +35,8 @@ import java.util.UUID;
  */
 public class ZHttp {
     static ZRequestIntercept REQUESTINTERCEPT;
+    static boolean           IS_CLEAR_EMPTY_VALUE;//清除为空的字段
+    static boolean           IS_CLEAR_NULL_VALUE;//清除为null的字段
 
     /**
      * 设置请求拦截器
@@ -41,6 +45,14 @@ public class ZHttp {
         REQUESTINTERCEPT = intercept;
     }
 
+
+    public static void setIsClearEmptyValue(boolean isClearEmptyValue) {
+        IS_CLEAR_EMPTY_VALUE = isClearEmptyValue;
+    }
+
+    public static void setIsClearNullValue(boolean isClearNullValue) {
+        IS_CLEAR_NULL_VALUE = isClearNullValue;
+    }
 
     //--------------------------------------------------ZSResponse START----------------------------------------------------
 
@@ -64,8 +76,10 @@ public class ZHttp {
         return getWithHeader(url, headerParams, beanToMap(contentParams), response);
     }
 
-    public static <T extends ZReply> String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
+    public static <T extends ZReply> String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams,
+            ZResponse<T> response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             OkHttpUtils.get().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy());
         }
@@ -82,12 +96,15 @@ public class ZHttp {
         return post(url, beanToMap(contentParams), response);
     }
 
-    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams, ZResponse<T> response) {
+    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Object contentParams,
+            ZResponse<T> response) {
         return postWithHeader(url, headerParams, beanToMap(contentParams), response);
     }
 
-    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZResponse<T> response) {
+    public static <T extends ZReply> String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams,
+            ZResponse<T> response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             OkHttpUtils.post().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy());
         }
@@ -104,10 +121,18 @@ public class ZHttp {
         return postStringWithHeader(url, null, string, mimeType, response);
     }
 
-    public static <T extends ZReply> String postStringWithHeader(String url, LinkedHashMap<String, String> headerParams, String string, String mimeType, ZResponse<T> response) {
+    public static <T extends ZReply> String postStringWithHeader(String url, LinkedHashMap<String, String> headerParams, String string, String mimeType,
+            ZResponse<T> response) {
         String cancelTag = UUID.randomUUID().toString();
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, string, response)) {
-            OkHttpUtils.postString().url(url).headers(headerParams).mimeType(mimeType).content(string).tag(cancelTag).build().execute(response.generatedProxy());
+            OkHttpUtils.postString()
+                       .url(url)
+                       .headers(headerParams)
+                       .mimeType(mimeType)
+                       .content(string)
+                       .tag(cancelTag)
+                       .build()
+                       .execute(response.generatedProxy());
         }
         return cancelTag;
     }
@@ -159,6 +184,7 @@ public class ZHttp {
 
     public static String getWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             OkHttpUtils.get().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response);
         }
@@ -179,6 +205,7 @@ public class ZHttp {
 
     public static String postWithHeader(String url, LinkedHashMap<String, String> headerParams, Map<String, String> contentParams, ZStringResponse response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             OkHttpUtils.post().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response);
         }
@@ -193,14 +220,22 @@ public class ZHttp {
         return postJson(url, GsonUtil.beanToString(jsonObj), response);
     }
 
-    public static <T extends ZReply> String postJsonWithHeader(String url, LinkedHashMap<String, String> headerParams, Object jsonObj, ZStringResponse response) {
+    public static <T extends ZReply> String postJsonWithHeader(String url, LinkedHashMap<String, String> headerParams, Object jsonObj,
+            ZStringResponse response) {
         return postJsonWithHeader(url, headerParams, GsonUtil.beanToString(jsonObj), response);
     }
 
     public static <T extends ZReply> String postJsonWithHeader(String url, LinkedHashMap<String, String> headerParams, String json, ZStringResponse response) {
         String cancelTag = UUID.randomUUID().toString();
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, json, response)) {
-            OkHttpUtils.postString().url(url).headers(headerParams).mimeType("application/json; charset=utf-8").content(json).tag(cancelTag).build().execute(response);
+            OkHttpUtils.postString()
+                       .url(url)
+                       .headers(headerParams)
+                       .mimeType("application/json; charset=utf-8")
+                       .content(json)
+                       .tag(cancelTag)
+                       .build()
+                       .execute(response);
         }
         return cancelTag;
     }
@@ -223,12 +258,15 @@ public class ZHttp {
         return uploadFileWithHeader(url, headers, null, fileParams, response);
     }
 
-    public static String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Object contentParams, Map<String, File> fileParams, ZStringResponse response) {
+    public static String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Object contentParams, Map<String, File> fileParams,
+            ZStringResponse response) {
         return uploadFileWithHeader(url, headers, beanToMap(contentParams), fileParams, response);
     }
 
-    public static String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams, Map<String, File> fileParams, ZStringResponse response) {
+    public static String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams,
+            Map<String, File> fileParams, ZStringResponse response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, contentParams, response)) {
             OkHttpUtils.post().url(url).headers(headers).files(fileParams).params(contentParams).tag(cancelTag).build().execute(response);
         }
@@ -257,23 +295,27 @@ public class ZHttp {
 
     public static <T extends ZReply> String uploadFile(String url, Map<String, String> contentParams, String fileKey, File[] fileValue, ZResponse<T> response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, null, fileValue, response)) {
             OkHttpUtils.post().url(url).params(contentParams).files(fileKey, fileValue).tag(cancelTag).build().execute(response.generatedProxy());
         }
         return cancelTag;
     }
 
-    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, File> fileParams, ZResponse<T> response) {
+    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, File> fileParams,
+            ZResponse<T> response) {
         return uploadFileWithHeader(url, headers, null, fileParams, response);
     }
 
-    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Object contentParams, Map<String, File> fileParams, ZResponse<T> response) {
+    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Object contentParams,
+            Map<String, File> fileParams, ZResponse<T> response) {
         return uploadFileWithHeader(url, headers, beanToMap(contentParams), fileParams, response);
     }
 
-    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams, Map<String, File> fileParams,
-            ZResponse<T> response) {
+    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams,
+            Map<String, File> fileParams, ZResponse<T> response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, fileParams, response)) {
             OkHttpUtils.post().url(url).headers(headers).files(fileParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy());
         }
@@ -294,6 +336,7 @@ public class ZHttp {
 
     public static String downLoadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams, ZFileResponse response) {
         String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, contentParams, response)) {
             OkHttpUtils.get().url(url).headers(headers).params(contentParams).tag(cancelTag).build().execute(response);
         }
@@ -395,5 +438,23 @@ public class ZHttp {
             }
         }
         return result;
+    }
+
+    public static void removeNullValue(Map<String, String> hashMap) {
+        if (!IS_CLEAR_EMPTY_VALUE && !IS_CLEAR_NULL_VALUE) {
+            return;
+        }
+
+        for (Iterator<Map.Entry<String, String>> it = hashMap.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<String, String> item = it.next();
+            if (item.getValue() == null && (IS_CLEAR_EMPTY_VALUE || IS_CLEAR_NULL_VALUE)) {
+                it.remove();
+                continue;
+            }
+
+            if (StringUtil.isEmpty(item.getValue()) && IS_CLEAR_EMPTY_VALUE) {
+                it.remove();
+            }
+        }
     }
 }
