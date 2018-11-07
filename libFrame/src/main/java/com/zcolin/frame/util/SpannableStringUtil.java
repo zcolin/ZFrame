@@ -249,7 +249,7 @@ public class SpannableStringUtil {
                 break;
             }
             int end = start + effectStr.length();
-            builder.backgroundColor(start, end, textSize);
+            builder.textSize(start, end, textSize);
             index = end;
         }
         return builder.build();
