@@ -286,20 +286,16 @@ public class ZHttp {
     }
 
     public static <T extends ZReply> String uploadFile(String url, String fileKey, File[] fileValue, ZResponse<T> response) {
-        String cancelTag = UUID.randomUUID().toString();
-        if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, null, fileValue, response)) {
-            OkHttpUtils.post().url(url).files(fileKey, fileValue).tag(cancelTag).build().execute(response.generatedProxy());
-        }
-        return cancelTag;
+        return uploadFile(url, null, fileKey, fileValue, response);
     }
 
     public static <T extends ZReply> String uploadFile(String url, Map<String, String> contentParams, String fileKey, File[] fileValue, ZResponse<T> response) {
-        String cancelTag = UUID.randomUUID().toString();
-        removeNullValue(contentParams);
-        if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, null, fileValue, response)) {
-            OkHttpUtils.post().url(url).params(contentParams).files(fileKey, fileValue).tag(cancelTag).build().execute(response.generatedProxy());
-        }
-        return cancelTag;
+        return uploadFileWithHeader(url, null, contentParams, fileKey, fileValue, response);
+    }
+
+    public static <T extends ZReply> String uploadFileArray(String url, Map<String, String> contentParams, Map<String, File[]> fileParams,
+            ZResponse<T> response) {
+        return uploadFileArrayWithHeader(url, null, contentParams, fileParams, response);
     }
 
     public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, File> fileParams,
@@ -318,6 +314,34 @@ public class ZHttp {
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, fileParams, response)) {
             OkHttpUtils.post().url(url).headers(headers).files(fileParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy());
+        }
+        return cancelTag;
+    }
+
+    public static <T extends ZReply> String uploadFileArrayWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams,
+            Map<String, File[]> fileParams, ZResponse<T> response) {
+        String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
+        if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, fileParams, response)) {
+            OkHttpUtils.post().url(url).headers(headers).arrFiles(fileParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy());
+        }
+        return cancelTag;
+    }
+
+
+    public static <T extends ZReply> String uploadFileWithHeader(String url, LinkedHashMap<String, String> headers, Map<String, String> contentParams,
+            String fileKey, File[] fileValue, ZResponse<T> response) {
+        String cancelTag = UUID.randomUUID().toString();
+        removeNullValue(contentParams);
+        if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, null, fileValue, response)) {
+            OkHttpUtils.post()
+                       .url(url)
+                       .headers(headers)
+                       .params(contentParams)
+                       .files(fileKey, fileValue)
+                       .tag(cancelTag)
+                       .build()
+                       .execute(response.generatedProxy());
         }
         return cancelTag;
     }

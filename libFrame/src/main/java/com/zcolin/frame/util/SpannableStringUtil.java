@@ -250,6 +250,9 @@ public class SpannableStringUtil {
             }
             int end = start + effectStr.length();
             builder.textSize(start, end, textSize);
+            
+            
+            
             index = end;
         }
         return builder.build();

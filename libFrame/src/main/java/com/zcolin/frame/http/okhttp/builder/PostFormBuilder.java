@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Created by zhy on 15/12/14.
- * 
+ * <p>
  * update by zcolin
  */
 public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> implements HasParamsable {
@@ -53,6 +53,13 @@ public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> imple
                 fileName = key;
             }
             this.files.add(new FileInput(key, fileName, file));
+        }
+        return this;
+    }
+
+    public PostFormBuilder arrFiles(Map<String, File[]> files) {
+        for (String key : files.keySet()) {
+            this.files(key, files.get(key));
         }
         return this;
     }
