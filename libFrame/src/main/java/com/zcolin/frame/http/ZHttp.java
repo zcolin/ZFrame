@@ -426,7 +426,7 @@ public class ZHttp {
                     if (object instanceof Collection) {
                         Collection list = ((Collection) object);
                         for (Object o : list) {
-                            stringBuilder.append(String.valueOf(list)).append(",");
+                            stringBuilder.append(String.valueOf(o)).append(",");
                         }
 
                         if (stringBuilder.length() > 0) {
