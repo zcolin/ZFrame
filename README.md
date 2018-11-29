@@ -25,7 +25,8 @@ Orm数据库采用GreenDao, Http采用OkHttp, 图片加载采用Glide, 这三个
 app的build.gradle中添加
 ```
 dependencies {
-    compile 'com.github.zcolin:ZFrame:latest.release'
+    implementation "com.android.support:appcompat-v7:你的版本号"
+    implementation 'com.github.zcolin:ZFrame:latest.release'
 }
 ```
 工程的build.gradle中添加

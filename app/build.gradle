@@ -51,10 +51,9 @@ android {
     }
 }
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':libFrame')
-
-    compile "com.android.support:appcompat-v7:$supprotVersion"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':libFrame')
+    implementation "com.android.support:appcompat-v7:$supprotVersion"
 }
 
 
