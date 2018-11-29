@@ -28,6 +28,12 @@ public class BaseApp extends Application {
         APP_CONTEXT = this;
         super.onCreate();
 
-        Thread.setDefaultUncaughtExceptionHandler(CrashHandler.getInstance());
+        if (isSetDefaultUncaughtExceptionHandler()) {
+            Thread.setDefaultUncaughtExceptionHandler(CrashHandler.getInstance());
+        }
+    }
+
+    protected boolean isSetDefaultUncaughtExceptionHandler() {
+        return true;
     }
 }
