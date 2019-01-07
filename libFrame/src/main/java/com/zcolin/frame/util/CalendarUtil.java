@@ -459,17 +459,32 @@ public class CalendarUtil {
      * @return 相差时间
      */
     public static String diff(Date one, Date two) {
-        long diffTime = diffDays(one, two);
+        long diffTime = diffYear(one, two);
+        if (Math.abs(diffTime) > 0) {
+            return diffTime + "年";
+        }
+
+        diffTime = CalendarUtil.diffMonth(one, two);
+        if (Math.abs(diffTime) > 0) {
+            return diffTime + "月";
+        }
+
+        diffTime = CalendarUtil.diffDays(one, two);
         if (Math.abs(diffTime) > 0) {
             return diffTime + "天";
         }
 
-        diffTime = diffHours(one, two);
+        diffTime = CalendarUtil.diffHours(one, two);
         if (Math.abs(diffTime) > 0) {
             return diffTime + "小时";
         }
 
-        return diffMinutes(one, two) + "分钟";
+        diffTime = CalendarUtil.diffMinutes(one, two);
+        if (Math.abs(diffTime) > 0) {
+            return diffTime + "分钟";
+        }
+
+        return "刚刚";
     }
 
     /**
@@ -528,14 +543,14 @@ public class CalendarUtil {
 
     /**
      * 计算两个日期相差月份数。
-     *
-     * @return 两个日期相差天数
+     * 用第一个日期减去第二个。如果前一个日期小于后一个日期，则返回负数
      */
     public static int diffMonth(Calendar one, Calendar two) {
         int diffYear = one.get(Calendar.YEAR) - two.get(Calendar.YEAR);
         int diffMonth = one.get(Calendar.MONTH) - two.get(Calendar.MONTH);
         return diffYear * 12 + diffMonth;
     }
+
 
     /**
      * 计算两个日期相差月份数。
@@ -550,6 +565,25 @@ public class CalendarUtil {
         return diffMonth(one, two);
     }
 
+    /**
+     * 计算两个日期相差月年数。
+     * 用第一个日期减去第二个。如果前一个日期小于后一个日期，则返回负数
+     */
+    public static int diffYear(Calendar one, Calendar two) {
+        return one.get(Calendar.YEAR) - two.get(Calendar.YEAR);
+    }
+
+    /**
+     * 计算两个日期相差月年数。
+     * 用第一个日期减去第二个。如果前一个日期小于后一个日期，则返回负数
+     */
+    public static int diffYear(Date dateOne, Date dateTwo) {
+        Calendar one = Calendar.getInstance();
+        Calendar two = Calendar.getInstance();
+        one.setTime(dateOne);
+        two.setTime(dateTwo);
+        return diffYear(dateOne, dateTwo);
+    }
 
     /**
      * 计算两个日期是否为同一天

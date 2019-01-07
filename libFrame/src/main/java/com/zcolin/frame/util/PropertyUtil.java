@@ -14,49 +14,68 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * Properties配置文件操作类
  */
 public class PropertyUtil {
+    protected String      fileName; // 文件名称
+    protected String      filePath; // 文件路径
+    protected InputStream inputStream;//读取配置文件的输入流
 
-    protected String fileName; // 文件名称
-    protected String filePath; // 文件路径
+    public static InputStreamProperties instance(InputStream inputStream) {
+        return new PropertyUtil(inputStream).new InputStreamProperties();
+    }
 
-    public PropertyUtil(String filePath, String fileName) {
-        this.fileName = fileName;
+    public static FileProperties instance(String filePath, String fileName) {
+        return new PropertyUtil(filePath, fileName).new FileProperties();
+    }
+
+    private PropertyUtil(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    private PropertyUtil(String filePath, String fileName) {
         this.filePath = filePath;
+        this.fileName = fileName;
     }
 
     /**
-     * 初始化加载
+     * 文件类型的，可以读写
      */
-    public LoadProperties load() {
-        LoadProperties loadProp = new LoadProperties();
-        loadProp.loadInProperties();
-        return loadProp;
-    }
-
-    /**
-     * 存入数据是必须调用此方法获取存入实例
-     */
-    public EditProperties edit() {
-        EditProperties editProp = new EditProperties();
-        return editProp;
-    }
-
-    //检查文件是否存在，不存在则创建
-    private void checkFileExist(File file) {
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
+    public class FileProperties {
+        /**
+         * 初始化加载
+         */
+        public LoadProperties load() {
+            LoadProperties loadProp = new LoadProperties();
+            loadProp.loadInFileProperties();
+            return loadProp;
         }
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        /**
+         * 存入数据是必须调用此方法获取存入实例
+         */
+        public EditProperties edit() {
+            EditProperties editProp = new EditProperties();
+            return editProp;
+        }
+    }
+
+    /**
+     * 输入流的，只能读取。如assets文件
+     */
+    public class InputStreamProperties {
+
+        /**
+         * 初始化加载
+         */
+        public LoadProperties load() {
+            LoadProperties loadProp = new LoadProperties();
+            loadProp.loadInInputStreamProperties();
+            return loadProp;
         }
     }
 
@@ -77,8 +96,9 @@ public class PropertyUtil {
          * @param defValue Key不存在的默认值
          */
         public String getString(String key, String defValue) {
-            if (key == null)
+            if (key == null) {
                 return defValue;
+            }
             String str = props.getProperty(key);
             if (str == null) {
                 str = defValue;
@@ -115,8 +135,9 @@ public class PropertyUtil {
          * @param defValue Key不存在的默认值
          */
         public int getInt(String key, int defValue) {
-            if (key == null)
+            if (key == null) {
                 return defValue;
+            }
             String str = props.getProperty(key);
             int i = defValue;
             if (StringUtil.isNotEmpty(str)) {
@@ -129,10 +150,10 @@ public class PropertyUtil {
             return i;
         }
 
-        /*
-         * 加载配置文件
+        /**
+         * 加载文件形式配置文件
          */
-        private Properties loadInProperties() {
+        private Properties loadInFileProperties() {
             File file = new File(filePath + "/" + fileName);
             checkFileExist(file);
             FileReader input = null;
@@ -144,12 +165,35 @@ public class PropertyUtil {
             } catch (IOException e1) {
                 LogUtil.d("PropertyMgr--loadInProperties", LogUtil.ExceptionToString(e1));
             } finally {
-                if (input != null)
+                if (input != null) {
                     try {
                         input.close();
                     } catch (IOException e) {
                         LogUtil.d("PropertyMgr--loadInProperties", LogUtil.ExceptionToString(e));
                     }
+                }
+            }
+            return props;
+        }
+
+        /*
+         * 加载输入流形式配置文件
+         */
+        private Properties loadInInputStreamProperties() {
+            try {
+                props.load(inputStream);
+            } catch (FileNotFoundException e) {
+                LogUtil.d("PropertyMgr--loadInProperties", LogUtil.ExceptionToString(e));
+            } catch (IOException e1) {
+                LogUtil.d("PropertyMgr--loadInProperties", LogUtil.ExceptionToString(e1));
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        LogUtil.d("PropertyMgr--loadInProperties", LogUtil.ExceptionToString(e));
+                    }
+                }
             }
             return props;
         }
@@ -164,7 +208,7 @@ public class PropertyUtil {
 
         private EditProperties() {
             LoadProperties loadProp = new LoadProperties();
-            props = loadProp.loadInProperties();
+            props = loadProp.loadInFileProperties();
         }
 
         /**
@@ -222,7 +266,7 @@ public class PropertyUtil {
          * 提交更改
          */
         public void commit() {
-            loadOutProperties(null);
+            loadOutFileProperties(null);
         }
 
         /**
@@ -231,7 +275,7 @@ public class PropertyUtil {
          * @param comm 注释
          */
         public void commit(String comm) {
-            loadOutProperties(comm);
+            loadOutFileProperties(comm);
         }
 
         /*
@@ -239,7 +283,7 @@ public class PropertyUtil {
          * 
          * @param comm		注释
          */
-        private void loadOutProperties(String comm) {
+        private void loadOutFileProperties(String comm) {
             FileWriter output = null;
             try {
                 File file = new File(filePath + "/" + fileName);
@@ -251,14 +295,31 @@ public class PropertyUtil {
             } catch (IOException e1) {
                 LogUtil.d("PropertyMgr--loadOutProperties", LogUtil.ExceptionToString(e1));
             } finally {
-                if (output != null)
+                if (output != null) {
                     try {
                         output.close();
                     } catch (IOException e) {
                         LogUtil.d("PropertyMgr--loadOutProperties", LogUtil.ExceptionToString(e));
                     }
+                }
             }
         }
 
+    }
+
+    /**
+     * 检查文件是否存在，不存在则创建
+     */
+    private void checkFileExist(File file) {
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
