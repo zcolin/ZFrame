@@ -447,8 +447,8 @@ public class CalendarUtil {
      * @param date 需要计算的Date对象
      * @return 相差的时间
      */
-    public static String diffNow(Date date) {
-        return diff(CalendarUtil.getNow(), date);
+    public static String timeAgo(Date date) {
+        return timeAgo(CalendarUtil.getNow(), date);
     }
 
     /**
@@ -458,30 +458,32 @@ public class CalendarUtil {
      * @param two 第二个日期数，作为比较
      * @return 相差时间
      */
-    public static String diff(Date one, Date two) {
-        long diffTime = diffYear(one, two);
+    public static String timeAgo(Date one, Date two) {
+        long day = Math.abs(one.getTime() - two.getTime()) / (24 * 60 * 1000);
+
+        long diffTime = day / 365;
         if (Math.abs(diffTime) > 0) {
-            return diffTime + "年";
+            return diffTime + "年前";
         }
 
-        diffTime = CalendarUtil.diffMonth(one, two);
+        diffTime = day / 30;
         if (Math.abs(diffTime) > 0) {
-            return diffTime + "月";
+            return diffTime + "月前";
         }
 
-        diffTime = CalendarUtil.diffDays(one, two);
+        diffTime = day;
         if (Math.abs(diffTime) > 0) {
-            return diffTime + "天";
+            return diffTime + "天前";
         }
 
         diffTime = CalendarUtil.diffHours(one, two);
         if (Math.abs(diffTime) > 0) {
-            return diffTime + "小时";
+            return diffTime + "小时前";
         }
 
         diffTime = CalendarUtil.diffMinutes(one, two);
         if (Math.abs(diffTime) > 0) {
-            return diffTime + "分钟";
+            return diffTime + "分钟前";
         }
 
         return "刚刚";
