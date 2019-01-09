@@ -9,6 +9,9 @@
 
 package com.zcolin.frame.http.okhttp.callback;
 
+import com.zcolin.frame.http.ZHttp;
+import com.zcolin.frame.util.LogUtil;
+
 import java.io.IOException;
 
 import okhttp3.Response;
@@ -19,6 +22,10 @@ import okhttp3.Response;
 public abstract class StringCallback extends Callback<String> {
     @Override
     public String parseNetworkResponse(Response response) throws IOException {
-        return response.body().string();
+        String body = response.body().string();
+        if (ZHttp.LOG) {
+            LogUtil.i("***************接收数据*****************：", body + "\n");
+        }
+        return body;
     }
 }

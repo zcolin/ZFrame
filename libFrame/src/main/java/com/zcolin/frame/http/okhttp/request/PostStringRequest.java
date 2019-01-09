@@ -46,7 +46,8 @@ public class PostStringRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
         if (ZHttp.LOG) {
-            LogUtil.i("\n发送数据：", content);
+            LogUtil.i("***************发送数据***************：", content + "\n");
+
         }
         return RequestBody.create(mediaType, content);
     }

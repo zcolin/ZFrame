@@ -14,6 +14,7 @@ import com.zcolin.frame.http.ZHttp;
 import com.zcolin.frame.http.okhttp.OkHttpUtils;
 import com.zcolin.frame.http.okhttp.builder.PostFormBuilder;
 import com.zcolin.frame.http.okhttp.callback.Callback;
+import com.zcolin.frame.util.GsonUtil;
 import com.zcolin.frame.util.LogUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -59,7 +60,7 @@ public class PostFormRequest extends OkHttpRequest {
             }
 
             if (ZHttp.LOG) {
-                LogUtil.i("\n发送数据：", stringBuffer);
+                LogUtil.i("***************发送数据*****************：", stringBuffer.toString() + "\n");
             }
             MediaType mime = mimeType == null ? MediaType.parse("application/x-www-form-urlencoded; charset=utf-8") : MediaType.parse(mimeType);
             return RequestBody.create(mime, stringBuffer.toString());
@@ -82,7 +83,8 @@ public class PostFormRequest extends OkHttpRequest {
             }
 
             if (ZHttp.LOG) {
-                LogUtil.i("\n发送文件：", fileNames.toString());
+                LogUtil.i("***************发送数据*****************：", GsonUtil.beanToString(params));
+                LogUtil.i("***************发送文件*****************：", fileNames.toString() + "\n");
             }
             return builder.build();
         }

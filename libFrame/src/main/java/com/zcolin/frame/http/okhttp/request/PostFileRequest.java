@@ -49,7 +49,7 @@ public class PostFileRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
         if (ZHttp.LOG) {
-            LogUtil.i("\n发送文件：", file.getName());
+            LogUtil.i("***************发送文件*****************：", file.getName() + "\n");
         }
         return RequestBody.create(mediaType, file);
     }
