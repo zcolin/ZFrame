@@ -459,7 +459,7 @@ public class CalendarUtil {
      * @return 相差时间
      */
     public static String timeAgo(Date one, Date two) {
-        long day = Math.abs(one.getTime() - two.getTime()) / (24 * 60 * 1000);
+        long day = Math.abs(((int) (one.getTime() / 1000) - (int) (two.getTime() / 1000)) / (24 * 60 * 60));
 
         long diffTime = day / 365;
         if (Math.abs(diffTime) > 0) {

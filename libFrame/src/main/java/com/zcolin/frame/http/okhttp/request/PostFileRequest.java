@@ -10,8 +10,10 @@
 package com.zcolin.frame.http.okhttp.request;
 
 
+import com.zcolin.frame.http.ZHttp;
 import com.zcolin.frame.http.okhttp.OkHttpUtils;
 import com.zcolin.frame.http.okhttp.callback.Callback;
+import com.zcolin.frame.util.LogUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -22,7 +24,7 @@ import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
- * 
+ * <p>
  * 文件上传请求
  */
 public class PostFileRequest extends OkHttpRequest {
@@ -46,18 +48,21 @@ public class PostFileRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody buildRequestBody() {
+        if (ZHttp.LOG) {
+            LogUtil.i("\n发送文件：", file.getName());
+        }
         return RequestBody.create(mediaType, file);
     }
 
     @Override
     protected RequestBody wrapRequestBody(RequestBody requestBody, final Callback callback) {
-        if (callback == null)
+        if (callback == null) {
             return requestBody;
+        }
         CountingRequestBody countingRequestBody = new CountingRequestBody(requestBody, (bytesWritten, contentLength) -> OkHttpUtils.getInstance()
                                                                                                                                    .getHandler()
-                                                                                                                                   .post(() -> callback
-                                                                                                                                           .onProgress
-                                                                                                                                                   (bytesWritten * 1.0f / contentLength, contentLength)));
+                                                                                                                                   .post(() -> callback.onProgress(bytesWritten * 1.0f / 
+                                                                                                                                           contentLength, contentLength)));
         return countingRequestBody;
     }
 

@@ -10,6 +10,9 @@
 package com.zcolin.frame.http.okhttp.request;
 
 
+import com.zcolin.frame.http.ZHttp;
+import com.zcolin.frame.util.LogUtil;
+
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -18,8 +21,6 @@ import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
- * 
- * 
  */
 public class PostStringRequest extends OkHttpRequest {
     private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
@@ -44,6 +45,9 @@ public class PostStringRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody buildRequestBody() {
+        if (ZHttp.LOG) {
+            LogUtil.i("\n发送数据：", content);
+        }
         return RequestBody.create(mediaType, content);
     }
 

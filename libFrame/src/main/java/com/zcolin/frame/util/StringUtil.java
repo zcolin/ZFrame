@@ -58,8 +58,9 @@ public class StringUtil {
      * 通过Res获取字符串
      */
     public static String getString(int resId) {
-        if (BaseApp.APP_CONTEXT != null)
+        if (BaseApp.APP_CONTEXT != null) {
             return BaseApp.APP_CONTEXT.getString(resId);
+        }
         return "";
     }
 
@@ -566,5 +567,35 @@ public class StringUtil {
             return new String[0];
         }
         return list.toArray(new String[list.size()]);
+    }
+
+    /**
+     * 获取List使用,分隔符分隔的字符串
+     *
+     * @param list 被分割的数据
+     */
+    public static String listJoin(List<String> list) {
+        return listJoin(list, ",");
+    }
+
+    /**
+     * 获取List使用分隔符分隔的字符串
+     *
+     * @param list     被分割的数据
+     * @param separate 分隔符
+     */
+    public static String listJoin(List<String> list, String separate) {
+        if (list == null || list.size() == 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (String s : list) {
+            builder.append(s).append(separate);
+        }
+        if (builder.length() > 0) {
+            builder.delete(builder.length() - 1, builder.length());
+        }
+        return builder.toString();
     }
 }

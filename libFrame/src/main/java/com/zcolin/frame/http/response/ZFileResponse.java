@@ -14,6 +14,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 
 import com.zcolin.frame.app.BaseFrameActivity;
+import com.zcolin.frame.http.ZHttp;
 import com.zcolin.frame.http.okhttp.callback.FileCallBack;
 
 import okhttp3.Request;
@@ -26,6 +27,7 @@ public abstract class ZFileResponse extends FileCallBack {
 
     private Dialog proBar;        //请求过程中的进度条
     private String barMsg;        //进度条上的文字
+    private String cancelTag;     //取消的标志位
 
     public ZFileResponse(String destPath) {
         this(destPath, null);
@@ -43,16 +45,38 @@ public abstract class ZFileResponse extends FileCallBack {
      * @param barMsg  进度条上 显示的信息
      */
     public ZFileResponse(String destPath, Activity barActy, String barMsg) {
+        this(destPath, barActy, barMsg, false);
+    }
+
+    /**
+     * @param barActivity 进度条Atvicity实体
+     * @param barMsg      进度条上 显示的信息
+     * @param cancelAble  是否可以取消
+     */
+    public ZFileResponse(String destPath, Activity barActivity, String barMsg, boolean cancelAble) {
         super(destPath);
-        if (barActy != null) {
-            if (barActy instanceof BaseFrameActivity && ((BaseFrameActivity) barActy).getProgressDialog() != null) {
-                proBar = ((BaseFrameActivity) barActy).getProgressDialog();
+        if (barActivity != null) {
+            if (barActivity instanceof BaseFrameActivity && ((BaseFrameActivity) barActivity).getProgressDialog() != null) {
+                proBar = ((BaseFrameActivity) barActivity).getProgressDialog();
             } else {
-                proBar = new ProgressDialog(barActy);
-                proBar.setCancelable(false);
+                proBar = new ProgressDialog(barActivity);
+                proBar.setCancelable(cancelAble);
+                if (cancelAble) {
+                    proBar.setOnCancelListener(dialogInterface -> {
+                        ZHttp.cancelRequest(cancelTag);
+                    });
+                }
             }
             this.barMsg = barMsg;
         }
+    }
+
+    /**
+     * 设置取消标志位
+     */
+    public ZFileResponse setCancelTag(String cancelTag) {
+        this.cancelTag = cancelTag;
+        return this;
     }
 
     @Override

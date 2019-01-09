@@ -10,9 +10,11 @@
 package com.zcolin.frame.http.okhttp.request;
 
 
+import com.zcolin.frame.http.ZHttp;
 import com.zcolin.frame.http.okhttp.OkHttpUtils;
 import com.zcolin.frame.http.okhttp.builder.PostFormBuilder;
 import com.zcolin.frame.http.okhttp.callback.Callback;
+import com.zcolin.frame.util.LogUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
@@ -56,6 +58,9 @@ public class PostFormRequest extends OkHttpRequest {
                 }
             }
 
+            if (ZHttp.LOG) {
+                LogUtil.i("\n发送数据：", stringBuffer);
+            }
             MediaType mime = mimeType == null ? MediaType.parse("application/x-www-form-urlencoded; charset=utf-8") : MediaType.parse(mimeType);
             return RequestBody.create(mime, stringBuffer.toString());
             //            此方法没有默认设置charset=utf-8，会导致中文乱码问题
@@ -67,11 +72,17 @@ public class PostFormRequest extends OkHttpRequest {
             MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
             addParams(builder);
 
+            StringBuilder fileNames = new StringBuilder();
             for (int i = 0; i < files.size(); i++) {
                 PostFormBuilder.FileInput fileInput = files.get(i);
                 MediaType mime = mimeType == null ? MediaType.parse(guessMimeType(fileInput.filename)) : MediaType.parse(mimeType);
                 RequestBody fileBody = RequestBody.create(mime, fileInput.file);
                 builder.addFormDataPart(fileInput.key, fileInput.filename, fileBody);
+                fileNames.append(fileInput.file.getName()).append(",");
+            }
+
+            if (ZHttp.LOG) {
+                LogUtil.i("\n发送文件：", fileNames.toString());
             }
             return builder.build();
         }

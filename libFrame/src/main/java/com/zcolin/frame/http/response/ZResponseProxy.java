@@ -27,8 +27,6 @@ import okhttp3.Response;
  * 返回gson对象，ZResponse的代理，处理数据完成后调用ZResponse的成功失败函数
  */
 public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
-    public static final int STATUS_CODE_SUCCESS = 200;
-
     public ZResponse<T> zResponse;
 
     ZResponseProxy(Class<T> cls, ZResponse<T> zResponse) {

@@ -10,6 +10,7 @@
 package com.zcolin.frame.http.okhttp.callback;
 
 
+import com.zcolin.frame.http.ZHttp;
 import com.zcolin.frame.util.GsonUtil;
 import com.zcolin.frame.util.LogUtil;
 
@@ -31,7 +32,9 @@ public abstract class GsonCallback<T> extends Callback<T> {
     @Override
     public T parseNetworkResponse(Response response) throws IOException {
         String string = response.body().string();
-        LogUtil.i("http response", string);
+        if (ZHttp.LOG) {
+            LogUtil.i("\n接收数据：", string);
+        }
 
         if (cls == String.class) {
             return (T) string;
