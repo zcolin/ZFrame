@@ -24,7 +24,8 @@ public abstract class StringCallback extends Callback<String> {
     public String parseNetworkResponse(Response response) throws IOException {
         String body = response.body().string();
         if (ZHttp.LOG) {
-            LogUtil.i("***************返回数据***************：", "url：" + response.request().url() + "\n数据：" + body + "\n");
+            body = body == null ? null : new String(body.getBytes("utf-8"), "utf-8");
+            LogUtil.i("**返回数据**：", "url：" + response.request().url() + "\n数据：" + body + "\n");
         }
         return body;
     }
