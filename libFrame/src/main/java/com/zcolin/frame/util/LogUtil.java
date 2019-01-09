@@ -124,12 +124,10 @@ public class LogUtil {
         log(tag, text, 'v');
     }
 
-    /*
-     * 根据tag, msg和等级，输出日志 
-     * 
-     * @param tag
-     * @param msg
-     * @param level				日志等级  e,w,d,i,v
+    /**
+     * 根据tag, msg和等级，输出日志
+     *
+     * @param level 日志等级  e,w,d,i,v
      */
     private static void log(String tag, String msg, char level) {
         if (msg == null) {
@@ -138,34 +136,80 @@ public class LogUtil {
 
         if (LOG_DEBUG) {
             if ('e' == level) {
-                Log.e(tag, msg);
+                logTruncation(tag, msg, level);
             } else if ('w' == level && ('w' == LOG_PRINT_TYPE || 'd' == LOG_PRINT_TYPE || 'i' == LOG_PRINT_TYPE || 'v' == LOG_PRINT_TYPE)) {
-                Log.w(tag, msg);
+                logTruncation(tag, msg, level);
             } else if ('d' == level && ('d' == LOG_PRINT_TYPE || 'i' == LOG_PRINT_TYPE || 'v' == LOG_PRINT_TYPE)) {
-                Log.d(tag, msg);
+                logTruncation(tag, msg, level);
             } else if ('i' == level && ('i' == LOG_PRINT_TYPE || 'v' == LOG_PRINT_TYPE)) {
-                Log.i(tag, msg);
+                logTruncation(tag, msg, level);
             } else if ('v' == level && 'v' == LOG_PRINT_TYPE) {
-                Log.v(tag, msg);
+                logTruncation(tag, msg, level);
             }
         }
 
         if (LOG_WRITE) {
             boolean flag = false;
-            if ('e' == level)
+            if ('e' == level) {
                 flag = true;
-            else if ('w' == level && ('w' == LOG_WRITE_TYPE || 'd' == LOG_WRITE_TYPE || 'i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE))
+            } else if ('w' == level && ('w' == LOG_WRITE_TYPE || 'd' == LOG_WRITE_TYPE || 'i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE)) {
                 flag = true;
-            else if ('d' == level && ('d' == LOG_WRITE_TYPE || 'i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE))
+            } else if ('d' == level && ('d' == LOG_WRITE_TYPE || 'i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE)) {
                 flag = true;
-            else if ('i' == level && ('i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE))
+            } else if ('i' == level && ('i' == LOG_WRITE_TYPE || 'v' == LOG_WRITE_TYPE)) {
                 flag = true;
-            else if ('v' == level && 'v' == LOG_WRITE_TYPE)
+            } else if ('v' == level && 'v' == LOG_WRITE_TYPE) {
                 flag = true;
+            }
 
             if (flag) {
                 writeLogtoFile(String.valueOf(level), tag, msg);
             }
+        }
+    }
+
+    /**
+     * 超4K logcat不输出，认为截断
+     * 截断输出日志
+     */
+    private static void logTruncation(String tag, String msg, char level) {
+        if (tag == null || tag.length() == 0 || msg == null || msg.length() == 0) {
+            return;
+        }
+
+        int segmentSize = 3 * 1024;
+        long length = msg.length();
+        if (length <= segmentSize) {// 长度小于等于限制直接打印
+            logDispense(tag, msg, level);
+        } else {
+            while (msg.length() > segmentSize) {// 循环分段打印日志
+                String logContent = msg.substring(0, segmentSize);
+                msg = msg.replace(logContent, "");
+                logDispense(tag, msg, level);
+            }
+            logDispense(tag, msg, level);// 打印剩余日志 
+        }
+    }
+
+    private static void logDispense(String tag, String msg, char level) {
+        switch (level) {
+            case 'e':
+                Log.e(tag, msg);
+                break;
+            case 'w':
+                Log.w(tag, msg);
+                break;
+            case 'd':
+                Log.d(tag, msg);
+                break;
+            case 'i':
+                Log.i(tag, msg);
+                break;
+            case 'v':
+                Log.v(tag, msg);
+                break;
+            default:
+                Log.v(tag, msg);
         }
     }
 
@@ -211,12 +255,12 @@ public class LogUtil {
         return writer.toString();
     }
 
-    /*
+    /**
      * 写入日志到文件
-     * 
-     * @param mylogtype			日志等级类型
-     * @param tag				日志标志
-     * @param text				日志内容
+     *
+     * @param mylogtype 日志等级类型
+     * @param tag       日志标志
+     * @param text      日志内容
      */
     private static void writeLogtoFile(String mylogtype, String tag, String text) {
         String preFileName = CalendarUtil.getDate();
