@@ -138,4 +138,16 @@ public class GsonUtil {
         }
         return map;
     }
+
+    /**
+     * 解析为JsonElement对象
+     */
+    public static JsonElement parse(String str) {
+        try {
+            return new JsonParser().parse(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

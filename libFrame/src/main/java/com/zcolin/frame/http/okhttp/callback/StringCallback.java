@@ -9,7 +9,9 @@
 
 package com.zcolin.frame.http.okhttp.callback;
 
+import com.google.gson.JsonElement;
 import com.zcolin.frame.http.ZHttp;
+import com.zcolin.frame.util.GsonUtil;
 import com.zcolin.frame.util.LogUtil;
 
 import java.io.IOException;
@@ -24,8 +26,9 @@ public abstract class StringCallback extends Callback<String> {
     public String parseNetworkResponse(Response response) throws IOException {
         String body = response.body().string();
         if (ZHttp.LOG) {
-            body = body == null ? null : new String(body.getBytes("utf-8"), "utf-8");
-            LogUtil.i("**返回数据**：", "url：" + response.request().url() + "\n数据：" + body + "\n");
+            JsonElement element = GsonUtil.parse(body);
+            String logstr = element == null ? body : element.toString();
+            LogUtil.i("**返回数据**：", "url：" + response.request().url() + "\n数据：" + logstr + "\n");
         }
         return body;
     }

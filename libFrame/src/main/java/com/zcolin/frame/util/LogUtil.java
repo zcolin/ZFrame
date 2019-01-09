@@ -184,8 +184,8 @@ public class LogUtil {
         } else {
             while (msg.length() > segmentSize) {// 循环分段打印日志
                 String logContent = msg.substring(0, segmentSize);
+                logDispense(tag, logContent, level);
                 msg = msg.replace(logContent, "");
-                logDispense(tag, msg, level);
             }
             logDispense(tag, msg, level);// 打印剩余日志 
         }

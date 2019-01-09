@@ -18,7 +18,7 @@ import okhttp3.RequestBody;
 
 /**
  * Created by zhy on 15/12/14.
- * 
+ * <p>
  * get请求构造类
  */
 public class GetRequest extends OkHttpRequest {
@@ -28,7 +28,7 @@ public class GetRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody buildRequestBody() {
-        LogUtil.i("***************http请求***************：", "url：" + url + "\n方法：GET\n");
+        LogUtil.i("***Get请求***：", "url：" + url);
         return null;
     }
 

@@ -50,7 +50,7 @@ public class OtherRequest extends OkHttpRequest {
         if (requestBody == null && !TextUtils.isEmpty(content)) {
             requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
         }
-        LogUtil.i("***http请求***：", "url：" + url + "\n方法：" + method + "\n");
+        LogUtil.i("***" + method + "请求***：", "url：" + url + "\n参数：" + content + "\n");
         return requestBody;
     }
 
