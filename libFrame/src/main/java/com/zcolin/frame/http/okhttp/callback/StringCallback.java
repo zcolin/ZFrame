@@ -28,7 +28,7 @@ public abstract class StringCallback extends Callback<String> {
         if (ZHttp.LOG) {
             JsonElement element = GsonUtil.parse(body);
             String logstr = element == null ? body : element.toString();
-            LogUtil.i("**返回数据**：", "url：" + response.request().url() + "\n数据：" + logstr + "\n");
+            LogUtil.i("**返回数据**：", response.request().url() + "\n" + logstr + "\n");
         }
         return body;
     }

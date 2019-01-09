@@ -28,7 +28,7 @@ public class GetRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody buildRequestBody() {
-        LogUtil.i("***Get请求***：", "url：" + url);
+        LogUtil.i("***Get请求***：", url);
         return null;
     }
 

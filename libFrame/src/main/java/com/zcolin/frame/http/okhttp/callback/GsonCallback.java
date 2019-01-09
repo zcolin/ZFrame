@@ -36,7 +36,7 @@ public abstract class GsonCallback<T> extends Callback<T> {
         if (ZHttp.LOG) {
             JsonElement element = GsonUtil.parse(string);
             String logstr = element == null ? string : element.toString();
-            LogUtil.i("**返回数据**：", "url：" + response.request().url() + "\n数据：" + logstr + "\n");
+            LogUtil.i("**返回数据**：", response.request().url() + "\n" + logstr + "\n");
         }
 
         if (cls == String.class) {

@@ -46,7 +46,7 @@ public class PostStringRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
         if (ZHttp.LOG) {
-            LogUtil.i("***Post请求***：", "url：" + url + "\n参数：" + content + "\n");
+            LogUtil.i("***Post请求***：", url + "\n" + content + "\n");
 
         }
         return RequestBody.create(mediaType, content);

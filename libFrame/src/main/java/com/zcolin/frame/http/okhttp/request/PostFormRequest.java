@@ -60,7 +60,7 @@ public class PostFormRequest extends OkHttpRequest {
             }
 
             if (ZHttp.LOG) {
-                LogUtil.i("***发送数据***：", "url：" + url + "\n参数：" + stringBuffer.toString() + "\n");
+                LogUtil.i("***Post请求***：", url + "\n" + stringBuffer.toString() + "\n");
             }
             MediaType mime = mimeType == null ? MediaType.parse("application/x-www-form-urlencoded; charset=utf-8") : MediaType.parse(mimeType);
             return RequestBody.create(mime, stringBuffer.toString());
@@ -83,7 +83,7 @@ public class PostFormRequest extends OkHttpRequest {
             }
 
             if (ZHttp.LOG) {
-                LogUtil.i("***发送数据***：", "url：" + url + "\n参数：" + GsonUtil.beanToString(params) + "\n");
+                LogUtil.i("***Post请求***：", url + "\n" + GsonUtil.beanToString(params) + "\n");
                 LogUtil.i("***发送文件***：", fileNames.toString() + "\n");
             }
             return builder.build();
