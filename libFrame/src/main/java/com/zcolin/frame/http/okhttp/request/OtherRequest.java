@@ -12,6 +12,7 @@ package com.zcolin.frame.http.okhttp.request;
 import android.text.TextUtils;
 
 import com.zcolin.frame.http.okhttp.OkHttpUtils;
+import com.zcolin.frame.util.LogUtil;
 
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class OtherRequest extends OkHttpRequest {
         if (requestBody == null && !TextUtils.isEmpty(content)) {
             requestBody = RequestBody.create(MEDIA_TYPE_PLAIN, content);
         }
-
+        LogUtil.i("***************http请求***************：", "url：" + url + "\n方法：" + method + "\n");
         return requestBody;
     }
 

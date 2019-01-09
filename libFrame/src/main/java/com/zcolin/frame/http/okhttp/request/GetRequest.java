@@ -9,6 +9,8 @@
 
 package com.zcolin.frame.http.okhttp.request;
 
+import com.zcolin.frame.util.LogUtil;
+
 import java.util.Map;
 
 import okhttp3.Request;
@@ -26,6 +28,7 @@ public class GetRequest extends OkHttpRequest {
 
     @Override
     protected RequestBody buildRequestBody() {
+        LogUtil.i("***************http请求***************：", "url：" + url + "\n方法：GET\n");
         return null;
     }
 

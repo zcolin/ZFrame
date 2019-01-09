@@ -33,7 +33,7 @@ public abstract class GsonCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response) throws IOException {
         String string = response.body().string();
         if (ZHttp.LOG) {
-            LogUtil.i("***************接收数据*****************：", string + "\n");
+            LogUtil.i("***************返回数据***************：", "url：" + response.request().url() + "\n数据：" + string + "\n");
         }
 
         if (cls == String.class) {
