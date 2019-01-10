@@ -49,11 +49,17 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
         String str;
         if (ex instanceof SocketTimeoutException || code == 0) {
             if (!NetworkUtil.isNetworkAvailable(BaseApp.APP_CONTEXT)) {
-                str = "当前无网络连接，请开启网络！";
+                str = "当前无网络连接，请开启网络~";
             } else {
-                str = "连接服务器失败, 请检查网络或稍后重试";
+                str = "连接服务器失败, 请检查网络或稍后重试~";
             }
             error(0, str);
+        } else if (code == 404) {
+            error(code, "你要找的地址不见啦~");
+        } else if (code == 403) {
+            error(code, "禁止访问");
+        } else if (code == 500) {
+            error(code, "服务器出错啦~");
         } else if (ex instanceof JsonSyntaxException) {
             error(-1, "json conversion failed, code is : -1");
         } else {
