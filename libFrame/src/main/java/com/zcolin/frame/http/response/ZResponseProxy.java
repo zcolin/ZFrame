@@ -54,17 +54,49 @@ public class ZResponseProxy<T extends ZReply> extends ZGsonResponse<T> {
                 str = "连接服务器失败, 请检查网络或稍后重试~";
             }
             error(0, str);
-        } else if (code == 404) {
-            error(code, "你要找的地址不见啦~");
-        } else if (code == 403) {
-            error(code, "禁止访问");
-        } else if (code == 500) {
-            error(code, "服务器出错啦~");
+        } else if ((str = getErrorMsg(code)) != null) {
+            error(code, str);
         } else if (ex instanceof JsonSyntaxException) {
             error(-1, "json conversion failed, code is : -1");
         } else {
             error(code, LogUtil.ExceptionToString(ex));
         }
+    }
+
+    private String getErrorMsg(int code) {
+        switch (code) {
+            case 400:
+                return "请求出现错误";
+            case 401:
+                return "没有提供认证信息";
+            case 403:
+                return "禁止访问";
+            case 404:
+                return "你要找的地址不见啦~";
+            case 406:
+                return "请求的资源并不符合要求";
+            case 408:
+                return "客户端请求超时";
+            case 413:
+                return "请求体过大";
+            case 415:
+                return "类型不正确";
+            case 416:
+                return "请求的区间无效";
+            case 500:
+                return "服务器出错啦~";
+            case 501:
+                return "请求还没有被实现";
+            case 502:
+                return "网关错误";
+            case 503:
+                return "服务暂时不可用。服务器正好在更新代码重启";
+            case 505:
+                return "请求的 HTTP 版本不支持";
+            default:
+                break;
+        }
+        return null;
     }
 
     @Override
