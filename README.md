@@ -4,7 +4,8 @@
 ZFrame是Android端的快速开发框架，此项目主要对常用的数据库、图片加载、权限处理、Http请求、常用工具类进行
 统一封装，基本涵盖了除了UI以外的所有功能，易于上手，上手之后能够快速的完成项目框架搭建。
 此项目主要包含五大模块:Orm数据库、OkHttp封装、Glide图片加载、PermissionHelper权限处理、工具类集合.
-Orm数据库采用GreenDao, Http采用OkHttp, 图片加载采用Glide, 这三个库是经过从性能和易用度综合考虑确定的.封装的基本能满足平时的使用了，遇到特殊问题，就google去吧。
+Orm数据库采用GreenDao, Http采用OkHttp, 图片加载采用Glide, 这三个库是经过从性能和易用度综合考虑确定的.封装的基本能满足平时的使用。
+如不满足可以自己进行扩展，或提交issue。
 
 
 ## Feature
@@ -90,6 +91,11 @@ ZHttp.get(HttpUrl.URL_BAIDU_TEST, new ZResponse<BaiduWeatherReply>(BaiduWeatherR
         }
     }
 });
+
+// 是否去除空/null字段。 default true
+ZHtpp.setIsClearEmptyValue(boolean)
+ZHtpp.setIsClearNullValue(boolean)
+
 ```
 #### DB 使用
 以下实体类的规则为GreenDao的官方规则，具体可以google
@@ -192,12 +198,4 @@ PermissionHelper.requestPermission(this, new String[]{Manifest.permission.CAMERA
 * SystemIntentUtil：调用系统Intent工具类。
 * ToastUtil：Toast工具类，可以在子线程调用。
 
-## copyright
-本软件使用 Apache License 2.0 协议，请严格遵照协议内容：
-1. 需要给代码的用户一份Apache Licence。
-1. 如果你修改了代码，需要在被修改的文件中说明。
-1. 在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议，商标，专利声明和其他原来作者规定需要包含的说明。
-1. 如果再发布的产品中包含一个Notice文件，则在Notice文件中需要带有Apache Licence。你可以在Notice中增加自己的许可，但不可以表现为对Apache Licence构成更改。
-1. Apache Licence也是对商业应用友好的许可。使用者也可以在需要的时候修改代码来满足需要并作为开源或商业产品发布/销售
-1. 你可以二次包装出售，但还请保留文件中的版权和作者信息，并在你的产品说明中注明ZFrame。
-1. 你可以以任何方式获得，你可以修改包名或类名，但还请保留文件中的版权和作者信息。
+## MIT

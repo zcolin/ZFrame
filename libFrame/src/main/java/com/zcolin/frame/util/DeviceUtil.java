@@ -78,6 +78,12 @@ public class DeviceUtil {
         return fontScale;
     }
 
+    /**
+     * 是否是平板设备
+     */
+    public static boolean isTablet(Context context) {
+        return ScreenUtil.isTablet(context);
+    }
 
     /**
      * 设置屏保时间
@@ -125,8 +131,7 @@ public class DeviceUtil {
     public static void acquireWakeLock(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if (!pm.isScreenOn()) {
-            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
-                    "SimpleTimer");
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "SimpleTimer");
             if (!wl.isHeld()) {
                 wl.acquire();
                 wl.release();
