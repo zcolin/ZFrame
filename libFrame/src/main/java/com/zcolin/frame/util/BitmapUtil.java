@@ -102,11 +102,15 @@ public class BitmapUtil {
      * @param height     缩放到高度， 小于0不缩放
      */
     public static void copyPic(String sourcePath, String tagPath, int width, int height) {
+        copyPic(sourcePath, tagPath, width, height, 300);
+    }
+
+    public static void copyPic(String sourcePath, String tagPath, int width, int height, int errorRange) {
         Bitmap map = null;
         if (width < 0 || height < 0) {
             map = decodeBitmap(sourcePath);
         } else {
-            map = decodeBitmap(sourcePath, width, height);
+            map = decodeBitmap(sourcePath, width, height, errorRange);
         }
 
         File file = new File(tagPath);
@@ -230,7 +234,7 @@ public class BitmapUtil {
      * @param fileName 图片文件路径
      */
     public static Bitmap decodeBitmap(String fileName, int width, int height) {
-        return decodeBitmap(fileName, width, height, 200);
+        return decodeBitmap(fileName, width, height, 300);
     }
 
     /**
@@ -283,7 +287,7 @@ public class BitmapUtil {
      * 图片缩放（等比缩放）
      */
     public static Bitmap decodeBitmap(byte[] arrayByte, int width, int height) {
-        return decodeBitmap(arrayByte, width, height, 200);
+        return decodeBitmap(arrayByte, width, height, 300);
     }
 
     /**
@@ -309,7 +313,7 @@ public class BitmapUtil {
     }
 
     private static int calculateOriginal(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        return calculateOriginal(options, reqWidth, reqHeight, 200);
+        return calculateOriginal(options, reqWidth, reqHeight, 300);
     }
 
     /**
@@ -410,8 +414,7 @@ public class BitmapUtil {
         canvas.drawRect(0, h, w, h + reflectionGap, deafalutPaint);
         canvas.drawBitmap(reflectionImage, 0, h + reflectionGap, null);
         Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, 
-                TileMode.CLAMP);
+        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
         paint.setShader(shader);
         // Set the Transfer mode to be porter duff and destination in
         paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
