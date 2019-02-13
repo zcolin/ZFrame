@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,11 +33,11 @@ import java.util.Set;
  */
 public class PermissionsManager {
 
-    private static final String                                       TAG              = PermissionsManager.class.getSimpleName();
-    private static       PermissionsManager                           mInstance        = null;
-    private final        Set<String>                                  mPendingRequests = new HashSet<>(1);
-    private final        Set<String>                                  mPermissions     = new HashSet<>(1);
-    private final        List<WeakReference<PermissionsResultAction>> mPendingActions  = new ArrayList<>(1);
+    private static final String                        TAG              = PermissionsManager.class.getSimpleName();
+    private static       PermissionsManager            mInstance        = null;
+    private final        Set<String>                   mPendingRequests = new HashSet<>(1);
+    private final        Set<String>                   mPermissions     = new HashSet<>(1);
+    private final        List<PermissionsResultAction> mPendingActions  = new ArrayList<>(1);
 
     private PermissionsManager() {
         initializePermissionsMap();
@@ -117,7 +116,7 @@ public class PermissionsManager {
             return;
         }
         action.registerPermissions(permissions);
-        mPendingActions.add(new WeakReference<>(action));
+        mPendingActions.add(action);
     }
 
     /**
@@ -129,9 +128,9 @@ public class PermissionsManager {
      * @param action the action to remove
      */
     private synchronized void removePendingAction(@Nullable PermissionsResultAction action) {
-        for (Iterator<WeakReference<PermissionsResultAction>> iterator = mPendingActions.iterator(); iterator.hasNext(); ) {
-            WeakReference<PermissionsResultAction> weakRef = iterator.next();
-            if (weakRef.get() == action || weakRef.get() == null) {
+        for (Iterator<PermissionsResultAction> iterator = mPendingActions.iterator(); iterator.hasNext(); ) {
+            PermissionsResultAction resultAction = iterator.next();
+            if (resultAction == action || resultAction == null) {
                 iterator.remove();
             }
         }
@@ -151,8 +150,7 @@ public class PermissionsManager {
      */
     @SuppressWarnings("unused")
     public synchronized boolean hasPermission(@Nullable Context context, @NonNull String permission) {
-        return context != null && (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED || !mPermissions.contains
-                (permission));
+        return context != null && (ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED || !mPermissions.contains(permission));
     }
 
     /**
@@ -217,8 +215,7 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity, @NonNull String[] permissions,
-            @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
         if (activity == null) {
             return;
         }
@@ -252,8 +249,7 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment, @NonNull String[] permissions,
-            @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
         Activity activity = fragment.getActivity();
         if (activity == null) {
             return;
@@ -292,9 +288,9 @@ public class PermissionsManager {
         if (results.length < size) {
             size = results.length;
         }
-        Iterator<WeakReference<PermissionsResultAction>> iterator = mPendingActions.iterator();
+        Iterator<PermissionsResultAction> iterator = mPendingActions.iterator();
         while (iterator.hasNext()) {
-            PermissionsResultAction action = iterator.next().get();
+            PermissionsResultAction action = iterator.next();
             for (int n = 0; n < size; n++) {
                 if (action == null || action.onResult(permissions[n], results[n])) {
                     iterator.remove();
