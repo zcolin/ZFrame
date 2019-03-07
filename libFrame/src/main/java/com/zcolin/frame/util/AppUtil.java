@@ -8,6 +8,7 @@
  */
 package com.zcolin.frame.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
@@ -28,6 +29,10 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.zcolin.frame.app.BaseApp;
+import com.zcolin.frame.app.BaseFrameActivity;
+import com.zcolin.frame.app.BaseFrameFrag;
+import com.zcolin.frame.permission.PermissionHelper;
+import com.zcolin.frame.permission.PermissionsResultAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -232,8 +237,9 @@ public class AppUtil {
     public static String getVersionName(Context context, String pckName) {
         String versionName = null;
         PackageInfo packInfo = getPackageInfo(context, pckName);
-        if (packInfo != null)
+        if (packInfo != null) {
             versionName = packInfo.versionName;
+        }
         return versionName;
     }
 
@@ -246,8 +252,9 @@ public class AppUtil {
     public static int getVersionCode(Context context, String pckName) {
         int versionCode = 0;
         PackageInfo packInfo = getPackageInfo(context, pckName);
-        if (packInfo != null)
+        if (packInfo != null) {
             versionCode = packInfo.versionCode;
+        }
         return versionCode;
     }
 
@@ -323,7 +330,7 @@ public class AppUtil {
      *
      * @param f APK文件对象
      */
-    public static void installBySys(Context context, File f) {
+    public static void installBySys(BaseFrameActivity context, File f) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
@@ -331,8 +338,55 @@ public class AppUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
-        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
-        context.startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PermissionHelper.requestPermission(context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, new PermissionsResultAction() {
+                @Override
+                public void onGranted() {
+                    intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                    context.startActivity(intent);
+                }
+
+                @Override
+                public void onDenied(String permission) {
+                    ToastUtil.toastShort("请赋予本应用安装app的权限");
+                }
+            });
+        } else {
+            intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+            context.startActivity(intent);
+        }
+    }
+
+    /**
+     * 调用系统安装
+     *
+     * @param f APK文件对象
+     */
+    public static void installBySys(BaseFrameFrag context, File f) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PermissionHelper.requestPermission(context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, new PermissionsResultAction() {
+                @Override
+                public void onGranted() {
+                    intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                    context.startActivity(intent);
+                }
+
+                @Override
+                public void onDenied(String permission) {
+                    ToastUtil.toastShort("请赋予本应用安装app的权限");
+                }
+            });
+        } else {
+            intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+            context.startActivity(intent);
+        }
     }
 
     /**
