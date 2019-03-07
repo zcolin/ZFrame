@@ -18,8 +18,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
-import java.io.File;
-
 /**
  * 系统托管下载工具
  * <p/>
@@ -28,9 +26,13 @@ import java.io.File;
  * downloadUtil.setDownloadFileName("apkName" + System.currentTimeMillis() + ".apk");
  * downloadUtil.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
  * downloadUtil.start();
+ * 
+ * 下载成功后通过广播发送消息，SystemDownloadApkUtil.BRO_DOWNLOAD_SUCCESS， 广播附加内容为putExtra("path", path))
+ * 直接使用AppUtil.installBySys(context, new File(path));安装即可
  */
 @SuppressWarnings("unused")
 public class SystemDownloadApkUtil {
+    public static final String BRO_DOWNLOAD_SUCCESS = "bro_download_success";
     private Context mContext;
     private String downloadFileName = "a.apk";
     private static long                    myReference;
@@ -87,9 +89,10 @@ public class SystemDownloadApkUtil {
             if (intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
                 String extraID = DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS;
                 long[] references = intent.getLongArrayExtra(extraID);
-                for (long reference : references)
+                for (long reference : references) {
                     if (reference == myReference) {
                     }
+                }
             }
             //下载完成
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
@@ -101,7 +104,8 @@ public class SystemDownloadApkUtil {
                     cursor.close();
                     if (filePath != null) {
                         if (filePath.contains(context.getPackageName())) {
-                            AppUtil.installBySys(context, new File(filePath.trim().substring(7)));
+                            context.sendBroadcast(new Intent(BRO_DOWNLOAD_SUCCESS).putExtra("path", filePath.trim().substring(7)));
+//                            AppUtil.installBySys(context, new File(filePath.trim().substring(7)));
                         }
                     } else {
                         Toast.makeText(context, "网络不给力", Toast.LENGTH_SHORT).show();
