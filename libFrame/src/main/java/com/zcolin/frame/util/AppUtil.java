@@ -8,7 +8,7 @@
  */
 package com.zcolin.frame.util;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
@@ -27,12 +27,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 
 import com.zcolin.frame.app.BaseApp;
 import com.zcolin.frame.app.BaseFrameActivity;
 import com.zcolin.frame.app.BaseFrameFrag;
-import com.zcolin.frame.permission.PermissionHelper;
-import com.zcolin.frame.permission.PermissionsResultAction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,6 +91,7 @@ public class AppUtil {
     /**
      * 杀进程， 在有的平台会失效
      */
+    @SuppressLint("MissingPermission")
     public static void shutDownPck(Context context, String pckName) {
         if (context != null) {
             ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -339,22 +339,24 @@ public class AppUtil {
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            PermissionHelper.requestPermission(context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, new PermissionsResultAction() {
-                @Override
-                public void onGranted() {
-                    intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
-                    context.startActivity(intent);
-                }
-
-                @Override
-                public void onDenied(String permission) {
-                    ToastUtil.toastShort("请赋予本应用安装app的权限");
-                }
-            });
-        } else {
-            intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
-            context.startActivity(intent);
+            boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
+            if (!hasInstallPermission) {
+                ToastUtil.toastShort("请打开[允许安装应用]权限");
+                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
+                context.startActivityWithCallback(intent1, (resultCode, data) -> {
+                    if (resultCode == Activity.RESULT_OK) {
+                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                        context.startActivity(intent);
+                    } else {
+                        ToastUtil.toastShort("没有赋予[未知来源安装]权限");
+                    }
+                });
+                return;
+            }
         }
+
+        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+        context.startActivity(intent);
     }
 
     /**
@@ -371,22 +373,24 @@ public class AppUtil {
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            PermissionHelper.requestPermission(context, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, new PermissionsResultAction() {
-                @Override
-                public void onGranted() {
-                    intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
-                    context.startActivity(intent);
-                }
-
-                @Override
-                public void onDenied(String permission) {
-                    ToastUtil.toastShort("请赋予本应用安装app的权限");
-                }
-            });
-        } else {
-            intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
-            context.startActivity(intent);
+            boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
+            if (!hasInstallPermission) {
+                ToastUtil.toastShort("请打开[允许安装应用]权限");
+                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
+                context.startActivityWithCallback(intent1, (resultCode, data) -> {
+                    if (resultCode == Activity.RESULT_OK) {
+                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                        context.startActivity(intent);
+                    } else {
+                        ToastUtil.toastShort("没有赋予[未知来源安装]权限");
+                    }
+                });
+                return;
+            }
         }
+
+        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+        context.startActivity(intent);
     }
 
     /**
