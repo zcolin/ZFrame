@@ -189,7 +189,7 @@ public class SystemIntentUtil {
                 FileUtil.checkFilePath(savePath, false);
                 final Intent intent = new Intent("com.android.camera.action.CROP");
                 intent.setDataAndType(getImageContentUri(file), "image/*");
-                final Uri uri = NUriParseUtil.get(Uri.fromFile(new File(savePath)));
+                final Uri uri = Uri.fromFile(new File(savePath));
                 if (uri != null) {
                     // 裁剪头像的绝对路径
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
