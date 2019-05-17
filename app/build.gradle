@@ -38,10 +38,9 @@ android {
         }
 
         release {
-            minifyEnabled true
-            shrinkResources false  //移除无用的resource文件（如果使用getIdentifier函数的需要关闭）
-            zipAlignEnabled true  //Zipalign优化
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
             signingConfig signingConfigs.debug
         }
     }
