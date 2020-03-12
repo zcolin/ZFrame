@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -19,7 +18,7 @@ import okhttp3.MediaType;
 
 /**
  * Created by zhy on 15/12/14.
- * 
+ * <p>
  * update by zcolin
  */
 public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder> {

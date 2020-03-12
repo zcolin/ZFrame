@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -89,7 +88,7 @@ public class ToastUtil {
 
     /*
      * 显示Toast，必须主线程调用
-     * 
+     *
      * @param strInfo		显示信息
      * @param nKeepTime		显示时间
      * @param able			显示的图片

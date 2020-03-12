@@ -1,17 +1,16 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
-/*    
- * 
- * @author		: WangLin  
+/*
+ *
+ * @author		: WangLin
  * @Company: 	：FCBN
- * @date		: 2015年5月13日 
+ * @date		: 2015年5月13日
  * @version 	: V1.0
  */
 package com.zcolin.frame.util;
@@ -414,7 +413,8 @@ public class BitmapUtil {
         canvas.drawRect(0, h, w, h + reflectionGap, deafalutPaint);
         canvas.drawBitmap(reflectionImage, 0, h + reflectionGap, null);
         Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, TileMode.CLAMP);
+        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0, bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
+                TileMode.CLAMP);
         paint.setShader(shader);
         // Set the Transfer mode to be porter duff and destination in
         paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));

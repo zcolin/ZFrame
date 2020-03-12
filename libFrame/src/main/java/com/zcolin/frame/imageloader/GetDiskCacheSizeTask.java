@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -68,7 +67,7 @@ public class GetDiskCacheSizeTask extends AsyncTask<File, Long, Long> {
         if (!dir.isDirectory()) {
             return dir.length();
         }
-        
+
         long result = 0;
         File[] children = dir.listFiles();
         if (children != null) {

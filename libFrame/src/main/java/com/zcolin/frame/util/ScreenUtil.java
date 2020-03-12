@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 package com.zcolin.frame.util;
@@ -198,8 +197,8 @@ public class ScreenUtil {
     public static boolean isAutoBrightness(ContentResolver aContentResolver) {
         boolean automicBrightness = false;
         try {
-            automicBrightness = Settings.System.getInt(aContentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System
-                    .SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
+            automicBrightness =
+                    Settings.System.getInt(aContentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }

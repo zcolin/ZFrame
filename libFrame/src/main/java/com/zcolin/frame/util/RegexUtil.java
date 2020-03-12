@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 package com.zcolin.frame.util;
@@ -57,8 +56,8 @@ public final class RegexUtil {
      * -9][0-9]*)))$ <br>
      * 浮点数 ^(-?\d+)(\.\d+)?$ <br>
      */
-    
-    
+
+
     /**
      * 手机号码，中间4位星号替换
      *
@@ -147,7 +146,7 @@ public final class RegexUtil {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean isPhone(String phone) {
-        String regex = "(\\+\\d+)?(\\d{3,4}\\-?)?\\d{7,8}$";
+        String regex = "(\\+\\d+)?(\\d{3,4}-?)?\\d{7,8}$";
         return Pattern.matches(regex, phone);
     }
 
@@ -169,7 +168,7 @@ public final class RegexUtil {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean isDigit(String digit) {
-        String regex = "\\-?[1-9]\\d+";
+        String regex = "-?[1-9]\\d+";
         return Pattern.matches(regex, digit);
     }
 
@@ -180,7 +179,7 @@ public final class RegexUtil {
      * @return 验证成功返回true，验证失败返回false
      */
     public static boolean isDecimals(String decimals) {
-        String regex = "\\-?[1-9]\\d+(\\.\\d+)?";
+        String regex = "-?[1-9]\\d+(\\.\\d+)?";
         return Pattern.matches(regex, decimals);
     }
 

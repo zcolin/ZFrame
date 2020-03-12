@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -26,18 +25,17 @@ import android.widget.Toast;
  * downloadUtil.setDownloadFileName("apkName" + System.currentTimeMillis() + ".apk");
  * downloadUtil.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
  * downloadUtil.start();
- * 
+ * <p>
  * 下载成功后通过广播发送消息，SystemDownloadApkUtil.BRO_DOWNLOAD_SUCCESS， 广播附加内容为putExtra("path", path))
  * 直接使用AppUtil.installBySys(context, new File(path));安装即可
  */
 @SuppressWarnings("unused")
 public class SystemDownloadApkUtil {
-    public static final String BRO_DOWNLOAD_SUCCESS = "bro_download_success";
-    private Context mContext;
-    private String downloadFileName = "a.apk";
-    private static long                    myReference;
-    private static DownloadManager         downloadManager;
-    private        DownloadManager.Request downloadRequest;
+    public static final String                  BRO_DOWNLOAD_SUCCESS = "bro_download_success";
+    private             Context                 mContext;
+    private static      long                    myReference;
+    private static      DownloadManager         downloadManager;
+    private             DownloadManager.Request downloadRequest;
 
     public SystemDownloadApkUtil(Context context, String downloadUrl) {
         this.mContext = context;
@@ -49,6 +47,7 @@ public class SystemDownloadApkUtil {
         Uri uri = Uri.parse(downloadUrl);//"http://app.mi.com/download/25323"
         downloadRequest = new DownloadManager.Request(uri);
         // 设置目标存储在外部目录，一般位置可以用
+        String downloadFileName = "a.apk";
         downloadRequest.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, downloadFileName);
         //下载的文件能被其他应用扫描到
         downloadRequest.allowScanningByMediaScanner();
@@ -58,7 +57,8 @@ public class SystemDownloadApkUtil {
         downloadRequest.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         // 设置mime类型，这里看服务器配置，一般国家化的都为utf-8编码。
         downloadRequest.setMimeType("application/vnd.android.package-archive");
-        /**
+
+        /*
          * 设置notification显示状态
          * Request.VISIBILITY_VISIBLE：在下载进行的过程中，通知栏中会一直显示该下载的Notification，当下载完成时，该Notification会被移除，这是默认的参数值。
          * Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED：在下载过程中通知栏会一直显示该下载的Notification，在下载完成后该Notification会继续显示，直到用户点击该
@@ -105,7 +105,7 @@ public class SystemDownloadApkUtil {
                     if (filePath != null) {
                         if (filePath.contains(context.getPackageName())) {
                             context.sendBroadcast(new Intent(BRO_DOWNLOAD_SUCCESS).putExtra("path", filePath.trim().substring(7)));
-//                            AppUtil.installBySys(context, new File(filePath.trim().substring(7)));
+                            //                            AppUtil.installBySys(context, new File(filePath.trim().substring(7)));
                         }
                     } else {
                         Toast.makeText(context, "网络不给力", Toast.LENGTH_SHORT).show();

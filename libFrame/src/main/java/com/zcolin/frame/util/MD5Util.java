@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -31,8 +30,9 @@ public class MD5Util {
      */
     public static String getMD5Str(String str) {
         String strMd5 = null;
-        if (str == null || str.length() == 0)
+        if (str == null || str.length() == 0) {
             return "";
+        }
         try {
             strMd5 = getMD5Str(str.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
@@ -52,8 +52,9 @@ public class MD5Util {
         MessageDigest messageDigest = null;
         try {
             messageDigest = MessageDigest.getInstance("MD5");
-            if (messageDigest == null)
+            if (messageDigest == null) {
                 return "";
+            }
 
             messageDigest.reset();
             messageDigest.update(arrbyte);
@@ -77,8 +78,9 @@ public class MD5Util {
         FileInputStream in = null;
         try {
             messageDigest = MessageDigest.getInstance("MD5");
-            if (messageDigest == null)
+            if (messageDigest == null) {
                 return "";
+            }
 
             messageDigest.reset();
             in = new FileInputStream(file);

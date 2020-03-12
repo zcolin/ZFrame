@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -16,6 +15,8 @@ import com.zcolin.frame.http.ZReply;
 import com.zcolin.frame.util.LogUtil;
 import com.zcolin.frame.util.ToastUtil;
 
+import java.lang.reflect.ParameterizedType;
+
 import okhttp3.Response;
 
 
@@ -26,7 +27,6 @@ public abstract class ZResponse<T extends ZReply> {
     static ZResponseIntercept RESPONSEINTERCEPT;
     String   barMsg;        //进度条上的文字
     Activity barActy;       //进度条的Activity
-    Class<T> cls;
 
     /**
      * 设置返回拦截器
@@ -35,29 +35,29 @@ public abstract class ZResponse<T extends ZReply> {
         RESPONSEINTERCEPT = intercept;
     }
 
-    public ZResponse(Class<T> cls) {
-        this(cls, null);
-    }
-
     public ZResponseProxy generatedProxy(String cancelTag) {
-        ZResponseProxy responseProxy = new ZResponseProxy<>(cls, this, barActy, barMsg);
+        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        ZResponseProxy responseProxy = new ZResponseProxy<>(entityClass, this, barActy, barMsg);
         responseProxy.setCancelTag(cancelTag);
         return responseProxy;
+    }
+
+    public ZResponse() {
+        this(null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      */
-    public ZResponse(Class<T> cls, Activity barActy) {
-        this(cls, barActy, null);
+    public ZResponse(Activity barActy) {
+        this(barActy, null);
     }
 
     /**
      * @param barActy 进度条Atvicity实体
      * @param barMsg  进度条上 显示的信息
      */
-    public ZResponse(Class<T> cls, Activity barActy, String barMsg) {
-        this.cls = cls;
+    public ZResponse(Activity barActy, String barMsg) {
         this.barActy = barActy;
         this.barMsg = barMsg;
     }

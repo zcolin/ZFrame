@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -30,8 +29,8 @@ final class CrashHandler implements UncaughtExceptionHandler {
     private static final String mExceptionFileName = "log.txt";
     private static final String TAG                = "CrashHandler";
 
-    private static volatile CrashHandler INSTANCE = null;
-    private UncaughtExceptionHandler mDefaultHandler;
+    private static volatile CrashHandler             INSTANCE = null;
+    private                 UncaughtExceptionHandler mDefaultHandler;
 
     private CrashHandler() {
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();

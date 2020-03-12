@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -31,7 +30,7 @@ import okhttp3.Response;
  * Created by zhy on 15/8/17.
  */
 public class OkHttpUtils {
-    public static final long DEFAULT_MILLISECONDS = 10_000L;
+    public static final     long         DEFAULT_MILLISECONDS = 10_000L;
     private volatile static OkHttpUtils  mInstance;
     private                 OkHttpClient mOkHttpClient;
     private                 Handler      handler;
@@ -128,7 +127,7 @@ public class OkHttpUtils {
                     }
 
                     if (!finalCallback.validateReponse(response)) {
-                        sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()), 
+                        sendFailResultCallback(response.code(), call, new IOException("request failed , reponse's code is : " + response.code()),
                                 finalCallback);
                         return;
                     }

@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -11,6 +10,8 @@ package com.zcolin.frame.util;
 
 import android.os.Environment;
 import android.os.StatFs;
+
+import com.zcolin.frame.app.BaseApp;
 
 import java.io.File;
 
@@ -27,14 +28,24 @@ public class SDCardUtil {
      */
     public static boolean isSDCardEnable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
-
     }
 
     /**
      * 获取SD卡路径
      */
     public static String getSDCardPath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+        return Environment.getExternalStorageDirectory().getPath() + File.separator;
+    }
+
+    /**
+     * 获取可用Path，默认返回sd卡路径，如果sd卡不可用，返回程序存储沙盒路径
+     */
+    public static String getEnablePath() {
+        if (isSDCardEnable()) {
+            return getSDCardPath();//SD卡目录
+        } else {
+            return BaseApp.APP_CONTEXT.getExternalFilesDir(null) + File.separator;//应用目录
+        }
     }
 
     /**

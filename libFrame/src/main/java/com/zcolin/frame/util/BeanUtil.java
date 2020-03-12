@@ -1,3 +1,11 @@
+/*
+ * *********************************************************
+ *   author   colin
+ *   email    wanglin2046@126.com
+ *   date     20-3-12 下午4:45
+ * ********************************************************
+ */
+
 package com.zcolin.frame.util;
 
 import java.lang.reflect.Field;
@@ -22,7 +30,7 @@ public class BeanUtil {
 
         Map<String, String> result = new HashMap<>();
         Field[] fields = bean.getClass().getFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return result;
         }
 
@@ -40,14 +48,14 @@ public class BeanUtil {
                 if (object instanceof Collection) {
                     Collection list = ((Collection) object);
                     for (Object o : list) {
-                        stringBuilder.append(String.valueOf(o)).append(",");
+                        stringBuilder.append(o).append(",");
                     }
 
                     if (stringBuilder.length() > 0) {
                         stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
                     }
                 } else {
-                    stringBuilder.append(String.valueOf(field.get(bean)));
+                    stringBuilder.append(field.get(bean));
                 }
                 result.put(key, stringBuilder.toString());
             } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -57,7 +65,7 @@ public class BeanUtil {
 
         //获取父类属性  
         fields = bean.getClass().getSuperclass().getFields();
-        if (fields == null || fields.length == 0) {
+        if (fields.length == 0) {
             return result;
         }
 

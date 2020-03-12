@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -55,7 +54,7 @@ public class PersistentCookieStore implements CookieStore {
     private static final String COOKIE_NAME_PREFIX = "cookie_";
 
     private final HashMap<String, HashMap<String, Cookie>> cookies;
-    private final SharedPreferences                                  cookiePrefs;
+    private final SharedPreferences                        cookiePrefs;
 
     /**
      * Construct a persistent cookie store.
@@ -175,16 +174,18 @@ public class PersistentCookieStore implements CookieStore {
     @Override
     public List<Cookie> getCookies() {
         ArrayList<Cookie> ret = new ArrayList<>();
-        for (String key : cookies.keySet())
+        for (String key : cookies.keySet()) {
             ret.addAll(cookies.get(key).values());
+        }
 
         return ret;
     }
 
 
     protected String encodeCookie(SerializableHttpCookie cookie) {
-        if (cookie == null)
+        if (cookie == null) {
             return null;
+        }
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(os);

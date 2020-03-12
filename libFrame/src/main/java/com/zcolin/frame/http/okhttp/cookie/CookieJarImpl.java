@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -25,8 +24,9 @@ public class CookieJarImpl implements CookieJar {
     private CookieStore cookieStore;
 
     public CookieJarImpl(CookieStore cookieStore) {
-        if (cookieStore == null)
+        if (cookieStore == null) {
             throw new IllegalArgumentException("cookieStore can not be null.");
+        }
 
         this.cookieStore = cookieStore;
     }

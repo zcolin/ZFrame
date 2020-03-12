@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -38,8 +37,9 @@ public class NUriParseUtil {
      * 根据版本获取Uri, AndroidN之前直接返回，之后自动使用FileProvider转换提供的content uri
      */
     public static Uri get(Uri uri) {
-        if (uri == null)
+        if (uri == null) {
             return null;
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || BaseApp.APP_CONTEXT.getApplicationInfo().targetSdkVersion <= 23) {
             return uri;
@@ -81,8 +81,9 @@ public class NUriParseUtil {
      * 将TakePhoto 提供的Uri 解析出文件绝对路径
      */
     public static String parseOwnUri(Uri uri) {
-        if (uri == null)
+        if (uri == null) {
             return null;
+        }
 
         String path;
         if (TextUtils.equals(uri.getAuthority(), getProviderName())) {
@@ -105,8 +106,8 @@ public class NUriParseUtil {
     public static Uri getImageContentUri(File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver()
-                                           .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media._ID}, MediaStore.Images
-                                                   .Media.DATA + "=? ", new String[]{filePath}, null);
+                                           .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media._ID},
+                                                   MediaStore.Images.Media.DATA + "=? ", new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));

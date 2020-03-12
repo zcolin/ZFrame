@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 package com.zcolin.frame.app;
@@ -25,8 +24,8 @@ public class ResultActivityHelper {
 
     private SparseArray<ResultActivityListener> requests       = new SparseArray<>();   //记录每一次请求的回调方法
     private int                                 currentReqCode = REQUEST_CODE_START;    //记录下一个请求的时候会生成的REQUEST_CODE
-    private Activity mActivity;
-    private Fragment mFragment;
+    private Activity                            mActivity;
+    private Fragment                            mFragment;
 
     public ResultActivityHelper(Activity activity) {
         this.mActivity = activity;

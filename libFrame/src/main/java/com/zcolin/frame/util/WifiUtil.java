@@ -1,18 +1,9 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
- */
-
-/*    
- * 
- * @author		: WangLin  
- * @Company: 	：FCBN
- * @date		: 2015年5月14日 
- * @version 	: V1.0
  */
 package com.zcolin.frame.util;
 
@@ -237,8 +228,9 @@ public class WifiUtil {
     public static void removeConfiguredNetworks(Context context) {
         WifiManager wifiManager = getWifiMgr(context);
         List<WifiConfiguration> existingConfigs = wifiManager.getConfiguredNetworks();
-        if (existingConfigs == null || existingConfigs.size() < 1)
+        if (existingConfigs == null || existingConfigs.size() < 1) {
             return;
+        }
 
         for (WifiConfiguration existingConfig : existingConfigs) {
             wifiManager.removeNetwork(existingConfig.networkId);
@@ -271,12 +263,14 @@ public class WifiUtil {
      * 检查wifi信号是否在附近
      */
     public static boolean isExistInWifiList(Context context, String SSID) {
-        if (SSID.length() == 0)
+        if (SSID.length() == 0) {
             return false;
+        }
         WifiManager wifiManager = getWifiMgr(context);
         List<ScanResult> scanResult = wifiManager.getScanResults();
-        if (scanResult == null)
+        if (scanResult == null) {
             return false;
+        }
         for (int i = 0; i < scanResult.size(); i++) {
             if (scanResult.get(i).SSID.equals(SSID)) {
                 return true;
@@ -345,8 +339,9 @@ public class WifiUtil {
      */
     public static String getWifiConnectInfoSSID(Context context) {
         WifiInfo wifiInfo = getWifiConnectInfo(context);
-        if (wifiInfo == null)
+        if (wifiInfo == null) {
             return "";
+        }
         return wifiInfo.getSSID();
     }
 
@@ -357,8 +352,9 @@ public class WifiUtil {
         WifiManager wifiManager = getWifiMgr(context);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (!NetworkUtil.isWifiConnect(context) || wifiInfo == null || ("0x").equalsIgnoreCase(wifiInfo.getSSID()) || wifiInfo.getSSID()
-                                                                                                                              .equals("<unknown ssid>"))
+                                                                                                                              .equals("<unknown ssid>")) {
             return null;
+        }
         return wifiInfo;
     }
 
@@ -375,8 +371,9 @@ public class WifiUtil {
         } else {
             float inputRange = (MAX_RSSI - MIN_RSSI);
             float outputRange = (totalLevels - 1);
-            if (inputRange != 0)
+            if (inputRange != 0) {
                 return (int) ((float) (rssi - MIN_RSSI) * outputRange / inputRange);
+            }
         }
         return 0;
     }

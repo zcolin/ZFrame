@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -33,7 +32,8 @@ public class OtherRequest extends OkHttpRequest {
     private String      method;
     private String      content;
 
-    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers, int id) {
+    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers,
+            int id) {
         super(url, tag, params, headers, id);
         this.requestBody = requestBody;
         this.method = method;

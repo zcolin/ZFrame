@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -30,7 +29,7 @@ import java.util.List;
  */
 public class DaoHelper<T1 extends AbstractDaoSession> {
     public static final String TAG = DaoHelper.class.getSimpleName();
-    public T1 daoSession;
+    public              T1     daoSession;
 
     public DaoHelper(T1 daoSession) {
         this.daoSession = daoSession;

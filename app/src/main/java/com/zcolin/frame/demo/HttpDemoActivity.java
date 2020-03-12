@@ -1,7 +1,6 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
  *   date     18-1-9 上午9:59
  * ********************************************************
@@ -37,8 +36,8 @@ import okhttp3.Response;
  * HttpDemo
  */
 public class HttpDemoActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout llContent;
-    private TextView     textView;
+    private LinearLayout      llContent;
+    private TextView          textView;
     private ArrayList<Button> listButton = new ArrayList<>();
 
     @Override
@@ -100,7 +99,7 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
      * ZResponse的参数，第二个参数是显示旋转进度条则传入，第三个参数是进度条文字，如果不需要进度条则只需要传入第一个参数
      */
     public void getObject() {
-        ZHttp.get(HttpUrl.URL_BAIDU_TEST, new ZResponse<BaiduWeatherReply>(BaiduWeatherReply.class, mActivity, "正在获取数据……") {
+        ZHttp.get(HttpUrl.URL_BAIDU_TEST, new ZResponse<BaiduWeatherReply>(mActivity, "正在获取数据……") {
             @Override
             public void onError(int code, String error) {
                 //TODO 错误处理   ToastUtil.toastShort(error);
@@ -124,7 +123,7 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
     public void postWithBarResponse() {
         HashMap<String, String> params = new HashMap<>();
         params.put("param1", "sss");
-        ZHttp.post(HttpUrl.URL_BAIDU_TEST, params, new ZResponse<HttpCommonReply>(HttpCommonReply.class, mActivity, "正在加载……") {
+        ZHttp.post(HttpUrl.URL_BAIDU_TEST, params, new ZResponse<HttpCommonReply>(mActivity, "正在加载……") {
             @Override
             public void onSuccess(Response response, HttpCommonReply httpBaseBean) {
                 textView.setText(String.valueOf(httpBaseBean));
@@ -145,7 +144,7 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
         params.put("param1", "sss");
         HashMap<String, File> fileParams = new HashMap<>();
         fileParams.put("key", new File(""));
-        ZHttp.uploadFile(HttpUrl.URL_BAIDU_TEST, params, fileParams, new ZResponse<HttpCommonReply>(HttpCommonReply.class, mActivity, "正在加载……") {
+        ZHttp.uploadFile(HttpUrl.URL_BAIDU_TEST, params, fileParams, new ZResponse<HttpCommonReply>(mActivity, "正在加载……") {
             @Override
             public void onSuccess(Response response, HttpCommonReply httpBaseBean) {
             }

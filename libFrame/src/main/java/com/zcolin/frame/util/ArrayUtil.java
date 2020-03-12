@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -731,8 +730,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(Object[] array1, Object[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -745,8 +743,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(long[] array1, long[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -759,8 +756,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(int[] array1, int[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -773,8 +769,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(short[] array1, short[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -787,8 +782,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(char[] array1, char[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -801,8 +795,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(byte[] array1, byte[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -815,8 +808,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(double[] array1, double[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -829,8 +821,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(float[] array1, float[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     /**
@@ -843,8 +834,7 @@ public class ArrayUtil {
      * <code>null</code> as an empty array
      */
     public static boolean isSameLength(boolean[] array1, boolean[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && 
-                array2 != null && array1.length != array2.length));
+        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
     }
 
     //-----------------------------------------------------------------------
@@ -2311,7 +2301,7 @@ public class ArrayUtil {
         final long[] result = new long[array.length];
         for (int i = 0; i < array.length; i++) {
             Long b = array[i];
-            result[i] = (b == null ? valueForNull : b.longValue());
+            result[i] = (b == null ? valueForNull : b);
         }
         return result;
     }

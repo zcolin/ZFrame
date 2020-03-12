@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -52,8 +51,8 @@ public class SystemIntentUtil {
             return;
         }
 
-        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new 
-                PermissionsResultAction() {
+        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                new PermissionsResultAction() {
             @Override
             public void onGranted() {
                 FileUtil.checkFilePath(savePath, false);
@@ -315,8 +314,8 @@ public class SystemIntentUtil {
      */
     public static void videoCapture(final Object object, final String savePath, final int durationLimit, final boolean isHighQuality,
             final OnCompleteLisenter onCompleteLisenter) {
-        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, new 
-                PermissionsResultAction() {
+        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                new PermissionsResultAction() {
             @Override
             public void onGranted() {
                 FileUtil.checkFilePath(savePath, false);
@@ -357,7 +356,6 @@ public class SystemIntentUtil {
                 ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
             }
         });
-        return;
     }
 
     public interface OnCompleteLisenter {

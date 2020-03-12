@@ -1,21 +1,12 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-4-9 下午5:30
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
 package com.zcolin.frame.util;
-
-/**
- * Created by zhaorl  on 2016/8/15.
- * <p>
- * RSA加密工具
- * <p>
- * 字符串以及文件加密处理
- */
 
 
 import java.io.BufferedReader;
@@ -38,6 +29,12 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
+/**
+ * <p>
+ * RSA加密工具
+ * <p>
+ * 字符串以及文件加密处理
+ */
 public class RSAUtil {
 
     private static String RSA = "RSA";
@@ -114,8 +111,7 @@ public class RSAUtil {
     public static PublicKey getPublicKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PublicKey publicKey = keyFactory.generatePublic(keySpec);
-        return publicKey;
+        return keyFactory.generatePublic(keySpec);
     }
 
     /**
@@ -124,8 +120,7 @@ public class RSAUtil {
     public static PrivateKey getPrivateKey(byte[] keyBytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        return privateKey;
+        return keyFactory.generatePrivate(keySpec);
     }
 
     /**
@@ -136,8 +131,7 @@ public class RSAUtil {
         BigInteger bigIntPrivateExponent = new BigInteger(publicExponent);
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PublicKey publicKey = keyFactory.generatePublic(keySpec);
-        return publicKey;
+        return keyFactory.generatePublic(keySpec);
     }
 
     /**
@@ -148,8 +142,7 @@ public class RSAUtil {
         BigInteger bigIntPrivateExponent = new BigInteger(privateExponent);
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent);
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-        return privateKey;
+        return keyFactory.generatePrivate(keySpec);
     }
 
     /**
@@ -233,14 +226,11 @@ public class RSAUtil {
         String readLine = null;
         StringBuilder sb = new StringBuilder();
         while ((readLine = br.readLine()) != null) {
-            if (readLine.charAt(0) == '-') {
-                continue;
-            } else {
+            if (readLine.charAt(0) != '-') {
                 sb.append(readLine);
                 sb.append('\r');
             }
         }
-
         return sb.toString();
     }
 

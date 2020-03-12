@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -40,7 +39,8 @@ public class PostFormRequest extends OkHttpRequest {
     private List<PostFormBuilder.FileInput> files;
     private String                          mimeType;
 
-    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files, int id, String mimeType) {
+    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files, int id,
+            String mimeType) {
         super(url, tag, params, headers, id);
         this.files = files;
         this.mimeType = mimeType;

@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -60,8 +59,9 @@ public class HttpsUtils {
     }
 
     private static TrustManager[] prepareTrustManager(InputStream... certificates) {
-        if (certificates == null || certificates.length <= 0)
+        if (certificates == null || certificates.length <= 0) {
             return null;
+        }
         try {
 
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
@@ -72,11 +72,10 @@ public class HttpsUtils {
                 String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
                 try {
-                    if (certificate != null)
+                    if (certificate != null) {
                         certificate.close();
-                } catch (IOException e)
-
-                {
+                    }
+                } catch (IOException e) {
                 }
             }
             TrustManagerFactory trustManagerFactory = null;
@@ -103,8 +102,9 @@ public class HttpsUtils {
 
     private static KeyManager[] prepareKeyManager(InputStream bksFile, String password) {
         try {
-            if (bksFile == null || password == null)
+            if (bksFile == null || password == null) {
                 return null;
+            }
 
             KeyStore clientKeyStore = KeyStore.getInstance("BKS");
             clientKeyStore.load(bksFile, password.toCharArray());

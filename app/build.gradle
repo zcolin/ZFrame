@@ -53,6 +53,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libFrame')
     implementation "com.android.support:appcompat-v7:$supprotVersion"
+    implementation 'org.greenrobot:greendao:3.2.0'
 }
 
 

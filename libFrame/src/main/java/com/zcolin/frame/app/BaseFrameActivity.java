@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -32,11 +31,11 @@ import com.zcolin.frame.util.ActivityUtil;
  * 5 继承此类之后可使用getView（int resId）替代findViewById。
  */
 public class BaseFrameActivity extends AppCompatActivity {
-    private final SparseArray<View> mViews = new SparseArray<>();
-    private   ResultActivityHelper resultActivityHelper;
-    protected Activity             mActivity;
-    protected Bundle               mBundle; //Activity 销毁/恢复 时 保存/获取 数据
-    private   boolean              isDestroyed;
+    private final SparseArray<View>    mViews = new SparseArray<>();
+    private       ResultActivityHelper resultActivityHelper;
+    protected     Activity             mActivity;
+    protected     Bundle               mBundle; //Activity 销毁/恢复 时 保存/获取 数据
+    private       boolean              isDestroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

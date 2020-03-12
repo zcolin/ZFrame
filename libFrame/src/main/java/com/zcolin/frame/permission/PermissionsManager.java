@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -215,7 +214,8 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@Nullable Activity activity, @NonNull String[] permissions,
+            @Nullable PermissionsResultAction action) {
         if (activity == null) {
             return;
         }
@@ -249,7 +249,8 @@ public class PermissionsManager {
      * @param action      the PermissionsResultAction to notify when the permissions are granted or denied.
      */
     @SuppressWarnings("unused")
-    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment, @NonNull String[] permissions, @Nullable PermissionsResultAction action) {
+    public synchronized void requestPermissionsIfNecessaryForResult(@NonNull Fragment fragment, @NonNull String[] permissions,
+            @Nullable PermissionsResultAction action) {
         Activity activity = fragment.getActivity();
         if (activity == null) {
             return;

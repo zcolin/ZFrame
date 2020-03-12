@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -14,6 +13,7 @@ import com.zcolin.frame.app.BaseApp;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -553,9 +553,7 @@ public class StringUtil {
      */
     public static List<String> stringArray2List(String[] strArray) {
         List<String> list = new ArrayList<>();
-        for (String aStrArray : strArray) {
-            list.add(aStrArray);
-        }
+        Collections.addAll(list, strArray);
         return list;
     }
 

@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -33,14 +32,14 @@ import com.zcolin.frame.permission.PermissionsManager;
  * 4 子类的ActivityContext可使用mActivity
  */
 public abstract class BaseFrameFrag extends Fragment {
-    private final SparseArray<View> mViews = new SparseArray<>();
-    protected Activity             mActivity;
-    protected View                 rootView;
-    protected boolean              mIsDetached;
-    protected boolean              isVisible;//Fragment当前状态是否可见
-    protected boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
-    protected boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
-    private   ResultActivityHelper resultActivityHelper;
+    private final SparseArray<View>    mViews = new SparseArray<>();
+    protected     Activity             mActivity;
+    protected     View                 rootView;
+    protected     boolean              mIsDetached;
+    protected     boolean              isVisible;//Fragment当前状态是否可见
+    protected     boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
+    protected     boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
+    private       ResultActivityHelper resultActivityHelper;
 
 
     /**

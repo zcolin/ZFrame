@@ -1,9 +1,8 @@
 /*
  * *********************************************************
  *   author   colin
- *   company  telchina
  *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
+ *   date     20-3-12 下午4:45
  * ********************************************************
  */
 
@@ -93,9 +92,11 @@ public abstract class ZGsonResponse<T> extends GsonCallback<T> {
     @Override
     public void onFinished() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (proBar != null && proBar.getWindow() != null && proBar.getWindow().getDecorView() != null && proBar.getWindow().getDecorView().isAttachedToWindow()) {
-                proBar.dismiss();
-                barMsg = null;
+            if (proBar != null && proBar.getWindow() != null) {
+                if (proBar.getWindow().getDecorView().isAttachedToWindow()) {
+                    proBar.dismiss();
+                    barMsg = null;
+                }
             }
         } else {
             if (proBar != null) {
