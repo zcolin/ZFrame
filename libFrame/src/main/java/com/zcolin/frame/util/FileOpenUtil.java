@@ -99,7 +99,7 @@ public class FileOpenUtil {
             return type;
         }
         /* 获取文件的后缀名*/
-        String end = fName.substring(dotIndex, fName.length()).toLowerCase();
+        String end = fName.substring(dotIndex).toLowerCase();
         if (end.length() == 0) {
             return type;
         }

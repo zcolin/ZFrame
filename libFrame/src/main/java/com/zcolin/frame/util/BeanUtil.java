@@ -35,7 +35,7 @@ public class BeanUtil {
         }
 
         for (Field field : fields) {
-            //获取属性名称及值存入Map  
+            //获取属性名称及值存入Map
             String key = field.getName();
             try {
                 Object object = field.get(bean);
@@ -63,14 +63,14 @@ public class BeanUtil {
             }
         }
 
-        //获取父类属性  
+        //获取父类属性
         fields = bean.getClass().getSuperclass().getFields();
         if (fields.length == 0) {
             return result;
         }
 
         for (Field field : fields) {
-            //获取属性名称及值存入Map  
+            //获取属性名称及值存入Map
             String key = field.getName();
             try {
                 Object object = field.get(bean);

@@ -1,13 +1,17 @@
-/*
- * *********************************************************
- *   author   colin
- *   email    wanglin2046@126.com
- *   date     20-3-12 下午4:45
- * ********************************************************
- */
 package com.zcolin.frame.util;
 
 
+import com.zcolin.frame.exception.ZFrameException;
+import com.zcolin.frame.util.func.Func1;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -57,6 +61,19 @@ public final class RegexUtil {
      * 浮点数 ^(-?\d+)(\.\d+)?$ <br>
      */
 
+    /**
+     * 分组
+     */
+    public final static Pattern        GROUP_VAR = Pattern.compile("\\$(\\d+)");
+    /**
+     * 正则中需要被转义的关键字
+     */
+    public final static Set<Character> RE_KEYS   = new HashSet<>(Arrays.asList('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'));
+
+    /**
+     * Pattern池
+     */
+    private static final HashMap<RegexWithFlag, Pattern> POOL = new HashMap<>();
 
     /**
      * 手机号码，中间4位星号替换
@@ -413,5 +430,368 @@ public final class RegexUtil {
     public static boolean isBlankLine(String str) {
         String regex = "\\n\\s*\\r";
         return Pattern.matches(regex, str);
+    }
+
+    /**
+     * 正则替换指定值<br>
+     * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
+     *
+     * <p>
+     * 例如：原字符串是：中文1234，我想把1234换成(1234)，则可以：
+     *
+     * <pre>
+     * ReUtil.replaceAll("中文1234", "(\\d+)", "($1)"))
+     *
+     * 结果：中文(1234)
+     * </pre>
+     *
+     * @param content             文本
+     * @param regex               正则
+     * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
+     * @return 处理后的文本
+     */
+    public static String replaceAll(CharSequence content, String regex, String replacementTemplate) {
+        final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+        return replaceAll(content, pattern, replacementTemplate);
+    }
+
+    /**
+     * 正则替换指定值<br>
+     * 通过正则查找到字符串，然后把匹配到的字符串加入到replacementTemplate中，$1表示分组1的字符串
+     *
+     * @param content             文本
+     * @param pattern             {@link Pattern}
+     * @param replacementTemplate 替换的文本模板，可以使用$1类似的变量提取正则匹配出的内容
+     * @return 处理后的文本
+     *
+     * @since 3.0.4
+     */
+    public static String replaceAll(CharSequence content, Pattern pattern, String replacementTemplate) {
+        if (StringUtil.isEmpty(content)) {
+            return StringUtil.str(content);
+        }
+
+        final Matcher matcher = pattern.matcher(content);
+        boolean result = matcher.find();
+        if (result) {
+            final Set<String> varNums = findAll(GROUP_VAR, replacementTemplate, 1, new HashSet<String>());
+            final StringBuffer sb = new StringBuffer();
+            do {
+                String replacement = replacementTemplate;
+                for (String var : varNums) {
+                    int group = Integer.parseInt(var);
+                    replacement = replacement.replace("$" + var, matcher.group(group));
+                }
+                matcher.appendReplacement(sb, escape(replacement));
+                result = matcher.find();
+            } while (result);
+            matcher.appendTail(sb);
+            return sb.toString();
+        }
+        return StringUtil.str(content);
+    }
+
+    /**
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+     *
+     * @param str        要替换的字符串
+     * @param regex      用于匹配的正则式
+     * @param replaceFun 决定如何替换的函数
+     * @return 替换后的文本
+     *
+     * @since 4.2.2
+     */
+    public static String replaceAll(CharSequence str, String regex, Func1<Matcher, String> replaceFun) {
+        return replaceAll(str, Pattern.compile(regex), replaceFun);
+    }
+
+    /**
+     * 替换所有正则匹配的文本，并使用自定义函数决定如何替换
+     *
+     * @param str        要替换的字符串
+     * @param pattern    用于匹配的正则式
+     * @param replaceFun 决定如何替换的函数,可能被多次调用（当有多个匹配时）
+     * @return 替换后的字符串
+     *
+     * @since 4.2.2
+     */
+    public static String replaceAll(CharSequence str, Pattern pattern, Func1<Matcher, String> replaceFun) {
+        if (StringUtil.isEmpty(str)) {
+            return StringUtil.str(str);
+        }
+
+        final Matcher matcher = pattern.matcher(str);
+        final StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            try {
+                matcher.appendReplacement(buffer, replaceFun.call(matcher));
+            } catch (Exception e) {
+                throw new ZFrameException(e);
+            }
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
+
+    /**
+     * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组0的内容
+     *
+     * @param regex   正则
+     * @param content 被查找的内容
+     * @return 结果列表
+     *
+     * @since 3.1.2
+     */
+    public static List<String> findAllGroup0(String regex, CharSequence content) {
+        return findAll(regex, content, 0);
+    }
+
+    /**
+     * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组1的内容
+     *
+     * @param regex   正则
+     * @param content 被查找的内容
+     * @return 结果列表
+     *
+     * @since 3.1.2
+     */
+    public static List<String> findAllGroup1(String regex, CharSequence content) {
+        return findAll(regex, content, 1);
+    }
+
+    /**
+     * 取得内容中匹配的所有结果
+     *
+     * @param regex   正则
+     * @param content 被查找的内容
+     * @param group   正则的分组
+     * @return 结果列表
+     *
+     * @since 3.0.6
+     */
+    public static List<String> findAll(String regex, CharSequence content, int group) {
+        return findAll(regex, content, group, new ArrayList<String>());
+    }
+
+    /**
+     * 取得内容中匹配的所有结果
+     *
+     * @param <T>        集合类型
+     * @param regex      正则
+     * @param content    被查找的内容
+     * @param group      正则的分组
+     * @param collection 返回的集合类型
+     * @return 结果集
+     */
+    public static <T extends Collection<String>> T findAll(String regex, CharSequence content, int group, T collection) {
+        if (null == regex) {
+            return collection;
+        }
+
+        return findAll(Pattern.compile(regex, Pattern.DOTALL), content, group, collection);
+    }
+
+    /**
+     * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组0的内容
+     *
+     * @param pattern 编译后的正则模式
+     * @param content 被查找的内容
+     * @return 结果列表
+     *
+     * @since 3.1.2
+     */
+    public static List<String> findAllGroup0(Pattern pattern, CharSequence content) {
+        return findAll(pattern, content, 0);
+    }
+
+    /**
+     * 取得内容中匹配的所有结果，获得匹配的所有结果中正则对应分组1的内容
+     *
+     * @param pattern 编译后的正则模式
+     * @param content 被查找的内容
+     * @return 结果列表
+     *
+     * @since 3.1.2
+     */
+    public static List<String> findAllGroup1(Pattern pattern, CharSequence content) {
+        return findAll(pattern, content, 1);
+    }
+
+    /**
+     * 取得内容中匹配的所有结果
+     *
+     * @param pattern 编译后的正则模式
+     * @param content 被查找的内容
+     * @param group   正则的分组
+     * @return 结果列表
+     *
+     * @since 3.0.6
+     */
+    public static List<String> findAll(Pattern pattern, CharSequence content, int group) {
+        return findAll(pattern, content, group, new ArrayList<String>());
+    }
+
+    /**
+     * 取得内容中匹配的所有结果
+     *
+     * @param <T>        集合类型
+     * @param pattern    编译后的正则模式
+     * @param content    被查找的内容
+     * @param group      正则的分组
+     * @param collection 返回的集合类型
+     * @return 结果集
+     */
+    public static <T extends Collection<String>> T findAll(Pattern pattern, CharSequence content, int group, T collection) {
+        if (null == pattern || null == content) {
+            return null;
+        }
+
+        if (null == collection) {
+            throw new NullPointerException("Null collection param provided!");
+        }
+
+        final Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            collection.add(matcher.group(group));
+        }
+        return collection;
+    }
+
+    /**
+     * 转义字符，将正则的关键字转义
+     *
+     * @param c 字符
+     * @return 转义后的文本
+     */
+    public static String escape(char c) {
+        final StringBuilder builder = new StringBuilder();
+        if (RE_KEYS.contains(c)) {
+            builder.append('\\');
+        }
+        builder.append(c);
+        return builder.toString();
+    }
+
+    /**
+     * 转义字符串，将正则的关键字转义
+     *
+     * @param content 文本
+     * @return 转义后的文本
+     */
+    public static String escape(CharSequence content) {
+        if (StringUtil.isBlank(content)) {
+            return StringUtil.str(content);
+        }
+
+        final StringBuilder builder = new StringBuilder();
+        int len = content.length();
+        char current;
+        for (int i = 0; i < len; i++) {
+            current = content.charAt(i);
+            if (RE_KEYS.contains(current)) {
+                builder.append('\\');
+            }
+            builder.append(current);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
+     *
+     * @param regex 正则表达式
+     * @return {@link Pattern}
+     */
+    public static Pattern get(String regex) {
+        return get(regex, 0);
+    }
+
+    /**
+     * 先从Pattern池中查找正则对应的{@link Pattern}，找不到则编译正则表达式并入池。
+     *
+     * @param regex 正则表达式
+     * @param flags 正则标识位集合 {@link Pattern}
+     * @return {@link Pattern}
+     */
+    public static Pattern get(String regex, int flags) {
+        final RegexWithFlag regexWithFlag = new RegexWithFlag(regex, flags);
+
+        Pattern pattern = POOL.get(regexWithFlag);
+        if (null == pattern) {
+            pattern = Pattern.compile(regex, flags);
+            POOL.put(regexWithFlag, pattern);
+        }
+        return pattern;
+    }
+
+    /**
+     * 移除缓存
+     *
+     * @param regex 正则
+     * @param flags 标识
+     * @return 移除的{@link Pattern}，可能为{@code null}
+     */
+    public static Pattern remove(String regex, int flags) {
+        return POOL.remove(new RegexWithFlag(regex, flags));
+    }
+
+    /**
+     * 清空缓存池
+     */
+    public static void clear() {
+        POOL.clear();
+    }
+
+    /**
+     * 正则表达式和正则标识位的包装
+     *
+     * @author Looly
+     */
+    private static class RegexWithFlag {
+        private String regex;
+        private int    flag;
+
+        /**
+         * 构造
+         *
+         * @param regex 正则
+         * @param flag  标识
+         */
+        public RegexWithFlag(String regex, int flag) {
+            this.regex = regex;
+            this.flag = flag;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + flag;
+            result = prime * result + ((regex == null) ? 0 : regex.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            RegexWithFlag other = (RegexWithFlag) obj;
+            if (flag != other.flag) {
+                return false;
+            }
+            if (regex == null) {
+                return other.regex == null;
+            } else {
+                return regex.equals(other.regex);
+            }
+        }
+
     }
 }

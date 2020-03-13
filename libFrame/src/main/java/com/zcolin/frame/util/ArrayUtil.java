@@ -1,215 +1,710 @@
-/*
- * *********************************************************
- *   author   colin
- *   email    wanglin2046@126.com
- *   date     20-3-12 下午4:45
- * ********************************************************
- */
-
 package com.zcolin.frame.util;
 
+
+import com.zcolin.frame.exception.ZFrameException;
+
 import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * <p>Operations on arrays, primitive arrays (like <code>int[]</code>) and
- * primitive wrapper arrays (like <code>Integer[]</code>).</p>
- * <p/>
- * <p>This class tries to handle <code>null</code> input gracefully.
- * An exception will not be thrown for a <code>null</code>
- * array input. However, an Object array that contains a <code>null</code>
- * element may throw an exception. Each method documents its behaviour.</p>
+ * 数组工具类
  *
- * @author Stephen Colebourne
- * @author Moritz Petersen
- * @author <a href="mailto:fredrik@westermarck.com">Fredrik Westermarck</a>
- * @author Nikolay Metchev
- * @author Matthew Hawthorne
- * @author Tim O'Brien
- * @author Pete Gieser
- * @author Gary Gregory
- * @author <a href="mailto:equinus100@hotmail.com">Ashwin S</a>
- * @author Maarten Coene
- * @version $Id$
- * @since 2.0
+ * @author Looly
  */
 public class ArrayUtil {
 
     /**
-     * An empty immutable <code>Object</code> array.
-     */
-    public static final Object[]    EMPTY_OBJECT_ARRAY           = new Object[0];
-    /**
-     * An empty immutable <code>Class</code> array.
-     */
-    public static final Class<?>[]  EMPTY_CLASS_ARRAY            = new Class[0];
-    /**
-     * An empty immutable <code>String</code> array.
-     */
-    public static final String[]    EMPTY_STRING_ARRAY           = new String[0];
-    /**
-     * An empty immutable <code>long</code> array.
-     */
-    public static final long[]      EMPTY_LONG_ARRAY             = new long[0];
-    /**
-     * An empty immutable <code>Long</code> array.
-     */
-    public static final Long[]      EMPTY_LONG_OBJECT_ARRAY      = new Long[0];
-    /**
-     * An empty immutable <code>int</code> array.
-     */
-    public static final int[]       EMPTY_INT_ARRAY              = new int[0];
-    /**
-     * An empty immutable <code>Integer</code> array.
-     */
-    public static final Integer[]   EMPTY_INTEGER_OBJECT_ARRAY   = new Integer[0];
-    /**
-     * An empty immutable <code>short</code> array.
-     */
-    public static final short[]     EMPTY_SHORT_ARRAY            = new short[0];
-    /**
-     * An empty immutable <code>Short</code> array.
-     */
-    public static final Short[]     EMPTY_SHORT_OBJECT_ARRAY     = new Short[0];
-    /**
-     * An empty immutable <code>byte</code> array.
-     */
-    public static final byte[]      EMPTY_BYTE_ARRAY             = new byte[0];
-    /**
-     * An empty immutable <code>Byte</code> array.
-     */
-    public static final Byte[]      EMPTY_BYTE_OBJECT_ARRAY      = new Byte[0];
-    /**
-     * An empty immutable <code>double</code> array.
-     */
-    public static final double[]    EMPTY_DOUBLE_ARRAY           = new double[0];
-    /**
-     * An empty immutable <code>Double</code> array.
-     */
-    public static final Double[]    EMPTY_DOUBLE_OBJECT_ARRAY    = new Double[0];
-    /**
-     * An empty immutable <code>float</code> array.
-     */
-    public static final float[]     EMPTY_FLOAT_ARRAY            = new float[0];
-    /**
-     * An empty immutable <code>Float</code> array.
-     */
-    public static final Float[]     EMPTY_FLOAT_OBJECT_ARRAY     = new Float[0];
-    /**
-     * An empty immutable <code>boolean</code> array.
-     */
-    public static final boolean[]   EMPTY_BOOLEAN_ARRAY          = new boolean[0];
-    /**
-     * An empty immutable <code>Boolean</code> array.
-     */
-    public static final Boolean[]   EMPTY_BOOLEAN_OBJECT_ARRAY   = new Boolean[0];
-    /**
-     * An empty immutable <code>char</code> array.
-     */
-    public static final char[]      EMPTY_CHAR_ARRAY             = new char[0];
-    /**
-     * An empty immutable <code>Character</code> array.
-     */
-    public static final Character[] EMPTY_CHARACTER_OBJECT_ARRAY = new Character[0];
-
-    /**
-     * The index value when an element is not found in a list or array: <code>-1</code>.
-     * This value is returned by methods in this class and can also be used in comparisons with values returned by
-     * various method from {@link List}.
+     * 数组中元素未找到的下标，值为-1
      */
     public static final int INDEX_NOT_FOUND = -1;
 
+    // ---------------------------------------------------------------------- isEmpty
+
     /**
-     * <p>ArrayUtils instances should NOT be constructed in standard programming.
-     * Instead, the class should be used as <code>ArrayUtils.clone(new int[] {2})</code>.</p>
-     * <p/>
-     * <p>This constructor is public to permit tools that require a JavaBean instance
-     * to operate.</p>
+     * 数组是否为空
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 是否为空
      */
-    public ArrayUtil() {
-        super();
+    public static <T> boolean isEmpty(T[] array) {
+        return array == null || array.length == 0;
     }
 
-    // Basic methods handling multi-dimensional arrays
-    // To map
-    //-----------------------------------------------------------------------
+    /**
+     * 如果给定数组为空，返回默认数组
+     *
+     * @param <T>          数组元素类型
+     * @param array        数组
+     * @param defaultArray 默认数组
+     * @return 非空（empty）的原数组或默认数组
+     *
+     * @since 4.6.9
+     */
+    public static <T> T[] defaultIfEmpty(T[] array, T[] defaultArray) {
+        return isEmpty(array) ? defaultArray : array;
+    }
 
     /**
-     * <p>Converts the given array into a {@link Map}. Each element of the array
-     * must be either a {@link Map.Entry} or an Array, containing at least two
-     * elements, where the first element is used as key and the second as
-     * value.</p>
-     * <p/>
-     * <p>This method can be used to initialize:</p>
-     * <pre>
-     * // Create a Map mapping colors.
-     * Map colorMap = MapUtils.toMap(new String[][] {{
-     *     {"RED", "#FF0000"},
-     *     {"GREEN", "#00FF00"},
-     *     {"BLUE", "#0000FF"}});
-     * </pre>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 数组是否为空<br>
+     * 此方法会匹配单一对象，如果此对象为{@code null}则返回true<br>
+     * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回false<br>
+     * 如果此对象为数组对象，数组长度大于0情况下返回false，否则返回true
      *
-     * @param array an array whose elements are either a {@link Map.Entry} or
-     *              an Array containing at least two elements, may be <code>null</code>
-     * @return a <code>Map</code> that was created from the array
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(Object array) {
+        if (null == array) {
+            return true;
+        } else if (isArray(array)) {
+            return 0 == Array.getLength(array);
+        }
+        throw new ZFrameException("Object to provide is not a Array !");
+    }
+
+    /**
+     * 数组是否为空
      *
-     * @throws IllegalArgumentException if one element of this Array is
-     *                                  itself an Array containing less then two elements
-     * @throws IllegalArgumentException if the array contains elements other
-     *                                  than {@link Map.Entry} and an Array
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(long[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(short[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(char[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(byte[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(double[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(float[] array) {
+        return array == null || array.length == 0;
+    }
+
+    /**
+     * 数组是否为空
+     *
+     * @param array 数组
+     * @return 是否为空
+     */
+    public static boolean isEmpty(boolean[] array) {
+        return array == null || array.length == 0;
+    }
+
+    // ---------------------------------------------------------------------- isNotEmpty
+
+    /**
+     * 数组是否为非空
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static <T> boolean isNotEmpty(T[] array) {
+        return (array != null && array.length != 0);
+    }
+
+    /**
+     * 数组是否为非空<br>
+     * 此方法会匹配单一对象，如果此对象为{@code null}则返回false<br>
+     * 如果此对象为非数组，理解为此对象为数组的第一个元素，则返回true<br>
+     * 如果此对象为数组对象，数组长度大于0情况下返回true，否则返回false
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(Object array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(long[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(int[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(short[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(char[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(byte[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(double[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(float[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 数组是否为非空
+     *
+     * @param array 数组
+     * @return 是否为非空
+     */
+    public static boolean isNotEmpty(boolean[] array) {
+        return !isEmpty(array);
+    }
+
+    /**
+     * 是否包含{@code null}元素
+     *
+     * @param <T>   数组元素类型
+     * @param array 被检查的数组
+     * @return 是否包含{@code null}元素
+     *
+     * @since 3.0.7
      */
     @SuppressWarnings("unchecked")
-    public static Map<Object, Object> toMap(Object[] array) {
-        if (array == null) {
-            return null;
-        }
-        final Map<Object, Object> map = new HashMap<>((int) (array.length * 1.5));
-        for (int i = 0; i < array.length; i++) {
-            Object object = array[i];
-            if (object instanceof Map.Entry) {
-                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) object;
-                map.put(entry.getKey(), entry.getValue());
-            } else if (object instanceof Object[]) {
-                Object[] entry = (Object[]) object;
-                if (entry.length < 2) {
-                    throw new IllegalArgumentException("Array element " + i + ", '" + object + "', has a length less than 2");
+    public static <T> boolean hasNull(T... array) {
+        if (isNotEmpty(array)) {
+            for (T element : array) {
+                if (null == element) {
+                    return true;
                 }
-                map.put(entry[0], entry[1]);
-            } else {
-                throw new IllegalArgumentException("Array element " + i + ", '" + object + "', is neither of type Map.Entry nor an Array");
             }
         }
-        return map;
+        return false;
     }
-
-    public static List<Object> toList(Object[] array) {
-        List<Object> ret = new ArrayList<>();
-        ret.addAll(Arrays.asList(array));
-        return ret;
-    }
-
-    // Clone
-    //-----------------------------------------------------------------------
 
     /**
-     * <p>Shallow clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>The objects in the array are not cloned, thus there is no special
-     * handling for multi-dimensional arrays.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 返回数组中第一个非空元素
      *
-     * @param array the array to shallow clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 非空元素，如果不存在非空元素或数组为空，返回{@code null}
+     *
+     * @since 3.0.7
      */
-    public static Object[] clone(Object[] array) {
+    @SuppressWarnings("unchecked")
+    public static <T> T firstNonNull(T... array) {
+        if (isNotEmpty(array)) {
+            for (final T val : array) {
+                if (null != val) {
+                    return val;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 新建一个空数组
+     *
+     * @param <T>           数组元素类型
+     * @param componentType 元素类型
+     * @param newSize       大小
+     * @return 空数组
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] newArray(Class<?> componentType, int newSize) {
+        return (T[]) Array.newInstance(componentType, newSize);
+    }
+
+    /**
+     * 新建一个空数组
+     *
+     * @param newSize 大小
+     * @return 空数组
+     *
+     * @since 3.3.0
+     */
+    public static Object[] newArray(int newSize) {
+        return new Object[newSize];
+    }
+
+    /**
+     * 获取数组对象的元素类型
+     *
+     * @param array 数组对象
+     * @return 元素类型
+     *
+     * @since 3.2.2
+     */
+    public static Class<?> getComponentType(Object array) {
+        return null == array ? null : array.getClass().getComponentType();
+    }
+
+    /**
+     * 获取数组对象的元素类型
+     *
+     * @param arrayClass 数组类
+     * @return 元素类型
+     *
+     * @since 3.2.2
+     */
+    public static Class<?> getComponentType(Class<?> arrayClass) {
+        return null == arrayClass ? null : arrayClass.getComponentType();
+    }
+
+    /**
+     * 根据数组元素类型，获取数组的类型<br>
+     * 方法是通过创建一个空数组从而获取其类型
+     *
+     * @param componentType 数组元素类型
+     * @return 数组类型
+     *
+     * @since 3.2.2
+     */
+    public static Class<?> getArrayType(Class<?> componentType) {
+        return Array.newInstance(componentType, 0).getClass();
+    }
+
+    /**
+     * 强转数组类型<br>
+     * 强制转换的前提是数组元素类型可被强制转换<br>
+     * 强制转换后会生成一个新数组
+     *
+     * @param type     数组类型或数组元素类型
+     * @param arrayObj 原数组
+     * @return 转换后的数组类型
+     *
+     * @throws NullPointerException     提供参数为空
+     * @throws IllegalArgumentException 参数arrayObj不是数组
+     * @since 3.0.6
+     */
+    public static Object[] cast(Class<?> type, Object arrayObj) throws NullPointerException, IllegalArgumentException {
+        if (null == arrayObj) {
+            throw new NullPointerException("Argument [arrayObj] is null !");
+        }
+        if (!arrayObj.getClass().isArray()) {
+            throw new IllegalArgumentException("Argument [arrayObj] is not array !");
+        }
+        if (null == type) {
+            return (Object[]) arrayObj;
+        }
+
+        final Class<?> componentType = type.isArray() ? type.getComponentType() : type;
+        final Object[] array = (Object[]) arrayObj;
+        final Object[] result = ArrayUtil.newArray(componentType, array.length);
+        System.arraycopy(array, 0, result, 0, array.length);
+        return result;
+    }
+
+    /**
+     * 将新元素添加到已有数组中<br>
+     * 添加新元素会生成一个新的数组，不影响原数组
+     *
+     * @param <T>         数组元素类型
+     * @param buffer      已有数组
+     * @param newElements 新元素
+     * @return 新数组
+     */
+    @SafeVarargs
+    public static <T> T[] append(T[] buffer, T... newElements) {
+        if (isEmpty(buffer)) {
+            return newElements;
+        }
+        return insert(buffer, buffer.length, newElements);
+    }
+
+    /**
+     * 将新元素添加到已有数组中<br>
+     * 添加新元素会生成一个新的数组，不影响原数组
+     *
+     * @param <T>         数组元素类型
+     * @param array       已有数组
+     * @param newElements 新元素
+     * @return 新数组
+     */
+    @SafeVarargs
+    public static <T> Object append(Object array, T... newElements) {
+        if (isEmpty(array)) {
+            return newElements;
+        }
+        return insert(array, length(array), newElements);
+    }
+
+    /**
+     * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+     *
+     * @param <T>    数组元素类型
+     * @param buffer 已有数组
+     * @param index  位置，大于长度追加，否则替换
+     * @param value  新值
+     * @return 新数组或原有数组
+     *
+     * @since 4.1.2
+     */
+    public static <T> T[] setOrAppend(T[] buffer, int index, T value) {
+        if (index < buffer.length) {
+            Array.set(buffer, index, value);
+            return buffer;
+        } else {
+            return append(buffer, value);
+        }
+    }
+
+    /**
+     * 将元素值设置为数组的某个位置，当给定的index大于数组长度，则追加
+     *
+     * @param array 已有数组
+     * @param index 位置，大于长度追加，否则替换
+     * @param value 新值
+     * @return 新数组或原有数组
+     *
+     * @since 4.1.2
+     */
+    public static Object setOrAppend(Object array, int index, Object value) {
+        if (index < length(array)) {
+            Array.set(array, index, value);
+            return array;
+        } else {
+            return append(array, value);
+        }
+    }
+
+    /**
+     * 将新元素插入到到已有数组中的某个位置<br>
+     * 添加新元素会生成一个新的数组，不影响原数组<br>
+     * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
+     *
+     * @param <T>         数组元素类型
+     * @param buffer      已有数组
+     * @param index       插入位置，此位置为对应此位置元素之前的空档
+     * @param newElements 新元素
+     * @return 新数组
+     *
+     * @since 4.0.8
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] insert(T[] buffer, int index, T... newElements) {
+        return (T[]) insert((Object) buffer, index, newElements);
+    }
+
+    /**
+     * 将新元素插入到到已有数组中的某个位置<br>
+     * 添加新元素会生成一个新的数组，不影响原数组<br>
+     * 如果插入位置为为负数，从原数组从后向前计数，若大于原数组长度，则空白处用null填充
+     *
+     * @param <T>         数组元素类型
+     * @param array       已有数组
+     * @param index       插入位置，此位置为对应此位置元素之前的空档
+     * @param newElements 新元素
+     * @return 新数组
+     *
+     * @since 4.0.8
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Object insert(Object array, int index, T... newElements) {
+        if (isEmpty(newElements)) {
+            return array;
+        }
+        if (isEmpty(array)) {
+            return newElements;
+        }
+
+        final int len = length(array);
+        if (index < 0) {
+            index = (index % len) + len;
+        }
+
+        final T[] result = newArray(array.getClass().getComponentType(), Math.max(len, index) + newElements.length);
+        System.arraycopy(array, 0, result, 0, Math.min(len, index));
+        System.arraycopy(newElements, 0, result, index, newElements.length);
+        if (index < len) {
+            System.arraycopy(array, index, result, index + newElements.length, len - index);
+        }
+        return result;
+    }
+
+    /**
+     * 生成一个新的重新设置大小的数组<br>
+     * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
+     *
+     * @param <T>           数组元素类型
+     * @param data          原数组
+     * @param newSize       新的数组大小
+     * @param componentType 数组元素类型
+     * @return 调整后的新数组
+     */
+    public static <T> T[] resize(T[] data, int newSize, Class<?> componentType) {
+        if (newSize < 0) {
+            return data;
+        }
+
+        final T[] newArray = newArray(componentType, newSize);
+        if (newSize > 0 && isNotEmpty(data)) {
+            System.arraycopy(data, 0, newArray, 0, Math.min(data.length, newSize));
+        }
+        return newArray;
+    }
+
+    /**
+     * 生成一个新的重新设置大小的数组<br>
+     * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，其它位置补充0，缩小则截断
+     *
+     * @param array   原数组
+     * @param newSize 新的数组大小
+     * @return 调整后的新数组
+     *
+     * @since 4.6.7
+     */
+    public static Object resize(Object array, int newSize) {
+        if (newSize < 0) {
+            return array;
+        }
+        if (null == array) {
+            return null;
+        }
+        final int length = length(array);
+        final Object newArray = Array.newInstance(array.getClass().getComponentType(), newSize);
+        if (newSize > 0 && isNotEmpty(array)) {
+            System.arraycopy(array, 0, newArray, 0, Math.min(length, newSize));
+        }
+        return newArray;
+    }
+
+    /**
+     * 生成一个新的重新设置大小的数组<br>
+     * 调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，其它位置补充0，缩小则截断
+     *
+     * @param bytes   原数组
+     * @param newSize 新的数组大小
+     * @return 调整后的新数组
+     *
+     * @since 4.6.7
+     */
+    public static byte[] resize(byte[] bytes, int newSize) {
+        if (newSize < 0) {
+            return bytes;
+        }
+        final byte[] newArray = new byte[newSize];
+        if (newSize > 0 && isNotEmpty(bytes)) {
+            System.arraycopy(bytes, 0, newArray, 0, Math.min(bytes.length, newSize));
+        }
+        return newArray;
+    }
+
+    /**
+     * 生成一个新的重新设置大小的数组<br>
+     * 新数组的类型为原数组的类型，调整大小后拷贝原数组到新数组下。扩大则占位前N个位置，缩小则截断
+     *
+     * @param <T>     数组元素类型
+     * @param buffer  原数组
+     * @param newSize 新的数组大小
+     * @return 调整后的新数组
+     */
+    public static <T> T[] resize(T[] buffer, int newSize) {
+        return resize(buffer, newSize, buffer.getClass().getComponentType());
+    }
+
+    /**
+     * 将多个数组合并在一起<br>
+     * 忽略null的数组
+     *
+     * @param <T>    数组元素类型
+     * @param arrays 数组集合
+     * @return 合并后的数组
+     */
+    @SafeVarargs
+    public static <T> T[] addAll(T[]... arrays) {
+        if (arrays.length == 1) {
+            return arrays[0];
+        }
+
+        int length = 0;
+        for (T[] array : arrays) {
+            if (null != array) {
+                length += array.length;
+            }
+        }
+        T[] result = newArray(arrays.getClass().getComponentType().getComponentType(), length);
+
+        length = 0;
+        for (T[] array : arrays) {
+            if (null != array) {
+                System.arraycopy(array, 0, result, length, array.length);
+                length += array.length;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 将多个数组合并在一起<br>
+     * 忽略null的数组
+     *
+     * @param arrays 数组集合
+     * @return 合并后的数组
+     *
+     * @since 4.6.9
+     */
+    public static byte[] addAll(byte[]... arrays) {
+        if (arrays.length == 1) {
+            return arrays[0];
+        }
+
+        // 计算总长度
+        int length = 0;
+        for (byte[] array : arrays) {
+            if (null != array) {
+                length += array.length;
+            }
+        }
+
+        final byte[] result = new byte[length];
+        length = 0;
+        for (byte[] array : arrays) {
+            if (null != array) {
+                System.arraycopy(array, 0, result, length, array.length);
+                length += array.length;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
+     * 数组复制
+     *
+     * @param src     源数组
+     * @param srcPos  源数组开始位置
+     * @param dest    目标数组
+     * @param destPos 目标数组开始位置
+     * @param length  拷贝数组长度
+     * @return 目标数组
+     *
+     * @since 3.0.6
+     */
+    public static Object copy(Object src, int srcPos, Object dest, int destPos, int length) {
+        System.arraycopy(src, srcPos, dest, destPos, length);
+        return dest;
+    }
+
+    /**
+     * 包装 {@link System#arraycopy(Object, int, Object, int, int)}<br>
+     * 数组复制，缘数组和目标数组都是从位置0开始复制
+     *
+     * @param src    源数组
+     * @param dest   目标数组
+     * @param length 拷贝数组长度
+     * @return 目标数组
+     *
+     * @since 3.0.6
+     */
+    public static Object copy(Object src, Object dest, int length) {
+        System.arraycopy(src, 0, dest, 0, length);
+        return dest;
+    }
+
+    /**
+     * 克隆数组
+     *
+     * @param <T>   数组元素类型
+     * @param array 被克隆的数组
+     * @return 新数组
+     */
+    public static <T> T[] clone(T[] array) {
         if (array == null) {
             return null;
         }
@@ -217,692 +712,2271 @@ public class ArrayUtil {
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 克隆数组，如果非数组返回<code>null</code>
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param <T> 数组元素类型
+     * @param obj 数组对象
+     * @return 克隆后的数组对象
      */
-    public static long[] clone(long[] array) {
-        if (array == null) {
+    @SuppressWarnings("unchecked")
+    public static <T> T clone(final T obj) {
+        if (null == obj) {
             return null;
         }
-        return array.clone();
+        if (isArray(obj)) {
+            final Object result;
+            final Class<?> componentType = obj.getClass().getComponentType();
+            if (componentType.isPrimitive()) {// 原始类型
+                int length = Array.getLength(obj);
+                result = Array.newInstance(componentType, length);
+                while (length-- > 0) {
+                    Array.set(result, length, Array.get(obj, length));
+                }
+            } else {
+                result = ((Object[]) obj).clone();
+            }
+            return (T) result;
+        }
+        return null;
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 生成一个从0开始的数字列表<br>
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param excludedEnd 结束的数字（不包含）
+     * @return 数字列表
      */
-    public static int[] clone(int[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
+    public static int[] range(int excludedEnd) {
+        return range(0, excludedEnd, 1);
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 生成一个数字列表<br>
+     * 自动判定正序反序
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param includedStart 开始的数字（包含）
+     * @param excludedEnd   结束的数字（不包含）
+     * @return 数字列表
      */
-    public static short[] clone(short[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
+    public static int[] range(int includedStart, int excludedEnd) {
+        return range(includedStart, excludedEnd, 1);
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 生成一个数字列表<br>
+     * 自动判定正序反序
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param includedStart 开始的数字（包含）
+     * @param excludedEnd   结束的数字（不包含）
+     * @param step          步进
+     * @return 数字列表
      */
-    public static char[] clone(char[] array) {
-        if (array == null) {
-            return null;
+    public static int[] range(int includedStart, int excludedEnd, int step) {
+        if (includedStart > excludedEnd) {
+            int tmp = includedStart;
+            includedStart = excludedEnd;
+            excludedEnd = tmp;
         }
-        return array.clone();
+
+        if (step <= 0) {
+            step = 1;
+        }
+
+        int deviation = excludedEnd - includedStart;
+        int length = deviation / step;
+        if (deviation % step != 0) {
+            length += 1;
+        }
+        int[] range = new int[length];
+        for (int i = 0; i < length; i++) {
+            range[i] = includedStart;
+            includedStart += step;
+        }
+        return range;
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 拆分byte数组为几个等份（最后一份可能小于len）
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
+     * @param array 数组
+     * @param len   每个小节的长度
+     * @return 拆分后的数组
      */
-    public static byte[] clone(byte[] array) {
-        if (array == null) {
-            return null;
+    public static byte[][] split(byte[] array, int len) {
+        int x = array.length / len;
+        int y = array.length % len;
+        int z = 0;
+        if (y != 0) {
+            z = 1;
         }
-        return array.clone();
+        byte[][] arrays = new byte[x + z][];
+        byte[] arr;
+        for (int i = 0; i < x + z; i++) {
+            arr = new byte[len];
+            if (i == x + z - 1 && y != 0) {
+                System.arraycopy(array, i * len, arr, 0, y);
+            } else {
+                System.arraycopy(array, i * len, arr, 0, len);
+            }
+            arrays[i] = arr;
+        }
+        return arrays;
     }
 
     /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
+     * 过滤<br>
+     * 过滤过程通过传入的Editor实现来返回需要的元素内容，这个Editor实现可以实现以下功能：
      *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
-     */
-    public static double[] clone(double[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
-    }
-
-    /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
-     */
-    public static float[] clone(float[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
-    }
-
-    /**
-     * <p>Clones an array returning a typecast result and handling
-     * <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array the array to clone, may be <code>null</code>
-     * @return the cloned array, <code>null</code> if <code>null</code> input
-     */
-    public static boolean[] clone(boolean[] array) {
-        if (array == null) {
-            return null;
-        }
-        return array.clone();
-    }
-
-    // Subarrays
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Produces a new array containing the elements between
-     * the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     * <p/>
-     * <p>The component type of the subarray is always the same as
-     * that of the input array. Thus, if the input is an array of type
-     * <code>Date</code>, the following usage is envisaged:</p>
-     * <p>
      * <pre>
-     * Date[] someDates = (Date[])ArrayUtils.subarray(allDates, 2, 5);
+     * 1、过滤出需要的对象，如果返回null表示这个元素对象抛弃
+     * 2、修改元素对象，返回集合中为修改后的对象
      * </pre>
      *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
+     * @param <T>    数组元素类型
+     * @param array  数组
+     * @param editor 编辑器接口
+     * @return 过滤后的数组
      */
-    public static Object[] subarray(Object[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
+    public static <T> T[] filter(T[] array, Editor<T> editor) {
+        ArrayList<T> list = new ArrayList<>(array.length);
+        T modified;
+        for (T t : array) {
+            modified = editor.edit(t);
+            if (null != modified) {
+                list.add(modified);
+            }
         }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        Class<?> type = array.getClass().getComponentType();
-        if (newSize <= 0) {
-            return (Object[]) Array.newInstance(type, 0);
-        }
-        Object[] subarray = (Object[]) Array.newInstance(type, newSize);
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
+        return list.toArray(Arrays.copyOf(array, list.size()));
     }
 
     /**
-     * <p>Produces a new <code>long</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
+     * 过滤<br>
+     * 过滤过程通过传入的Filter实现来过滤返回需要的元素内容，这个Filter实现可以实现以下功能：
      *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static long[] subarray(long[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_LONG_ARRAY;
-        }
-
-        long[] subarray = new long[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>int</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static int[] subarray(int[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_INT_ARRAY;
-        }
-
-        int[] subarray = new int[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>short</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static short[] subarray(short[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_SHORT_ARRAY;
-        }
-
-        short[] subarray = new short[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>char</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static char[] subarray(char[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_CHAR_ARRAY;
-        }
-
-        char[] subarray = new char[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>byte</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static byte[] subarray(byte[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_BYTE_ARRAY;
-        }
-
-        byte[] subarray = new byte[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>double</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static double[] subarray(double[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_DOUBLE_ARRAY;
-        }
-
-        double[] subarray = new double[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>float</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static float[] subarray(float[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_FLOAT_ARRAY;
-        }
-
-        float[] subarray = new float[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    /**
-     * <p>Produces a new <code>boolean</code> array containing the elements
-     * between the start and end indices.</p>
-     * <p/>
-     * <p>The start index is inclusive, the end index exclusive.
-     * Null array input produces null output.</p>
-     *
-     * @param array               the array
-     * @param startIndexInclusive the starting index. Undervalue (&lt;0)
-     *                            is promoted to 0, overvalue (&gt;array.length) results
-     *                            in an empty array.
-     * @param endIndexExclusive   elements up to endIndex-1 are present in the
-     *                            returned subarray. Undervalue (&lt; startIndex) produces
-     *                            empty array, overvalue (&gt;array.length) is demoted to
-     *                            array length.
-     * @return a new array containing the elements between
-     * the start and end indices.
-     *
-     * @since 2.1
-     */
-    public static boolean[] subarray(boolean[] array, int startIndexInclusive, int endIndexExclusive) {
-        if (array == null) {
-            return null;
-        }
-        if (startIndexInclusive < 0) {
-            startIndexInclusive = 0;
-        }
-        if (endIndexExclusive > array.length) {
-            endIndexExclusive = array.length;
-        }
-        int newSize = endIndexExclusive - startIndexInclusive;
-        if (newSize <= 0) {
-            return EMPTY_BOOLEAN_ARRAY;
-        }
-
-        boolean[] subarray = new boolean[newSize];
-        System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
-        return subarray;
-    }
-
-    // Is same length
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.
-     * <p/>
-     * <p>Any multi-dimensional aspects of the arrays are ignored.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(Object[] array1, Object[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(long[] array1, long[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(int[] array1, int[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(short[] array1, short[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(char[] array1, char[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(byte[] array1, byte[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(double[] array1, double[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(float[] array1, float[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    /**
-     * <p>Checks whether two arrays are the same length, treating
-     * <code>null</code> arrays as length <code>0</code>.</p>
-     *
-     * @param array1 the first array, may be <code>null</code>
-     * @param array2 the second array, may be <code>null</code>
-     * @return <code>true</code> if length of arrays matches, treating
-     * <code>null</code> as an empty array
-     */
-    public static boolean isSameLength(boolean[] array1, boolean[] array2) {
-        return !((array1 == null && array2 != null && array2.length > 0) || (array2 == null && array1 != null && array1.length > 0) || (array1 != null && array2 != null && array1.length != array2.length));
-    }
-
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Returns the length of the specified array.
-     * This method can deal with <code>Object</code> arrays and with primitive arrays.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, <code>0</code> is returned.</p>
-     * <p>
      * <pre>
-     * ArrayUtils.getLength(null)            = 0
-     * ArrayUtils.getLength([])              = 0
-     * ArrayUtils.getLength([null])          = 1
-     * ArrayUtils.getLength([true, false])   = 2
-     * ArrayUtils.getLength([1, 2, 3])       = 3
-     * ArrayUtils.getLength(["a", "b", "c"]) = 3
+     * 1、过滤出需要的对象，{@link Filter#accept(Object)}方法返回true的对象将被加入结果集合中
      * </pre>
      *
-     * @param array the array to retrieve the length from, may be null
-     * @return The length of the array, or <code>0</code> if the array is <code>null</code>
+     * @param <T>    数组元素类型
+     * @param array  数组
+     * @param filter 过滤器接口，用于定义过滤规则，null表示不过滤，返回原数组
+     * @return 过滤后的数组
      *
-     * @throws IllegalArgumentException if the object arguement is not an array.
-     * @since 2.1
+     * @since 3.2.1
      */
-    public static int getLength(Object array) {
-        if (array == null) {
+    public static <T> T[] filter(T[] array, Filter<T> filter) {
+        if (null == filter) {
+            return array;
+        }
+
+        final ArrayList<T> list = new ArrayList<>(array.length);
+        for (T t : array) {
+            if (filter.accept(t)) {
+                list.add(t);
+            }
+        }
+        final T[] result = newArray(array.getClass().getComponentType(), list.size());
+        return list.toArray(result);
+    }
+
+    /**
+     * 去除{@code null} 元素
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 处理后的数组
+     *
+     * @since 3.2.2
+     */
+    public static <T> T[] removeNull(T[] array) {
+        return filter(array, (Editor<T>) t -> {
+            // 返回null便不加入集合
+            return t;
+        });
+    }
+
+    /**
+     * 去除{@code null}或者"" 元素
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 处理后的数组
+     *
+     * @since 3.2.2
+     */
+    public static <T extends CharSequence> T[] removeEmpty(T[] array) {
+        return filter(array, (Filter<T>) t -> !StringUtil.isEmpty(t));
+    }
+
+    /**
+     * 去除{@code null}或者""或者空白字符串 元素
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 处理后的数组
+     *
+     * @since 3.2.2
+     */
+    public static <T extends CharSequence> T[] removeBlank(T[] array) {
+        return filter(array, (Filter<T>) t -> !StringUtil.isBlank(t));
+    }
+
+    /**
+     * 数组元素中的null转换为""
+     *
+     * @param array 数组
+     * @return 新数组
+     *
+     * @since 3.2.1
+     */
+    public static String[] nullToEmpty(String[] array) {
+        return filter(array, (Editor<String>) t -> null == t ? StringUtil.EMPTY : t);
+    }
+
+    // ------------------------------------------------------------------- indexOf and lastIndexOf and contains
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param <T>   数组类型
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static <T> int indexOf(T[] array, Object value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (ObjectUtil.equal(value, array[i])) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，忽略大小写，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.1.2
+     */
+    public static int indexOfIgnoreCase(CharSequence[] array, CharSequence value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (StringUtil.equalsIgnoreCase(array[i], value)) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param <T>   数组类型
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static <T> int lastIndexOf(T[] array, Object value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (ObjectUtil.equal(value, array[i])) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     */
+    public static <T> boolean contains(T[] array, T value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含指定元素中的任意一个
+     *
+     * @param <T>    数组元素类型
+     * @param array  数组
+     * @param values 被检查的多个元素
+     * @return 是否包含指定元素中的任意一个
+     *
+     * @since 4.1.20
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> boolean containsAny(T[] array, T... values) {
+        for (T value : values) {
+            if (contains(array, value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 数组中是否包含元素，忽略大小写
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.1.2
+     */
+    public static boolean containsIgnoreCase(CharSequence[] array, CharSequence value) {
+        return indexOfIgnoreCase(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(long[] array, long value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(long[] array, long value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(long[] array, long value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(int[] array, int value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(int[] array, int value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(int[] array, int value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(short[] array, short value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(short[] array, short value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(short[] array, short value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(char[] array, char value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(char[] array, char value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(char[] array, char value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(byte[] array, byte value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(byte[] array, byte value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(byte[] array, byte value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(double[] array, double value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(double[] array, double value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(double[] array, double value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(float[] array, float value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(float[] array, float value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(float[] array, float value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int indexOf(boolean[] array, boolean value) {
+        if (null != array) {
+            for (int i = 0; i < array.length; i++) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 返回数组中指定元素所在最后的位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 数组中指定元素所在位置，未找到返回{@link #INDEX_NOT_FOUND}
+     *
+     * @since 3.0.7
+     */
+    public static int lastIndexOf(boolean[] array, boolean value) {
+        if (null != array) {
+            for (int i = array.length - 1; i >= 0; i--) {
+                if (value == array[i]) {
+                    return i;
+                }
+            }
+        }
+        return INDEX_NOT_FOUND;
+    }
+
+    /**
+     * 数组中是否包含元素
+     *
+     * @param array 数组
+     * @param value 被检查的元素
+     * @return 是否包含
+     *
+     * @since 3.0.7
+     */
+    public static boolean contains(boolean[] array, boolean value) {
+        return indexOf(array, value) > INDEX_NOT_FOUND;
+    }
+
+    // ------------------------------------------------------------------- Wrap and unwrap
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Integer[] wrap(int... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Integer[0];
+        }
+
+        final Integer[] array = new Integer[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Integer.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static int[] unWrap(Integer... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new int[0];
+        }
+
+        final int[] array = new int[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].intValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Long[] wrap(long... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Long[0];
+        }
+
+        final Long[] array = new Long[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Long.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static long[] unWrap(Long... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new long[0];
+        }
+
+        final long[] array = new long[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].longValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Character[] wrap(char... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Character[0];
+        }
+
+        final Character[] array = new Character[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Character.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static char[] unWrap(Character... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new char[0];
+        }
+
+        char[] array = new char[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].charValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Byte[] wrap(byte... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Byte[0];
+        }
+
+        final Byte[] array = new Byte[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Byte.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static byte[] unWrap(Byte... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new byte[0];
+        }
+
+        final byte[] array = new byte[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].byteValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Short[] wrap(short... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Short[0];
+        }
+
+        final Short[] array = new Short[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Short.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static short[] unWrap(Short... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new short[0];
+        }
+
+        final short[] array = new short[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].shortValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Float[] wrap(float... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Float[0];
+        }
+
+        final Float[] array = new Float[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Float.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static float[] unWrap(Float... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new float[0];
+        }
+
+        final float[] array = new float[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].floatValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Double[] wrap(double... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Double[0];
+        }
+
+        final Double[] array = new Double[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Double.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static double[] unWrap(Double... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new double[0];
+        }
+
+        final double[] array = new double[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].doubleValue();
+        }
+        return array;
+    }
+
+    /**
+     * 将原始类型数组包装为包装类型
+     *
+     * @param values 原始类型数组
+     * @return 包装类型数组
+     */
+    public static Boolean[] wrap(boolean... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new Boolean[0];
+        }
+
+        final Boolean[] array = new Boolean[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = Boolean.valueOf(values[i]);
+        }
+        return array;
+    }
+
+    /**
+     * 包装类数组转为原始类型数组
+     *
+     * @param values 包装类型数组
+     * @return 原始类型数组
+     */
+    public static boolean[] unWrap(Boolean... values) {
+        if (null == values) {
+            return null;
+        }
+        final int length = values.length;
+        if (0 == length) {
+            return new boolean[0];
+        }
+
+        final boolean[] array = new boolean[length];
+        for (int i = 0; i < length; i++) {
+            array[i] = values[i].booleanValue();
+        }
+        return array;
+    }
+
+    /**
+     * 包装数组对象
+     *
+     * @param obj 对象，可以是对象数组或者基本类型数组
+     * @return 包装类型数组或对象数组
+     *
+     * @throws ZFrameException 对象为非数组
+     */
+    public static Object[] wrap(Object obj) {
+        if (null == obj) {
+            return null;
+        }
+        if (isArray(obj)) {
+            try {
+                return (Object[]) obj;
+            } catch (Exception e) {
+                final String className = obj.getClass().getComponentType().getName();
+                switch (className) {
+                    case "long":
+                        return wrap((long[]) obj);
+                    case "int":
+                        return wrap((int[]) obj);
+                    case "short":
+                        return wrap((short[]) obj);
+                    case "char":
+                        return wrap((char[]) obj);
+                    case "byte":
+                        return wrap((byte[]) obj);
+                    case "boolean":
+                        return wrap((boolean[]) obj);
+                    case "float":
+                        return wrap((float[]) obj);
+                    case "double":
+                        return wrap((double[]) obj);
+                    default:
+                        throw new ZFrameException(e);
+                }
+            }
+        }
+        throw new ZFrameException(StringUtil.format("[{}] is not Array!", obj.getClass()));
+    }
+
+    /**
+     * 对象是否为数组对象
+     *
+     * @param obj 对象
+     * @return 是否为数组对象，如果为{@code null} 返回false
+     */
+    public static boolean isArray(Object obj) {
+        if (null == obj) {
+            // throw new NullPointerException("Object check for isArray is null");
+            return false;
+        }
+        return obj.getClass().isArray();
+    }
+
+    /**
+     * 获取数组对象中指定index的值，支持负数，例如-1表示倒数第一个值<br>
+     * 如果数组下标越界，返回null
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组对象
+     * @param index 下标，支持负数
+     * @return 值
+     *
+     * @since 4.0.6
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T get(Object array, int index) {
+        if (null == array) {
+            return null;
+        }
+
+        if (index < 0) {
+            index += Array.getLength(array);
+        }
+        try {
+            return (T) Array.get(array, index);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取数组中指定多个下标元素值，组成新数组
+     *
+     * @param <T>     数组元素类型
+     * @param array   数组
+     * @param indexes 下标列表
+     * @return 结果
+     */
+    public static <T> T[] getAny(Object array, int... indexes) {
+        if (null == array) {
+            return null;
+        }
+
+        final T[] result = newArray(array.getClass().getComponentType(), indexes.length);
+        for (int i : indexes) {
+            result[i] = get(array, i);
+        }
+        return result;
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.2.2
+     */
+    public static <T> T[] sub(T[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return newArray(array.getClass().getComponentType(), 0);
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return newArray(array.getClass().getComponentType(), 0);
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static byte[] sub(byte[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new byte[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new byte[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static int[] sub(int[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new int[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new int[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static long[] sub(long[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new long[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new long[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static short[] sub(short[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new short[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new short[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static char[] sub(char[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new char[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new char[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static double[] sub(double[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new double[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new double[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static float[] sub(float[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new float[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new float[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @see Arrays#copyOfRange(Object[], int, int)
+     * @since 4.5.2
+     */
+    public static boolean[] sub(boolean[] array, int start, int end) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new boolean[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new boolean[0];
+            }
+            end = length;
+        }
+        return Arrays.copyOfRange(array, start, end);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @return 新的数组
+     *
+     * @since 4.0.6
+     */
+    public static Object[] sub(Object array, int start, int end) {
+        return sub(array, start, end, 1);
+    }
+
+    /**
+     * 获取子数组
+     *
+     * @param array 数组
+     * @param start 开始位置（包括）
+     * @param end   结束位置（不包括）
+     * @param step  步进
+     * @return 新的数组
+     *
+     * @since 4.0.6
+     */
+    public static Object[] sub(Object array, int start, int end, int step) {
+        int length = length(array);
+        if (start < 0) {
+            start += length;
+        }
+        if (end < 0) {
+            end += length;
+        }
+        if (start == length) {
+            return new Object[0];
+        }
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+        if (end > length) {
+            if (start >= length) {
+                return new Object[0];
+            }
+            end = length;
+        }
+
+        if (step <= 1) {
+            step = 1;
+        }
+
+        final ArrayList<Object> list = new ArrayList<>();
+        for (int i = start; i < end; i += step) {
+            list.add(get(array, i));
+        }
+
+        return list.toArray();
+    }
+
+    /**
+     * 数组或集合转String
+     *
+     * @param obj 集合或数组对象
+     * @return 数组字符串，与集合转字符串格式相同
+     */
+    public static String toString(Object obj) {
+        if (null == obj) {
+            return null;
+        }
+
+        if (obj instanceof long[]) {
+            return Arrays.toString((long[]) obj);
+        } else if (obj instanceof int[]) {
+            return Arrays.toString((int[]) obj);
+        } else if (obj instanceof short[]) {
+            return Arrays.toString((short[]) obj);
+        } else if (obj instanceof char[]) {
+            return Arrays.toString((char[]) obj);
+        } else if (obj instanceof byte[]) {
+            return Arrays.toString((byte[]) obj);
+        } else if (obj instanceof boolean[]) {
+            return Arrays.toString((boolean[]) obj);
+        } else if (obj instanceof float[]) {
+            return Arrays.toString((float[]) obj);
+        } else if (obj instanceof double[]) {
+            return Arrays.toString((double[]) obj);
+        } else if (ArrayUtil.isArray(obj)) {
+            // 对象数组
+            try {
+                return Arrays.deepToString((Object[]) obj);
+            } catch (Exception ignore) {
+                //ignore
+            }
+        }
+
+        return obj.toString();
+    }
+
+    /**
+     * 获取数组长度<br>
+     * 如果参数为{@code null}，返回0
+     *
+     * <pre>
+     * ArrayUtil.length(null)            = 0
+     * ArrayUtil.length([])              = 0
+     * ArrayUtil.length([null])          = 1
+     * ArrayUtil.length([true, false])   = 2
+     * ArrayUtil.length([1, 2, 3])       = 3
+     * ArrayUtil.length(["a", "b", "c"]) = 3
+     * </pre>
+     *
+     * @param array 数组对象
+     * @return 数组长度
+     *
+     * @throws IllegalArgumentException 如果参数不为数组，抛出此异常
+     * @see Array#getLength(Object)
+     * @since 3.0.8
+     */
+    public static int length(Object array) throws IllegalArgumentException {
+        if (null == array) {
             return 0;
         }
         return Array.getLength(array);
     }
 
     /**
-     * <p>Checks whether two arrays are the same type taking into account
-     * multi-dimensional arrays.</p>
+     * 以 conjunction 为分隔符将数组转换为字符串
      *
-     * @param array1 the first array, must not be <code>null</code>
-     * @param array2 the second array, must not be <code>null</code>
-     * @return <code>true</code> if type of arrays matches
-     *
-     * @throws IllegalArgumentException if either array is <code>null</code>
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
      */
-    public static boolean isSameType(Object array1, Object array2) {
-        if (array1 == null || array2 == null) {
-            throw new IllegalArgumentException("The Array must not be null");
+    public static String join(long[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
         }
-        return array1.getClass().getName().equals(array2.getClass().getName());
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (long item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
     }
 
-    // Reverse
-    //-----------------------------------------------------------------------
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(int[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (int item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>There is no special handling for multi-dimensional arrays.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 以 conjunction 为分隔符将数组转换为字符串
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
      */
-    public static void reverse(Object[] array) {
-        if (array == null) {
-            return;
+    public static String join(short[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
         }
-        int i = 0;
-        int j = array.length - 1;
-        Object tmp;
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (short item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(char[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (char item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(byte[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (byte item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(boolean[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (boolean item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(float[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (float item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(double[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (double item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param array       数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(Object array, CharSequence conjunction) {
+        if (isArray(array)) {
+            final Class<?> componentType = array.getClass().getComponentType();
+            if (componentType.isPrimitive()) {
+                final String componentTypeName = componentType.getName();
+                switch (componentTypeName) {
+                    case "long":
+                        return join((long[]) array, conjunction);
+                    case "int":
+                        return join((int[]) array, conjunction);
+                    case "short":
+                        return join((short[]) array, conjunction);
+                    case "char":
+                        return join((char[]) array, conjunction);
+                    case "byte":
+                        return join((byte[]) array, conjunction);
+                    case "boolean":
+                        return join((boolean[]) array, conjunction);
+                    case "float":
+                        return join((float[]) array, conjunction);
+                    case "double":
+                        return join((double[]) array, conjunction);
+                    default:
+                        throw new ZFrameException("Unknown primitive type: [{}]", componentTypeName);
+                }
+            } else {
+                return join((Object[]) array, conjunction);
+            }
+        }
+        throw new ZFrameException(StringUtil.format("[{}] is not a Array!", array.getClass()));
+    }
+
+    /**
+     * {@link ByteBuffer} 转byte数组
+     *
+     * @param bytebuffer {@link ByteBuffer}
+     * @return byte数组
+     *
+     * @since 3.0.1
+     */
+    public static byte[] toArray(ByteBuffer bytebuffer) {
+        if (false == bytebuffer.hasArray()) {
+            int oldPosition = bytebuffer.position();
+            bytebuffer.position(0);
+            int size = bytebuffer.limit();
+            byte[] buffers = new byte[size];
+            bytebuffer.get(buffers);
+            bytebuffer.position(oldPosition);
+            return buffers;
+        } else {
+            return Arrays.copyOfRange(bytebuffer.array(), bytebuffer.position(), bytebuffer.limit());
+        }
+    }
+
+    /**
+     * 将集合转为数组
+     *
+     * @param <T>           数组元素类型
+     * @param collection    集合
+     * @param componentType 集合元素类型
+     * @return 数组
+     *
+     * @since 3.0.9
+     */
+    public static <T> T[] toArray(Collection<T> collection, Class<T> componentType) {
+        final T[] array = newArray(componentType, collection.size());
+        return collection.toArray(array);
+    }
+
+    // ---------------------------------------------------------------------- remove
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param <T>   数组元素类型
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T[] remove(T[] array, int index) throws IllegalArgumentException {
+        return (T[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static long[] remove(long[] array, int index) throws IllegalArgumentException {
+        return (long[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static int[] remove(int[] array, int index) throws IllegalArgumentException {
+        return (int[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static short[] remove(short[] array, int index) throws IllegalArgumentException {
+        return (short[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static char[] remove(char[] array, int index) throws IllegalArgumentException {
+        return (char[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static byte[] remove(byte[] array, int index) throws IllegalArgumentException {
+        return (byte[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static double[] remove(double[] array, int index) throws IllegalArgumentException {
+        return (double[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static float[] remove(float[] array, int index) throws IllegalArgumentException {
+        return (float[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static boolean[] remove(boolean[] array, int index) throws IllegalArgumentException {
+        return (boolean[]) remove((Object) array, index);
+    }
+
+    /**
+     * 移除数组中对应位置的元素<br>
+     * copy from commons-lang
+     *
+     * @param array 数组对象，可以是对象数组，也可以原始类型数组
+     * @param index 位置，如果位置小于0或者大于长度，返回原数组
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static Object remove(Object array, int index) throws IllegalArgumentException {
+        if (null == array) {
+            return null;
+        }
+        int length = length(array);
+        if (index < 0 || index >= length) {
+            return array;
+        }
+
+        final Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
+        System.arraycopy(array, 0, result, 0, index);
+        if (index < length - 1) {
+            // 后半部分
+            System.arraycopy(array, index + 1, result, index, length - index - 1);
+        }
+
+        return result;
+    }
+
+    // ---------------------------------------------------------------------- remove
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param <T>     数组元素类型
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static <T> T[] removeEle(T[] array, T element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static long[] removeEle(long[] array, long element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static int[] removeEle(int[] array, int element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static short[] removeEle(short[] array, short element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static char[] removeEle(char[] array, char element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static byte[] removeEle(byte[] array, byte element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static double[] removeEle(double[] array, double element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static float[] removeEle(float[] array, float element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    /**
+     * 移除数组中指定的元素<br>
+     * 只会移除匹配到的第一个元素 copy from commons-lang
+     *
+     * @param array   数组对象，可以是对象数组，也可以原始类型数组
+     * @param element 要移除的元素
+     * @return 去掉指定元素后的新数组或原数组
+     *
+     * @throws IllegalArgumentException 参数对象不为数组对象
+     * @since 3.0.8
+     */
+    public static boolean[] removeEle(boolean[] array, boolean element) throws IllegalArgumentException {
+        return remove(array, indexOf(array, element));
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ Reverse array
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param <T>                 数组元素类型
+     * @param array               数组，会变更
+     * @param startIndexInclusive 开始位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static <T> T[] reverse(final T[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
+        }
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
+        T tmp;
         while (j > i) {
             tmp = array[j];
             array[j] = array[i];
@@ -910,21 +2984,38 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param <T>   数组元素类型
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(long[] array) {
-        if (array == null) {
-            return;
+    public static <T> T[] reverse(final T[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static long[] reverse(final long[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         long tmp;
         while (j > i) {
             tmp = array[j];
@@ -933,21 +3024,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(int[] array) {
-        if (array == null) {
-            return;
+    public static long[] reverse(final long[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static int[] reverse(final int[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         int tmp;
         while (j > i) {
             tmp = array[j];
@@ -956,21 +3063,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(short[] array) {
-        if (array == null) {
-            return;
+    public static int[] reverse(final int[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static short[] reverse(final short[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         short tmp;
         while (j > i) {
             tmp = array[j];
@@ -979,21 +3102,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(char[] array) {
-        if (array == null) {
-            return;
+    public static short[] reverse(final short[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static char[] reverse(final char[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         char tmp;
         while (j > i) {
             tmp = array[j];
@@ -1002,21 +3141,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(byte[] array) {
-        if (array == null) {
-            return;
+    public static char[] reverse(final char[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static byte[] reverse(final byte[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         byte tmp;
         while (j > i) {
             tmp = array[j];
@@ -1025,21 +3180,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(double[] array) {
-        if (array == null) {
-            return;
+    public static byte[] reverse(final byte[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static double[] reverse(final double[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         double tmp;
         while (j > i) {
             tmp = array[j];
@@ -1048,21 +3219,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(float[] array) {
-        if (array == null) {
-            return;
+    public static double[] reverse(final double[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static float[] reverse(final float[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         float tmp;
         while (j > i) {
             tmp = array[j];
@@ -1071,21 +3258,37 @@ public class ArrayUtil {
             j--;
             i++;
         }
+        return array;
     }
 
     /**
-     * <p>Reverses the order of the given array.</p>
-     * <p/>
-     * <p>This method does nothing for a <code>null</code> input array.</p>
+     * 反转数组，会变更原数组
      *
-     * @param array the array to reverse, may be <code>null</code>
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static void reverse(boolean[] array) {
-        if (array == null) {
-            return;
+    public static float[] reverse(final float[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    /**
+     * 反转数组，会变更原数组
+     *
+     * @param array               数组，会变更
+     * @param startIndexInclusive 其实位置（包含）
+     * @param endIndexExclusive   结束位置（不包含）
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
+     */
+    public static boolean[] reverse(final boolean[] array, final int startIndexInclusive, final int endIndexExclusive) {
+        if (isEmpty(array)) {
+            return array;
         }
-        int i = 0;
-        int j = array.length - 1;
+        int i = Math.max(startIndexInclusive, 0);
+        int j = Math.min(array.length, endIndexExclusive) - 1;
         boolean tmp;
         while (j > i) {
             tmp = array[j];
@@ -1094,3286 +3297,578 @@ public class ArrayUtil {
             j--;
             i++;
         }
-    }
-
-    // IndexOf search
-    // ----------------------------------------------------------------------
-
-    // Object IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given object in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array        the array to search through for the object, may be <code>null</code>
-     * @param objectToFind the object to find, may be <code>null</code>
-     * @return the index of the object within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(Object[] array, Object objectToFind) {
-        return indexOf(array, objectToFind, 0);
+        return array;
     }
 
     /**
-     * <p>Finds the index of the given object in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
+     * 反转数组，会变更原数组
      *
-     * @param array        the array to search through for the object, may be <code>null</code>
-     * @param objectToFind the object to find, may be <code>null</code>
-     * @param startIndex   the index to start searching at
-     * @return the index of the object within the array starting at the index,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @param array 数组，会变更
+     * @return 变更后的原数组
+     *
+     * @since 3.0.9
      */
-    public static int indexOf(Object[] array, Object objectToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static boolean[] reverse(final boolean[] array) {
+        return reverse(array, 0, array.length);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ min and max
+
+    /**
+     * 取最小值
+     *
+     * @param <T>         元素类型
+     * @param numberArray 数字数组
+     * @return 最小值
+     *
+     * @since 3.0.9
+     */
+    public static <T extends Comparable<? super T>> T min(T[] numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        if (objectToFind == null) {
-            for (int i = startIndex; i < array.length; i++) {
-                if (array[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = startIndex; i < array.length; i++) {
-                if (objectToFind.equals(array[i])) {
-                    return i;
-                }
+        T min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (ObjectUtil.compare(min, numberArray[i]) > 0) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Finds the last index of the given object within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最小值
      *
-     * @param array        the array to travers backwords looking for the object, may be <code>null</code>
-     * @param objectToFind the object to find, may be <code>null</code>
-     * @return the last index of the object within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(Object[] array, Object objectToFind) {
-        return lastIndexOf(array, objectToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given object in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than
-     * the array length will search from the end of the array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array        the array to traverse for looking for the object, may be <code>null</code>
-     * @param objectToFind the object to find, may be <code>null</code>
-     * @param startIndex   the start index to travers backwards from
-     * @return the last index of the object within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(Object[] array, Object objectToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static long min(long... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        if (objectToFind == null) {
-            for (int i = startIndex; i >= 0; i--) {
-                if (array[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = startIndex; i >= 0; i--) {
-                if (objectToFind.equals(array[i])) {
-                    return i;
-                }
+        long min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Checks if the object is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最小值
      *
-     * @param array        the array to search through
-     * @param objectToFind the object to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(Object[] array, Object objectToFind) {
-        return indexOf(array, objectToFind) != INDEX_NOT_FOUND;
-    }
-
-    // long IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int indexOf(long[] array, long valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(long[] array, long valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static int min(int... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        int min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最小值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(long[] array, long valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(long[] array, long valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static short min(short... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        short min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最小值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(long[] array, long valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // int IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int indexOf(int[] array, int valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(int[] array, int valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static char min(char... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        char min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最小值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(int[] array, int valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(int[] array, int valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static byte min(byte... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        byte min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最小值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(int[] array, int valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // short IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int indexOf(short[] array, short valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(short[] array, short valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static double min(double... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        double min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最小值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(short[] array, short valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
+     * @param numberArray 数字数组
+     * @return 最小值
      *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(short[] array, short valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static float min(float... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        float min = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (min > numberArray[i]) {
+                min = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return min;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最大值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
+     * @param <T>         元素类型
+     * @param numberArray 数字数组
+     * @return 最大值
+     *
+     * @since 3.0.9
      */
-    public static boolean contains(short[] array, short valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // char IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     *
-     * @since 2.1
-     */
-    public static int indexOf(char[] array, char valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     *
-     * @since 2.1
-     */
-    public static int indexOf(char[] array, char valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static <T extends Comparable<? super T>> T max(T[] numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        T max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (ObjectUtil.compare(max, numberArray[i]) < 0) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最大值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @param numberArray 数字数组
+     * @return 最大值
      *
-     * @since 2.1
+     * @since 3.0.9
      */
-    public static int lastIndexOf(char[] array, char valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
-     *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     *
-     * @since 2.1
-     */
-    public static int lastIndexOf(char[] array, char valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static long max(long... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        long max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最大值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
+     * @param numberArray 数字数组
+     * @return 最大值
      *
-     * @since 2.1
+     * @since 3.0.9
      */
-    public static boolean contains(char[] array, char valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // byte IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(byte[] array, byte valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(byte[] array, byte valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static int max(int... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        int max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最大值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(byte[] array, byte valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
+     * @param numberArray 数字数组
+     * @return 最大值
      *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(byte[] array, byte valueToFind, int startIndex) {
-        if (array == null) {
-            return INDEX_NOT_FOUND;
+    public static short max(short... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        short max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 取最大值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(byte[] array, byte valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // double IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * @param numberArray 数字数组
+     * @return 最大值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int indexOf(double[] array, double valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value within a given tolerance in the array.
-     * This method will return the index of the first value which falls between the region
-     * defined by valueToFind - tolerance and valueToFind + tolerance.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param tolerance   tolerance of the search
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(double[] array, double valueToFind, double tolerance) {
-        return indexOf(array, valueToFind, 0, tolerance);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(double[] array, double valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
+    public static char max(char... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
+        char max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Finds the index of the given value in the array starting at the given index.
-     * This method will return the index of the first value which falls between the region
-     * defined by valueToFind - tolerance and valueToFind + tolerance.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
+     * 取最大值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @param tolerance   tolerance of the search
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @param numberArray 数字数组
+     * @return 最大值
+     *
+     * @since 3.0.9
      */
-    public static int indexOf(double[] array, double valueToFind, int startIndex, double tolerance) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
+    public static byte max(byte... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        double min = valueToFind - tolerance;
-        double max = valueToFind + tolerance;
-        for (int i = startIndex; i < array.length; i++) {
-            if (array[i] >= min && array[i] <= max) {
-                return i;
+        byte max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * 取最大值
      *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(double[] array, double valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value within a given tolerance in the array.
-     * This method will return the index of the last value which falls between the region
-     * defined by valueToFind - tolerance and valueToFind + tolerance.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
+     * @param numberArray 数字数组
+     * @return 最大值
      *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param tolerance   tolerance of the search
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @since 3.0.9
      */
-    public static int lastIndexOf(double[] array, double valueToFind, double tolerance) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE, tolerance);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
-     *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(double[] array, double valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
+    public static double max(double... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
+        double max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Finds the last index of the given value in the array starting at the given index.
-     * This method will return the index of the last value which falls between the region
-     * defined by valueToFind - tolerance and valueToFind + tolerance.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
+     * 取最大值
      *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @param tolerance   search for value within plus/minus this amount
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
+     * @param numberArray 数字数组
+     * @return 最大值
+     *
+     * @since 3.0.9
      */
-    public static int lastIndexOf(double[] array, double valueToFind, int startIndex, double tolerance) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
+    public static float max(float... numberArray) {
+        if (isEmpty(numberArray)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        double min = valueToFind - tolerance;
-        double max = valueToFind + tolerance;
-        for (int i = startIndex; i >= 0; i--) {
-            if (array[i] >= min && array[i] <= max) {
-                return i;
+        float max = numberArray[0];
+        for (int i = 0; i < numberArray.length; i++) {
+            if (max < numberArray[i]) {
+                max = numberArray[i];
             }
         }
-        return INDEX_NOT_FOUND;
+        return max;
     }
 
     /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
+     * 交换数组中两个位置的值
      *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(double[] array, double valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    /**
-     * <p>Checks if a value falling within the given tolerance is in the
-     * given array.  If the array contains a value within the inclusive range
-     * defined by (value - tolerance) to (value + tolerance).</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array
-     * is passed in.</p>
-     *
-     * @param array       the array to search
-     * @param valueToFind the value to find
-     * @param tolerance   the array contains the tolerance of the search
-     * @return true if value falling within tolerance is in array
-     */
-    public static boolean contains(double[] array, double valueToFind, double tolerance) {
-        return indexOf(array, valueToFind, 0, tolerance) != INDEX_NOT_FOUND;
-    }
-
-    // float IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(float[] array, float valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(float[] array, float valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
-            }
-        }
-        return INDEX_NOT_FOUND;
-    }
-
-    /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(float[] array, float valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than the
-     * array length will search from the end of the array.</p>
-     *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(float[] array, float valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
-            }
-        }
-        return INDEX_NOT_FOUND;
-    }
-
-    /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
-     *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(float[] array, float valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // boolean IndexOf
-    //-----------------------------------------------------------------------
-
-    /**
-     * <p>Finds the index of the given value in the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int indexOf(boolean[] array, boolean valueToFind) {
-        return indexOf(array, valueToFind, 0);
-    }
-
-    /**
-     * <p>Finds the index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex is treated as zero. A startIndex larger than the array
-     * length will return {@link #INDEX_NOT_FOUND} (<code>-1</code>).</p>
-     *
-     * @param array       the array to search through for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the index to start searching at
-     * @return the index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code>
-     * array input
-     */
-    public static int indexOf(boolean[] array, boolean valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-        for (int i = startIndex; i < array.length; i++) {
-            if (valueToFind == array[i]) {
-                return i;
-            }
-        }
-        return INDEX_NOT_FOUND;
-    }
-
-    /**
-     * <p>Finds the last index of the given value within the array.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) if
-     * <code>null</code> array input.</p>
-     *
-     * @param array       the array to travers backwords looking for the object, may be <code>null</code>
-     * @param valueToFind the object to find
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(boolean[] array, boolean valueToFind) {
-        return lastIndexOf(array, valueToFind, Integer.MAX_VALUE);
-    }
-
-    /**
-     * <p>Finds the last index of the given value in the array starting at the given index.</p>
-     * <p/>
-     * <p>This method returns {@link #INDEX_NOT_FOUND} (<code>-1</code>) for a <code>null</code> input array.</p>
-     * <p/>
-     * <p>A negative startIndex will return {@link #INDEX_NOT_FOUND} (<code>-1</code>). A startIndex larger than
-     * the array length will search from the end of the array.</p>
-     *
-     * @param array       the array to traverse for looking for the object, may be <code>null</code>
-     * @param valueToFind the value to find
-     * @param startIndex  the start index to travers backwards from
-     * @return the last index of the value within the array,
-     * {@link #INDEX_NOT_FOUND} (<code>-1</code>) if not found or <code>null</code> array input
-     */
-    public static int lastIndexOf(boolean[] array, boolean valueToFind, int startIndex) {
-        if (ArrayUtil.isEmpty(array)) {
-            return INDEX_NOT_FOUND;
-        }
-        if (startIndex < 0) {
-            return INDEX_NOT_FOUND;
-        } else if (startIndex >= array.length) {
-            startIndex = array.length - 1;
-        }
-        for (int i = startIndex; i >= 0; i--) {
-            if (valueToFind == array[i]) {
-                return i;
-            }
-        }
-        return INDEX_NOT_FOUND;
-    }
-
-    /**
-     * <p>Checks if the value is in the given array.</p>
-     * <p/>
-     * <p>The method returns <code>false</code> if a <code>null</code> array is passed in.</p>
-     *
-     * @param array       the array to search through
-     * @param valueToFind the value to find
-     * @return <code>true</code> if the array contains the object
-     */
-    public static boolean contains(boolean[] array, boolean valueToFind) {
-        return indexOf(array, valueToFind) != INDEX_NOT_FOUND;
-    }
-
-    // Primitive/Object array converters
-    // ----------------------------------------------------------------------
-
-    // Character array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Characters to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Character</code> array, may be <code>null</code>
-     * @return a <code>char</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static char[] toPrimitive(Character[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_CHAR_ARRAY;
-        }
-        final char[] result = new char[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].charValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Character to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Character</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>char</code> array, <code>null</code> if null array input
-     */
-    public static char[] toPrimitive(Character[] array, char valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_CHAR_ARRAY;
-        }
-        final char[] result = new char[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Character b = array[i];
-            result[i] = (b == null ? valueForNull : b.charValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive chars to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>char</code> array
-     * @return a <code>Character</code> array, <code>null</code> if null array input
-     */
-    public static Character[] toObject(char[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_CHARACTER_OBJECT_ARRAY;
-        }
-        final Character[] result = new Character[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Character(array[i]);
-        }
-        return result;
-    }
-
-    // Long array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Longs to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Long</code> array, may be <code>null</code>
-     * @return a <code>long</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static long[] toPrimitive(Long[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_LONG_ARRAY;
-        }
-        final long[] result = new long[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].longValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Long to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Long</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>long</code> array, <code>null</code> if null array input
-     */
-    public static long[] toPrimitive(Long[] array, long valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_LONG_ARRAY;
-        }
-        final long[] result = new long[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Long b = array[i];
-            result[i] = (b == null ? valueForNull : b);
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive longs to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>long</code> array
-     * @return a <code>Long</code> array, <code>null</code> if null array input
-     */
-    public static Long[] toObject(long[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_LONG_OBJECT_ARRAY;
-        }
-        final Long[] result = new Long[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Long(array[i]);
-        }
-        return result;
-    }
-
-    // Int array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Integers to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Integer</code> array, may be <code>null</code>
-     * @return an <code>int</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static int[] toPrimitive(Integer[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_INT_ARRAY;
-        }
-        final int[] result = new int[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].intValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Integer to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Integer</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return an <code>int</code> array, <code>null</code> if null array input
-     */
-    public static int[] toPrimitive(Integer[] array, int valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_INT_ARRAY;
-        }
-        final int[] result = new int[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Integer b = array[i];
-            result[i] = (b == null ? valueForNull : b.intValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive ints to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array an <code>int</code> array
-     * @return an <code>Integer</code> array, <code>null</code> if null array input
-     */
-    public static Integer[] toObject(int[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_INTEGER_OBJECT_ARRAY;
-        }
-        final Integer[] result = new Integer[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Integer(array[i]);
-        }
-        return result;
-    }
-
-    // Short array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Shorts to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Short</code> array, may be <code>null</code>
-     * @return a <code>byte</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static short[] toPrimitive(Short[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_SHORT_ARRAY;
-        }
-        final short[] result = new short[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].shortValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Short to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Short</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>byte</code> array, <code>null</code> if null array input
-     */
-    public static short[] toPrimitive(Short[] array, short valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_SHORT_ARRAY;
-        }
-        final short[] result = new short[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Short b = array[i];
-            result[i] = (b == null ? valueForNull : b.shortValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive shorts to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>short</code> array
-     * @return a <code>Short</code> array, <code>null</code> if null array input
-     */
-    public static Short[] toObject(short[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_SHORT_OBJECT_ARRAY;
-        }
-        final Short[] result = new Short[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Short(array[i]);
-        }
-        return result;
-    }
-
-    // Byte array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Bytes to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Byte</code> array, may be <code>null</code>
-     * @return a <code>byte</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static byte[] toPrimitive(Byte[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BYTE_ARRAY;
-        }
-        final byte[] result = new byte[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].byteValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Bytes to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Byte</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>byte</code> array, <code>null</code> if null array input
-     */
-    public static byte[] toPrimitive(Byte[] array, byte valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BYTE_ARRAY;
-        }
-        final byte[] result = new byte[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Byte b = array[i];
-            result[i] = (b == null ? valueForNull : b.byteValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive bytes to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>byte</code> array
-     * @return a <code>Byte</code> array, <code>null</code> if null array input
-     */
-    public static Byte[] toObject(byte[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BYTE_OBJECT_ARRAY;
-        }
-        final Byte[] result = new Byte[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = Byte.valueOf(array[i]);
-        }
-        return result;
-    }
-
-    // Double array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Doubles to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Double</code> array, may be <code>null</code>
-     * @return a <code>double</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static double[] toPrimitive(Double[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_DOUBLE_ARRAY;
-        }
-        final double[] result = new double[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i] == null ? 0 : array[i].doubleValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Doubles to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Double</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>double</code> array, <code>null</code> if null array input
-     */
-    public static double[] toPrimitive(Double[] array, double valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_DOUBLE_ARRAY;
-        }
-        final double[] result = new double[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Double b = array[i];
-            result[i] = (b == null ? valueForNull : b.doubleValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive doubles to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>double</code> array
-     * @return a <code>Double</code> array, <code>null</code> if null array input
-     */
-    public static Double[] toObject(double[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_DOUBLE_OBJECT_ARRAY;
-        }
-        final Double[] result = new Double[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Double(array[i]);
-        }
-        return result;
-    }
-
-    //   Float array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Floats to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Float</code> array, may be <code>null</code>
-     * @return a <code>float</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static float[] toPrimitive(Float[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_FLOAT_ARRAY;
-        }
-        final float[] result = new float[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].floatValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Floats to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Float</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>float</code> array, <code>null</code> if null array input
-     */
-    public static float[] toPrimitive(Float[] array, float valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_FLOAT_ARRAY;
-        }
-        final float[] result = new float[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Float b = array[i];
-            result[i] = (b == null ? valueForNull : b.floatValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive floats to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>float</code> array
-     * @return a <code>Float</code> array, <code>null</code> if null array input
-     */
-    public static Float[] toObject(float[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_FLOAT_OBJECT_ARRAY;
-        }
-        final Float[] result = new Float[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = new Float(array[i]);
-        }
-        return result;
-    }
-
-    // Boolean array converters
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Converts an array of object Booleans to primitives.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>Boolean</code> array, may be <code>null</code>
-     * @return a <code>boolean</code> array, <code>null</code> if null array input
-     *
-     * @throws NullPointerException if array content is <code>null</code>
-     */
-    public static boolean[] toPrimitive(Boolean[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BOOLEAN_ARRAY;
-        }
-        final boolean[] result = new boolean[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i].booleanValue();
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of object Booleans to primitives handling <code>null</code>.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array        a <code>Boolean</code> array, may be <code>null</code>
-     * @param valueForNull the value to insert if <code>null</code> found
-     * @return a <code>boolean</code> array, <code>null</code> if null array input
-     */
-    public static boolean[] toPrimitive(Boolean[] array, boolean valueForNull) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BOOLEAN_ARRAY;
-        }
-        final boolean[] result = new boolean[array.length];
-        for (int i = 0; i < array.length; i++) {
-            Boolean b = array[i];
-            result[i] = (b == null ? valueForNull : b.booleanValue());
-        }
-        return result;
-    }
-
-    /**
-     * <p>Converts an array of primitive booleans to objects.</p>
-     * <p/>
-     * <p>This method returns <code>null</code> for a <code>null</code> input array.</p>
-     *
-     * @param array a <code>boolean</code> array
-     * @return a <code>Boolean</code> array, <code>null</code> if null array input
-     */
-    public static Boolean[] toObject(boolean[] array) {
-        if (array == null) {
-            return null;
-        } else if (array.length == 0) {
-            return EMPTY_BOOLEAN_OBJECT_ARRAY;
-        }
-        final Boolean[] result = new Boolean[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = (array[i] ? Boolean.TRUE : Boolean.FALSE);
-        }
-        return result;
-    }
-
-    // ----------------------------------------------------------------------
-
-    /**
-     * <p>Checks if an array of Objects is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static <T> boolean isEmpty(T[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive longs is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(long[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive ints is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(int[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive shorts is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(short[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive chars is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(char[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive bytes is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(byte[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive doubles is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(double[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive floats is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(float[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Checks if an array of primitive booleans is empty or <code>null</code>.</p>
-     *
-     * @param array the array to test
-     * @return <code>true</code> if the array is empty or <code>null</code>
-     *
-     * @since 2.1
-     */
-    public static boolean isEmpty(boolean[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(null, null)     = null
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * ArrayUtils.addAll([null], [null]) = [null, null]
-     * ArrayUtils.addAll(["a", "b", "c"], ["1", "2", "3"]) = ["a", "b", "c", "1", "2", "3"]
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array, may be <code>null</code>
-     * @param array2 the second array whose elements are added to the new array, may be <code>null</code>
-     * @return The new array, <code>null</code> if <code>null</code> array inputs.
-     * The type of the new array is the type of the first array.
-     *
-     * @since 2.1
-     */
-    public static Object[] addAll(Object[] array1, Object[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        Object[] joinedArray = (Object[]) Array.newInstance(array1.getClass().getComponentType(), array1.length + array2.length);
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new boolean[] array.
-     *
-     * @since 2.1
-     */
-    public static boolean[] addAll(boolean[] array1, boolean[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        boolean[] joinedArray = new boolean[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new char[] array.
-     *
-     * @since 2.1
-     */
-    public static char[] addAll(char[] array1, char[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        char[] joinedArray = new char[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new byte[] array.
-     *
-     * @since 2.1
-     */
-    public static byte[] addAll(byte[] array1, byte[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        byte[] joinedArray = new byte[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new short[] array.
-     *
-     * @since 2.1
-     */
-    public static short[] addAll(short[] array1, short[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        short[] joinedArray = new short[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new int[] array.
-     *
-     * @since 2.1
-     */
-    public static int[] addAll(int[] array1, int[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        int[] joinedArray = new int[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new long[] array.
-     *
-     * @since 2.1
-     */
-    public static long[] addAll(long[] array1, long[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        long[] joinedArray = new long[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new float[] array.
-     *
-     * @since 2.1
-     */
-    public static float[] addAll(float[] array1, float[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        float[] joinedArray = new float[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Adds all the elements of the given arrays into a new array.</p>
-     * <p>The new array contains all of the element of <code>array1</code> followed
-     * by all of the elements <code>array2</code>. When an array is returned, it is always
-     * a new array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.addAll(array1, null)   = cloned copy of array1
-     * ArrayUtils.addAll(null, array2)   = cloned copy of array2
-     * ArrayUtils.addAll([], [])         = []
-     * </pre>
-     *
-     * @param array1 the first array whose elements are added to the new array.
-     * @param array2 the second array whose elements are added to the new array.
-     * @return The new double[] array.
-     *
-     * @since 2.1
-     */
-    public static double[] addAll(double[] array1, double[] array2) {
-        if (array1 == null) {
-            return clone(array2);
-        } else if (array2 == null) {
-            return clone(array1);
-        }
-        double[] joinedArray = new double[array1.length + array2.length];
-        System.arraycopy(array1, 0, joinedArray, 0, array1.length);
-        System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
-        return joinedArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, null)      = [null]
-     * ArrayUtils.add(null, "a")       = ["a"]
-     * ArrayUtils.add(["a"], null)     = ["a", null]
-     * ArrayUtils.add(["a"], "b")      = ["a", "b"]
-     * ArrayUtils.add(["a", "b"], "c") = ["a", "b", "c"]
-     * </pre>
-     *
-     * @param array   the array to "add" the element to, may be <code>null</code>
-     * @param element the object to add
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static Object[] add(Object[] array, Object element) {
-        Class<?> type = array != null ? array.getClass() : (element != null ? element.getClass() : Object.class);
-        Object[] newArray = (Object[]) copyArrayGrow1(array, type);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, true)          = [true]
-     * ArrayUtils.add([true], false)       = [true, false]
-     * ArrayUtils.add([true, false], true) = [true, false, true]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static boolean[] add(boolean[] array, boolean element) {
-        boolean[] newArray = (boolean[]) copyArrayGrow1(array, Boolean.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static byte[] add(byte[] array, byte element) {
-        byte[] newArray = (byte[]) copyArrayGrow1(array, Byte.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, '0')       = ['0']
-     * ArrayUtils.add(['1'], '0')      = ['1', '0']
-     * ArrayUtils.add(['1', '0'], '1') = ['1', '0', '1']
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static char[] add(char[] array, char element) {
-        char[] newArray = (char[]) copyArrayGrow1(array, Character.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static double[] add(double[] array, double element) {
-        double[] newArray = (double[]) copyArrayGrow1(array, Double.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static float[] add(float[] array, float element) {
-        float[] newArray = (float[]) copyArrayGrow1(array, Float.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static int[] add(int[] array, int element) {
-        int[] newArray = (int[]) copyArrayGrow1(array, Integer.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static long[] add(long[] array, long element) {
-        long[] newArray = (long[]) copyArrayGrow1(array, Long.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * <p>Copies the given array and adds the given element at the end of the new array.</p>
-     * <p/>
-     * <p>The new array contains the same elements of the input
-     * array plus the given element in the last position. The component type of
-     * the new array is the same as that of the input array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0)   = [0]
-     * ArrayUtils.add([1], 0)    = [1, 0]
-     * ArrayUtils.add([1, 0], 1) = [1, 0, 1]
-     * </pre>
-     *
-     * @param array   the array to copy and add the element to, may be <code>null</code>
-     * @param element the object to add at the last index of the new array
-     * @return A new array containing the existing elements plus the new element
-     *
-     * @since 2.1
-     */
-    public static short[] add(short[] array, short element) {
-        short[] newArray = (short[]) copyArrayGrow1(array, Short.TYPE);
-        newArray[newArray.length - 1] = element;
-        return newArray;
-    }
-
-    /**
-     * Returns a copy of the given array of size 1 greater than the argument.
-     * The last value of the array is left to the default value.
-     *
-     * @param array                 The array to copy, must not be <code>null</code>.
-     * @param newArrayComponentType If <code>array</code> is <code>null</code>, create a
-     *                              size 1 array of this type.
-     * @return A new copy of the array of size 1 greater than the input.
-     */
-    private static Object copyArrayGrow1(Object array, Class<?> newArrayComponentType) {
-        if (array != null) {
-            int arrayLength = Array.getLength(array);
-            Object newArray = Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
-            System.arraycopy(array, 0, newArray, 0, arrayLength);
-            return newArray;
-        }
-        return Array.newInstance(newArrayComponentType, 1);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0, null)      = [null]
-     * ArrayUtils.add(null, 0, "a")       = ["a"]
-     * ArrayUtils.add(["a"], 1, null)     = ["a", null]
-     * ArrayUtils.add(["a"], 1, "b")      = ["a", "b"]
-     * ArrayUtils.add(["a", "b"], 3, "c") = ["a", "b", "c"]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static Object[] add(Object[] array, int index, Object element) {
-        Class<?> clss = null;
-        if (array != null) {
-            clss = array.getClass().getComponentType();
-        } else if (element != null) {
-            clss = element.getClass();
-        } else {
-            return new Object[]{null};
-        }
-        return (Object[]) add(array, index, element, clss);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0, true)          = [true]
-     * ArrayUtils.add([true], 0, false)       = [false, true]
-     * ArrayUtils.add([false], 1, true)       = [false, true]
-     * ArrayUtils.add([true, false], 1, true) = [true, true, false]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static boolean[] add(boolean[] array, int index, boolean element) {
-        return (boolean[]) add(array, index, Boolean.valueOf(element), Boolean.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add(null, 0, 'a')            = ['a']
-     * ArrayUtils.add(['a'], 0, 'b')           = ['b', 'a']
-     * ArrayUtils.add(['a', 'b'], 0, 'c')      = ['c', 'a', 'b']
-     * ArrayUtils.add(['a', 'b'], 1, 'k')      = ['a', 'k', 'b']
-     * ArrayUtils.add(['a', 'b', 'c'], 1, 't') = ['a', 't', 'b', 'c']
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static char[] add(char[] array, int index, char element) {
-        return (char[]) add(array, index, new Character(element), Character.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1], 0, 2)         = [2, 1]
-     * ArrayUtils.add([2, 6], 2, 3)      = [2, 6, 3]
-     * ArrayUtils.add([2, 6], 0, 1)      = [1, 2, 6]
-     * ArrayUtils.add([2, 6, 3], 2, 1)   = [2, 6, 1, 3]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static byte[] add(byte[] array, int index, byte element) {
-        return (byte[]) add(array, index, Byte.valueOf(element), Byte.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1], 0, 2)         = [2, 1]
-     * ArrayUtils.add([2, 6], 2, 10)     = [2, 6, 10]
-     * ArrayUtils.add([2, 6], 0, -4)     = [-4, 2, 6]
-     * ArrayUtils.add([2, 6, 3], 2, 1)   = [2, 6, 1, 3]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static short[] add(short[] array, int index, short element) {
-        return (short[]) add(array, index, new Short(element), Short.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1], 0, 2)         = [2, 1]
-     * ArrayUtils.add([2, 6], 2, 10)     = [2, 6, 10]
-     * ArrayUtils.add([2, 6], 0, -4)     = [-4, 2, 6]
-     * ArrayUtils.add([2, 6, 3], 2, 1)   = [2, 6, 1, 3]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static int[] add(int[] array, int index, int element) {
-        return (int[]) add(array, index, new Integer(element), Integer.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1L], 0, 2L)           = [2L, 1L]
-     * ArrayUtils.add([2L, 6L], 2, 10L)      = [2L, 6L, 10L]
-     * ArrayUtils.add([2L, 6L], 0, -4L)      = [-4L, 2L, 6L]
-     * ArrayUtils.add([2L, 6L, 3L], 2, 1L)   = [2L, 6L, 1L, 3L]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static long[] add(long[] array, int index, long element) {
-        return (long[]) add(array, index, new Long(element), Long.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1.1f], 0, 2.2f)               = [2.2f, 1.1f]
-     * ArrayUtils.add([2.3f, 6.4f], 2, 10.5f)        = [2.3f, 6.4f, 10.5f]
-     * ArrayUtils.add([2.6f, 6.7f], 0, -4.8f)        = [-4.8f, 2.6f, 6.7f]
-     * ArrayUtils.add([2.9f, 6.0f, 0.3f], 2, 1.0f)   = [2.9f, 6.0f, 1.0f, 0.3f]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
-     */
-    public static float[] add(float[] array, int index, float element) {
-        return (float[]) add(array, index, new Float(element), Float.TYPE);
-    }
-
-    /**
-     * <p>Inserts the specified element at the specified position in the array.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array plus the given element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, a new one element array is returned
-     * whose component type is the same as the element.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.add([1.1], 0, 2.2)              = [2.2, 1.1]
-     * ArrayUtils.add([2.3, 6.4], 2, 10.5)        = [2.3, 6.4, 10.5]
-     * ArrayUtils.add([2.6, 6.7], 0, -4.8)        = [-4.8, 2.6, 6.7]
-     * ArrayUtils.add([2.9, 6.0, 0.3], 2, 1.0)    = [2.9, 6.0, 1.0, 0.3]
-     * </pre>
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @return A new array containing the existing elements and the new element
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index > array.length).
+     * @since 4.0.7
      */
-    public static double[] add(double[] array, int index, double element) {
-        return (double[]) add(array, index, new Double(element), Double.TYPE);
-    }
-
-    /**
-     * Underlying implementation of add(array, index, element) methods.
-     * The last parameter is the class, which may not equal element.getClass
-     * for primitives.
-     *
-     * @param array   the array to add the element to, may be <code>null</code>
-     * @param index   the position of the new object
-     * @param element the object to add
-     * @param clss    the type of the element being added
-     * @return A new array containing the existing elements and the new element
-     */
-    private static Object add(Object array, int index, Object element, Class<?> clss) {
-        if (array == null) {
-            if (index != 0) {
-                throw new IndexOutOfBoundsException("Index: " + index + ", Length: 0");
-            }
-            Object joinedArray = Array.newInstance(clss, 1);
-            Array.set(joinedArray, 0, element);
-            return joinedArray;
-        }
-        int length = Array.getLength(array);
-        if (index > length || index < 0) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+    public static int[] swap(int[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        Object result = Array.newInstance(clss, length + 1);
-        System.arraycopy(array, 0, result, 0, index);
-        Array.set(result, index, element);
-        if (index < length) {
-            System.arraycopy(array, index, result, index + 1, length - index);
-        }
-        return result;
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove(["a"], 0)           = []
-     * ArrayUtils.remove(["a", "b"], 0)      = ["b"]
-     * ArrayUtils.remove(["a", "b"], 1)      = ["a"]
-     * ArrayUtils.remove(["a", "b", "c"], 1) = ["a", "c"]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static Object[] remove(Object[] array, int index) {
-        return (Object[]) remove((Object) array, index);
+        int tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, "a")            = null
-     * ArrayUtils.removeElement([], "a")              = []
-     * ArrayUtils.removeElement(["a"], "b")           = ["a"]
-     * ArrayUtils.removeElement(["a", "b"], "a")      = ["b"]
-     * ArrayUtils.removeElement(["a", "b", "a"], "a") = ["b", "a"]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static Object[] removeElement(Object[] array, Object element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static long[] swap(long[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([true], 0)              = []
-     * ArrayUtils.remove([true, false], 0)       = [false]
-     * ArrayUtils.remove([true, false], 1)       = [true]
-     * ArrayUtils.remove([true, true, false], 1) = [true, false]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static boolean[] remove(boolean[] array, int index) {
-        return (boolean[]) remove((Object) array, index);
+        long tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, true)                = null
-     * ArrayUtils.removeElement([], true)                  = []
-     * ArrayUtils.removeElement([true], false)             = [true]
-     * ArrayUtils.removeElement([true, false], false)      = [true]
-     * ArrayUtils.removeElement([true, false, true], true) = [false, true]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static boolean[] removeElement(boolean[] array, boolean element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static double[] swap(double[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1], 0)          = []
-     * ArrayUtils.remove([1, 0], 0)       = [0]
-     * ArrayUtils.remove([1, 0], 1)       = [1]
-     * ArrayUtils.remove([1, 0, 1], 1)    = [1, 1]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static byte[] remove(byte[] array, int index) {
-        return (byte[]) remove((Object) array, index);
+        double tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1)        = null
-     * ArrayUtils.removeElement([], 1)          = []
-     * ArrayUtils.removeElement([1], 0)         = [1]
-     * ArrayUtils.removeElement([1, 0], 0)      = [1]
-     * ArrayUtils.removeElement([1, 0, 1], 1)   = [0, 1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static byte[] removeElement(byte[] array, byte element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static float[] swap(float[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove(['a'], 0)           = []
-     * ArrayUtils.remove(['a', 'b'], 0)      = ['b']
-     * ArrayUtils.remove(['a', 'b'], 1)      = ['a']
-     * ArrayUtils.remove(['a', 'b', 'c'], 1) = ['a', 'c']
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static char[] remove(char[] array, int index) {
-        return (char[]) remove((Object) array, index);
+        float tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 'a')            = null
-     * ArrayUtils.removeElement([], 'a')              = []
-     * ArrayUtils.removeElement(['a'], 'b')           = ['a']
-     * ArrayUtils.removeElement(['a', 'b'], 'a')      = ['b']
-     * ArrayUtils.removeElement(['a', 'b', 'a'], 'a') = ['b', 'a']
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static char[] removeElement(char[] array, char element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static boolean[] swap(boolean[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1.1], 0)           = []
-     * ArrayUtils.remove([2.5, 6.0], 0)      = [6.0]
-     * ArrayUtils.remove([2.5, 6.0], 1)      = [2.5]
-     * ArrayUtils.remove([2.5, 6.0, 3.8], 1) = [2.5, 3.8]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static double[] remove(double[] array, int index) {
-        return (double[]) remove((Object) array, index);
+        boolean tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1.1)            = null
-     * ArrayUtils.removeElement([], 1.1)              = []
-     * ArrayUtils.removeElement([1.1], 1.2)           = [1.1]
-     * ArrayUtils.removeElement([1.1, 2.3], 1.1)      = [2.3]
-     * ArrayUtils.removeElement([1.1, 2.3, 1.1], 1.1) = [2.3, 1.1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static double[] removeElement(double[] array, double element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static byte[] swap(byte[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1.1], 0)           = []
-     * ArrayUtils.remove([2.5, 6.0], 0)      = [6.0]
-     * ArrayUtils.remove([2.5, 6.0], 1)      = [2.5]
-     * ArrayUtils.remove([2.5, 6.0, 3.8], 1) = [2.5, 3.8]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static float[] remove(float[] array, int index) {
-        return (float[]) remove((Object) array, index);
+        byte tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1.1)            = null
-     * ArrayUtils.removeElement([], 1.1)              = []
-     * ArrayUtils.removeElement([1.1], 1.2)           = [1.1]
-     * ArrayUtils.removeElement([1.1, 2.3], 1.1)      = [2.3]
-     * ArrayUtils.removeElement([1.1, 2.3, 1.1], 1.1) = [2.3, 1.1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static float[] removeElement(float[] array, float element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static char[] swap(char[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1], 0)         = []
-     * ArrayUtils.remove([2, 6], 0)      = [6]
-     * ArrayUtils.remove([2, 6], 1)      = [2]
-     * ArrayUtils.remove([2, 6, 3], 1)   = [2, 3]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static int[] remove(int[] array, int index) {
-        return (int[]) remove((Object) array, index);
+        char tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1)      = null
-     * ArrayUtils.removeElement([], 1)        = []
-     * ArrayUtils.removeElement([1], 2)       = [1]
-     * ArrayUtils.removeElement([1, 3], 1)    = [3]
-     * ArrayUtils.removeElement([1, 3, 1], 1) = [3, 1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static int[] removeElement(int[] array, int element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static short[] swap(short[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Number array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1], 0)         = []
-     * ArrayUtils.remove([2, 6], 0)      = [6]
-     * ArrayUtils.remove([2, 6], 1)      = [2]
-     * ArrayUtils.remove([2, 6, 3], 1)   = [2, 3]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static long[] remove(long[] array, int index) {
-        return (long[]) remove((Object) array, index);
+        short tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1)      = null
-     * ArrayUtils.removeElement([], 1)        = []
-     * ArrayUtils.removeElement([1], 2)       = [1]
-     * ArrayUtils.removeElement([1, 3], 1)    = [3]
-     * ArrayUtils.removeElement([1, 3, 1], 1) = [3, 1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param <T>    元素类型
+     * @param array  数组
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static long[] removeElement(long[] array, long element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static <T> T[] swap(T[] array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Array must not empty !");
         }
-        return remove(array, index);
-    }
-
-    /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.remove([1], 0)         = []
-     * ArrayUtils.remove([2, 6], 0)      = [6]
-     * ArrayUtils.remove([2, 6], 1)      = [2]
-     * ArrayUtils.remove([2, 6, 3], 1)   = [2, 3]
-     * </pre>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
-     */
-    public static short[] remove(short[] array, int index) {
-        return (short[]) remove((Object) array, index);
+        T tmp = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tmp;
+        return array;
     }
 
     /**
-     * <p>Removes the first occurrence of the specified element from the
-     * specified array. All subsequent elements are shifted to the left
-     * (substracts one from their indices). If the array doesn't contains
-     * such an element, no elements are removed from the array.</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the first occurrence of the specified element. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p>
-     * <pre>
-     * ArrayUtils.removeElement(null, 1)      = null
-     * ArrayUtils.removeElement([], 1)        = []
-     * ArrayUtils.removeElement([1], 2)       = [1]
-     * ArrayUtils.removeElement([1, 3], 1)    = [3]
-     * ArrayUtils.removeElement([1, 3, 1], 1) = [3, 1]
-     * </pre>
+     * 交换数组中两个位置的值
      *
-     * @param array   the array to remove the element from, may be <code>null</code>
-     * @param element the element to be removed
-     * @return A new array containing the existing elements except the first
-     * occurrence of the specified element.
+     * @param array  数组对象
+     * @param index1 位置1
+     * @param index2 位置2
+     * @return 交换后的数组，与传入数组为同一对象
      *
-     * @since 2.1
+     * @since 4.0.7
      */
-    public static short[] removeElement(short[] array, short element) {
-        int index = indexOf(array, element);
-        if (index == INDEX_NOT_FOUND) {
-            return clone(array);
+    public static Object swap(Object array, int index1, int index2) {
+        if (isEmpty(array)) {
+            throw new IllegalArgumentException("Array must not empty !");
         }
-        return remove(array, index);
+        Object tmp = get(array, index1);
+        Array.set(array, index1, Array.get(array, index2));
+        Array.set(array, index2, tmp);
+        return array;
     }
 
     /**
-     * <p>Removes the element at the specified position from the specified array.
-     * All subsequent elements are shifted to the left (substracts one from
-     * their indices).</p>
-     * <p/>
-     * <p>This method returns a new array with the same elements of the input
-     * array except the element on the specified position. The component
-     * type of the returned array is always the same as that of the input
-     * array.</p>
-     * <p/>
-     * <p>If the input array is <code>null</code>, an IndexOutOfBoundsException
-     * will be thrown, because in that case no valid index can be specified.</p>
-     *
-     * @param array the array to remove the element from, may not be <code>null</code>
-     * @param index the position of the element to be removed
-     * @return A new array containing the existing elements except the element
-     * at the specified position.
+     * 去重数组中的元素，去重后生成新的数组，原数组不变<br>
+     * 此方法通过{@link LinkedHashSet} 去重
      *
-     * @throws IndexOutOfBoundsException if the index is out of range
-     *                                   (index < 0 || index >= array.length), or if the array is <code>null</code>.
-     * @since 2.1
+     * @param <T>   数组元素类型
+     * @param array 数组
+     * @return 去重后的数组
      */
-    private static Object remove(Object array, int index) {
-        int length = getLength(array);
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+    @SuppressWarnings("unchecked")
+    public static <T> T[] distinct(T[] array) {
+        if (isEmpty(array)) {
+            return array;
         }
 
-        Object result = Array.newInstance(array.getClass().getComponentType(), length - 1);
-        System.arraycopy(array, 0, result, 0, index);
-        if (index < length - 1) {
-            System.arraycopy(array, index + 1, result, index, length - index - 1);
-        }
-
-        return result;
+        final Set<T> set = new LinkedHashSet<>(array.length, 1);
+        Collections.addAll(set, array);
+        return toArray(set, (Class<T>) getComponentType(array));
     }
-
 }
