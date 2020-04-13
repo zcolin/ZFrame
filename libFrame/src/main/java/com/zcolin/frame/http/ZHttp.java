@@ -79,7 +79,15 @@ public class ZHttp {
         String cancelTag = UUID.randomUUID().toString();
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
-            OkHttpUtils.get().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy(cancelTag));
+            OkHttpUtils.get()
+                       .url(url)
+                       .headers(headerParams)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
     }
@@ -104,7 +112,15 @@ public class ZHttp {
         String cancelTag = UUID.randomUUID().toString();
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
-            OkHttpUtils.post().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response.generatedProxy(cancelTag));
+            OkHttpUtils.post()
+                       .url(url)
+                       .headers(headerParams)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
     }
@@ -130,6 +146,8 @@ public class ZHttp {
                        .content(string)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
@@ -158,6 +176,8 @@ public class ZHttp {
                        .content(json)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
@@ -192,7 +212,15 @@ public class ZHttp {
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             response.setCancelTag(cancelTag);
-            OkHttpUtils.get().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response);
+            OkHttpUtils.get()
+                       .url(url)
+                       .headers(headerParams)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response);
         }
         return cancelTag;
     }
@@ -214,7 +242,15 @@ public class ZHttp {
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headerParams, contentParams, response)) {
             response.setCancelTag(cancelTag);
-            OkHttpUtils.post().url(url).headers(headerParams).params(contentParams).tag(cancelTag).build().execute(response);
+            OkHttpUtils.post()
+                       .url(url)
+                       .headers(headerParams)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response);
         }
         return cancelTag;
     }
@@ -243,6 +279,8 @@ public class ZHttp {
                        .content(json)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response);
         }
         return cancelTag;
@@ -277,7 +315,16 @@ public class ZHttp {
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, contentParams, response)) {
             response.setCancelTag(cancelTag);
-            OkHttpUtils.post().url(url).headers(headers).files(fileParams).params(contentParams).tag(cancelTag).build().execute(response);
+            OkHttpUtils.post()
+                       .url(url)
+                       .headers(headers)
+                       .files(fileParams)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response);
         }
         return cancelTag;
     }
@@ -329,6 +376,8 @@ public class ZHttp {
                        .params(contentParams)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
@@ -346,6 +395,8 @@ public class ZHttp {
                        .params(contentParams)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
@@ -364,6 +415,8 @@ public class ZHttp {
                        .files(fileKey, fileValue)
                        .tag(cancelTag)
                        .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
                        .execute(response.generatedProxy(cancelTag));
         }
         return cancelTag;
@@ -386,7 +439,15 @@ public class ZHttp {
         removeNullValue(contentParams);
         if (REQUESTINTERCEPT == null || !REQUESTINTERCEPT.onRequest(url, headers, contentParams, response)) {
             response.setCancelTag(cancelTag);
-            OkHttpUtils.get().url(url).headers(headers).params(contentParams).tag(cancelTag).build().execute(response);
+            OkHttpUtils.get()
+                       .url(url)
+                       .headers(headers)
+                       .params(contentParams)
+                       .tag(cancelTag)
+                       .build()
+                       .readTimeOut(600000L)
+                       .writeTimeOut(600000L)
+                       .execute(response);
         }
         return cancelTag;
     }

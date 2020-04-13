@@ -42,6 +42,12 @@ public abstract class ZResponse<T extends ZReply> {
         return responseProxy;
     }
 
+    public ZResponseProxy generatedProxy(String cancelTag, Class<T> cls) {
+        ZResponseProxy responseProxy = new ZResponseProxy<>(cls, this, barActy, barMsg);
+        responseProxy.setCancelTag(cancelTag);
+        return responseProxy;
+    }
+
     public ZResponse() {
         this(null);
     }
