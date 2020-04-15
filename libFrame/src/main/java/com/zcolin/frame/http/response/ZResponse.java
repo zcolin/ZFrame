@@ -24,9 +24,10 @@ import okhttp3.Response;
  * 返回网络对象，使用gons解析好，并通过状态码做成功失败分发
  */
 public abstract class ZResponse<T extends ZReply> {
-    static ZResponseIntercept RESPONSEINTERCEPT;
-    String   barMsg;        //进度条上的文字
-    Activity barActy;       //进度条的Activity
+    static    ZResponseIntercept RESPONSEINTERCEPT;
+    protected Class<T>           dataClass;
+    protected String             barMsg;        //进度条上的文字
+    protected Activity           barActy;       //进度条的Activity
 
     /**
      * 设置返回拦截器
@@ -36,14 +37,19 @@ public abstract class ZResponse<T extends ZReply> {
     }
 
     public ZResponseProxy generatedProxy(String cancelTag) {
-        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        ZResponseProxy responseProxy = new ZResponseProxy<>(entityClass, this, barActy, barMsg);
+        if (dataClass == null) {
+            dataClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        }
+        ZResponseProxy responseProxy = new ZResponseProxy<>(dataClass, this, barActy, barMsg);
         responseProxy.setCancelTag(cancelTag);
         return responseProxy;
     }
 
     public ZResponseProxy generatedProxy(String cancelTag, Class<T> cls) {
-        ZResponseProxy responseProxy = new ZResponseProxy<>(cls, this, barActy, barMsg);
+        if (dataClass == null) {
+            dataClass = cls;
+        }
+        ZResponseProxy responseProxy = new ZResponseProxy<>(dataClass, this, barActy, barMsg);
         responseProxy.setCancelTag(cancelTag);
         return responseProxy;
     }
@@ -67,6 +73,17 @@ public abstract class ZResponse<T extends ZReply> {
         this.barActy = barActy;
         this.barMsg = barMsg;
     }
+
+    /**
+     * @param barActy 进度条Atvicity实体
+     * @param barMsg  进度条上 显示的信息
+     */
+    public ZResponse(Activity barActy, String barMsg, Class<T> dataClass) {
+        this.barActy = barActy;
+        this.barMsg = barMsg;
+        this.dataClass = dataClass;
+    }
+
 
     /**
      * 请求成功回调
