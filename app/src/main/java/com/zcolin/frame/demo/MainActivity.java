@@ -1,11 +1,3 @@
-/*
- * *********************************************************
- *   author   colin
- *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
- * ********************************************************
- */
-
 package com.zcolin.frame.demo;
 
 import android.Manifest;
@@ -30,8 +22,8 @@ import com.zcolin.frame.util.ToastUtil;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout llContent;
-    private ImageView    imageView;
+    private LinearLayout      llContent;
+    private ImageView         imageView;
     private ArrayList<Button> listButton = new ArrayList<>();
 
     @Override
@@ -57,7 +49,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private Button addButton(String text) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                         ViewGroup.LayoutParams.WRAP_CONTENT);
         Button button = new Button(mActivity);
         button.setText(text);
         button.setGravity(Gravity.CENTER);
@@ -73,54 +66,64 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         } else if (v == listButton.get(1)) {
             ActivityUtil.startActivity(this, DbDemoActivity.class);
         } else if (v == listButton.get(2)) {
-            PermissionHelper.requestPermission(mActivity, new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.CAMERA}, new 
-                    PermissionsResultAction() {
-                @Override
-                public void onGranted() {
-                    Intent intent = new Intent(mActivity, PermissionAndActivityResultActivity.class);
-                    intent.putExtra("data", "传入数据-xxx");
-                    startActivityWithCallback(intent, (resultCode, data) -> {
-                        if (resultCode == RESULT_OK) {
-                            if (data != null) {
-                                ToastUtil.toastShort(data.getStringExtra("data"));
-                            }
-                        }
-                    });
-                }
+            PermissionHelper.requestPermission(mActivity,
+                                               new String[]{Manifest.permission.CALL_PHONE, Manifest.permission.CAMERA},
+                                               new PermissionsResultAction() {
+                                                   @Override
+                                                   public void onGranted() {
+                                                       Intent intent = new Intent(mActivity,
+                                                                                  PermissionAndActivityResultActivity.class);
+                                                       intent.putExtra("data", "传入数据-xxx");
+                                                       startActivityWithCallback(intent, (resultCode, data) -> {
+                                                           if (resultCode == RESULT_OK) {
+                                                               if (data != null) {
+                                                                   ToastUtil.toastShort(data.getStringExtra("data"));
+                                                               }
+                                                           }
+                                                       });
+                                                   }
 
-                @Override
-                public void onDenied(String permission) {
-                    ToastUtil.toastShort("请赋予本程序拨打电话和摄像头权限!");
-                }
-            });
+                                                   @Override
+                                                   public void onDenied(String permission) {
+                                                       ToastUtil.toastShort("请赋予本程序拨打电话和摄像头权限!");
+                                                   }
+                                               });
         } else if (v == listButton.get(3)) {
             final String savePath = FramePathConst.getInstance().getTempFilePath("jpg");
-            SystemIntentUtil.takePhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
-                @Override
-                public void onSelected(Uri fileProviderUri) {
-                    ImageLoaderUtils.displayImage(mActivity, savePath, imageView);
-                    System.out.println(fileProviderUri.getPath());
-                }
+            SystemIntentUtil.takePhotoWithCrop(mActivity,
+                                               savePath,
+                                               600,
+                                               600,
+                                               new SystemIntentUtil.OnCompleteLisenter() {
+                                                   @Override
+                                                   public void onSelected(Uri fileProviderUri) {
+                                                       ImageLoaderUtils.displayImage(mActivity, savePath, imageView);
+                                                       System.out.println(fileProviderUri.getPath());
+                                                   }
 
-                @Override
-                public void onCancel() {
+                                                   @Override
+                                                   public void onCancel() {
 
-                }
-            });
+                                                   }
+                                               });
         } else if (v == listButton.get(4)) {
             final String savePath = FramePathConst.getInstance().getTempFilePath("jpg");
-            SystemIntentUtil.selectPhotoWithCrop(mActivity, savePath, 600, 600, new SystemIntentUtil.OnCompleteLisenter() {
-                @Override
-                public void onSelected(Uri fileProviderUri) {
-                    ImageLoaderUtils.displayImage(mActivity, fileProviderUri, imageView);
-                    System.out.println(fileProviderUri.getPath());
-                }
+            SystemIntentUtil.selectPhotoWithCrop(mActivity,
+                                                 savePath,
+                                                 600,
+                                                 600,
+                                                 new SystemIntentUtil.OnCompleteLisenter() {
+                                                     @Override
+                                                     public void onSelected(Uri fileProviderUri) {
+                                                         ImageLoaderUtils.displayImage(mActivity, fileProviderUri, imageView);
+                                                         System.out.println(fileProviderUri.getPath());
+                                                     }
 
-                @Override
-                public void onCancel() {
+                                                     @Override
+                                                     public void onCancel() {
 
-                }
-            });
+                                                     }
+                                                 });
         }
     }
 }

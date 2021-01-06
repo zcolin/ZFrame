@@ -25,9 +25,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
  * 异常捕获
  */
 final class CrashHandler implements UncaughtExceptionHandler {
-    private static final Object LOCK               = new Object();
-    private static final String mExceptionFileName = "log.txt";
-    private static final String TAG                = "CrashHandler";
+    private static final Object LOCK                = new Object();
+    private static final String EXCEPTION_FILE_NAME = "log.txt";
+    private static final String TAG                 = "CrashHandler";
 
     private static volatile CrashHandler             INSTANCE = null;
     private                 UncaughtExceptionHandler mDefaultHandler;
@@ -55,6 +55,8 @@ final class CrashHandler implements UncaughtExceptionHandler {
         if (!handleException(ex) && mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
+            // 此处只执行写入到本地的操作，建议下一次打开应用程序时再执行相对比较耗时的上传log到服务器的操作，防止线程被杀死而无法完成上传。
+            writeExceptionToFile(ex);
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -75,13 +77,8 @@ final class CrashHandler implements UncaughtExceptionHandler {
             return false;
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                ToastUtil.toastShort("很抱歉，程序出现异常，即将退出");
-            }
-        }.start();
-
+        // TODO: 2021/1/6  debug：主线程被杀死了，Toast无法正常执行，目前暂无法解决。
+        new Thread(() -> ToastUtil.toastShort("很抱歉，程序出现异常，即将退出"));
 
         return true;
     }
@@ -89,8 +86,9 @@ final class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 将异常日志写入文件
      */
-    private void writeExceptionToFile(String message) {
-        File crashFile = new File(FramePathConst.getInstance().getPathLog() + "/crash_" + CalendarUtil.getDate() + mExceptionFileName);
+    private void writeExceptionToFile(Throwable ex) {
+        File crashFile = new File(FramePathConst.getInstance()
+                                                .getPathLog() + "/crash_" + CalendarUtil.getDate() + EXCEPTION_FILE_NAME);
         if (!crashFile.exists()) {
             FileUtil.createFile(crashFile.getPath());
         }
@@ -99,12 +97,11 @@ final class CrashHandler implements UncaughtExceptionHandler {
         stringBuilder.append(CalendarUtil.getDateTime());
         stringBuilder.append(collectDeviceInfo());
         stringBuilder.append("\n\n");
-        stringBuilder.append(message);
-        stringBuilder.append("\n");
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(new FileWriter(crashFile, true));
             writer.append(stringBuilder);
+            ex.printStackTrace(writer);
             writer.flush();
         } catch (Exception e) {
             e.printStackTrace();

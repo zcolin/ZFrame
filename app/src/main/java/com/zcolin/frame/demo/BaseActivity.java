@@ -8,12 +8,15 @@
 
 package com.zcolin.frame.demo;
 
+import android.annotation.SuppressLint;
+
 import com.zcolin.frame.app.BaseFrameActivity;
 
 
 /**
  * DBDemo
  */
+@SuppressLint("Registered")
 public class BaseActivity extends BaseFrameActivity {
 
 }

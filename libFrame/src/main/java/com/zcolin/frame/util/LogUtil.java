@@ -218,7 +218,7 @@ public class LogUtil {
     public static void delFile() {
         long beforeTime = CalendarUtil.addDays(-SDCARD_LOG_FILE_SAVE_DAYS).getTime();
         File dirFile = new File(PATH_LOG);
-        File files[] = dirFile.listFiles();
+        File[] files = dirFile.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.lastModified() < beforeTime) {

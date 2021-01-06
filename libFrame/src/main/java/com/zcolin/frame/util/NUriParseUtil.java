@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
 import com.zcolin.frame.app.BaseApp;
@@ -27,6 +26,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import androidx.core.content.FileProvider;
 
 
 /**
@@ -106,8 +107,11 @@ public class NUriParseUtil {
     public static Uri getImageContentUri(File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver()
-                                           .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Media._ID},
-                                                   MediaStore.Images.Media.DATA + "=? ", new String[]{filePath}, null);
+                                           .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                                  new String[]{MediaStore.Images.Media._ID},
+                                                  MediaStore.Images.Media.DATA + "=? ",
+                                                  new String[]{filePath},
+                                                  null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
@@ -117,7 +121,8 @@ public class NUriParseUtil {
             if (imageFile.exists()) {
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DATA, filePath);
-                return BaseApp.APP_CONTEXT.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                return BaseApp.APP_CONTEXT.getContentResolver()
+                                          .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             } else {
                 return null;
             }
@@ -129,8 +134,9 @@ public class NUriParseUtil {
      */
     public static File getFileFromUri(Uri uri) {
         String filePath = getFilePathFromUri(uri);
-        if (TextUtils.isEmpty(filePath))
+        if (TextUtils.isEmpty(filePath)) {
             throw new IllegalArgumentException("uri parse fail");
+        }
         return TextUtils.isEmpty(filePath) ? null : new File(filePath);
     }
 
@@ -139,7 +145,8 @@ public class NUriParseUtil {
      */
     @SuppressLint("NewApi")
     public static String getFilePathFromUri(final Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(BaseApp.APP_CONTEXT, uri)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(BaseApp.APP_CONTEXT,
+                                                                                                   uri)) {
             if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {   // ExternalStorageProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -150,7 +157,8 @@ public class NUriParseUtil {
                 }
             } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {   // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
+                                                                  Long.valueOf(id));
                 return getDataColumn(contentUri, null, null);
             } else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {   // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -186,7 +194,12 @@ public class NUriParseUtil {
         String scheme = uri.getScheme();
         if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
             String[] filePathColumn = {"_data"};
-            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver().query(uri, filePathColumn, selection, selectionArgs, null);//从系统表中查询指定Uri对应的照片
+            Cursor cursor = BaseApp.APP_CONTEXT.getContentResolver()
+                                               .query(uri,
+                                                      filePathColumn,
+                                                      selection,
+                                                      selectionArgs,
+                                                      null);//从系统表中查询指定Uri对应的照片
             boolean flag = false;
             if (cursor != null) {
                 cursor.moveToFirst();

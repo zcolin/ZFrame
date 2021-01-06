@@ -10,7 +10,7 @@ package com.zcolin.frame.util;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 /**
  * 着色器辅助类，主要用来改变图片的背景颜色

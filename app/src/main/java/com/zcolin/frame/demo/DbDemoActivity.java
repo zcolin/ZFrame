@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.zcolin.frame.demo.db.DaoManager;
 import com.zcolin.frame.demo.db.entity.Employee;
 import com.zcolin.frame.demo.db.entity.EmployeeDao;
 import com.zcolin.frame.util.ToastUtil;
@@ -27,15 +28,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.zcolin.frame.demo.db.DaoManager.getDaoHelper;
-
-
 /**
  * DBDemo
  */
 public class DbDemoActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout llContent;
-    private TextView     textView;
+    private LinearLayout      llContent;
+    private TextView          textView;
     private ArrayList<Button> listButton      = new ArrayList<>();
     private int               currentSortType = 0;//当前排序方式
 
@@ -64,7 +62,8 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private Button addButton(String text) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                         ViewGroup.LayoutParams.WRAP_CONTENT);
         Button button = new Button(mActivity);
         button.setText(text);
         button.setGravity(Gravity.CENTER);
@@ -78,7 +77,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
      */
     public Employee insertObject() {
         Employee employee = getEmployee();
-        boolean b = getDaoHelper().insertObject(employee);
+        boolean b = DaoManager.getDaoHelper().insertObject(employee);
         ToastUtil.toastShort(b ? "插入成功" : "插入失败-主键重复");
         return employee;
     }
@@ -88,7 +87,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
      */
     public Employee insertOrReplaceObject() {
         Employee employee = getEmployee();
-        boolean b = getDaoHelper().insertOrReplaceObject(employee);
+        boolean b = DaoManager.getDaoHelper().insertOrReplaceObject(employee);
         ToastUtil.toastShort(b ? "插入成功" : "插入失败-主键重复");
         return employee;
     }
@@ -97,7 +96,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
      * 查询所有数据的数据列表
      */
     public void queryObject() {
-        List<Employee> list = getDaoHelper().queryAll(Employee.class);
+        List<Employee> list = DaoManager.getDaoHelper().queryAll(Employee.class);
         setText(list);
     }
 
@@ -106,7 +105,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
      * <p>
      */
     public void queryObjectWithCondition() {
-        QueryBuilder<Employee> queryBuilder = getDaoHelper().getQueryBuilder(Employee.class);
+        QueryBuilder<Employee> queryBuilder = DaoManager.getDaoHelper().getQueryBuilder(Employee.class);
         queryBuilder.where(EmployeeDao.Properties.Group.eq("部门二"));
         queryBuilder.offset(1);
         queryBuilder.limit(3);
@@ -117,7 +116,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
             currentSortType = 0;
             queryBuilder.orderAsc(EmployeeDao.Properties.Date);
         }
-        List<Employee> list = getDaoHelper().queryObjects(queryBuilder);
+        List<Employee> list = DaoManager.getDaoHelper().queryObjects(queryBuilder);
         setText(list);
     }
 
@@ -125,7 +124,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
      * 删除所有数据
      */
     public void deleteAllObject() {
-        boolean b = getDaoHelper().deleteAll(Employee.class);
+        boolean b = DaoManager.getDaoHelper().deleteAll(Employee.class);
     }
 
     private Employee getEmployee() {

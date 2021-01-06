@@ -75,8 +75,9 @@ public class PersistentCookieStore implements CookieStore {
                     if (encodedCookie != null) {
                         Cookie decodedCookie = decodeCookie(encodedCookie);
                         if (decodedCookie != null) {
-                            if (!cookies.containsKey(entry.getKey()))
+                            if (!cookies.containsKey(entry.getKey())) {
                                 cookies.put(entry.getKey(), new HashMap<>());
+                            }
                             cookies.get(entry.getKey()).put(name, decodedCookie);
                         }
                     }
@@ -219,6 +220,7 @@ public class PersistentCookieStore implements CookieStore {
      * large Base64 libraries. Can be overridden if you like!
      *
      * @param bytes byte array to be converted
+     *
      * @return string containing hex values
      */
     protected String byteArrayToHexString(byte[] bytes) {
@@ -237,13 +239,15 @@ public class PersistentCookieStore implements CookieStore {
      * Converts hex values from strings to byte arra
      *
      * @param hexString string of hex-encoded values
+     *
      * @return decoded byte array
      */
     protected byte[] hexStringToByteArray(String hexString) {
         int len = hexString.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character.digit(hexString.charAt(i + 1), 16));
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i),
+                                                   16) << 4) + Character.digit(hexString.charAt(i + 1), 16));
         }
         return data;
     }

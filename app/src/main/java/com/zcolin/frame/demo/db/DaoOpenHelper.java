@@ -43,6 +43,8 @@ public class DaoOpenHelper extends DaoMaster.OpenHelper {
                 // 加入新字段
                 // db.execSQL("ALTER TABLE 'moments' ADD 'audio_path' TEXT;");  
                 break;
+            default:
+                break;
         }
     }
 

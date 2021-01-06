@@ -36,7 +36,7 @@ public class SimpleGlideModule implements GlideModule {
         //  builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
         //设置缓存目录
         File cacheDir = new File(FramePathConst.getInstance().getPathImgCache());
-        cache = DiskLruCacheWrapper.get(cacheDir, 100 * 1024 * 1024);// 100 MB 
+        cache = DiskLruCacheWrapper.create(cacheDir, 100 * 1024 * 1024);// 100 MB
         builder.setDiskCache(() -> cache);
 
         //        builder.setMemoryCache(new LruResourceCache(customMemoryCacheSize));

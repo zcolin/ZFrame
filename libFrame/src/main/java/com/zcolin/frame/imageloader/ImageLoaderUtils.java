@@ -13,7 +13,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +22,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.Util;
 
 import java.util.HashMap;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 
 /**
@@ -344,8 +346,8 @@ public class ImageLoaderUtils {
                 return Glide.with(((Activity) context));
             } else if (context instanceof android.app.Fragment) {
                 return Glide.with(((android.app.Fragment) context));
-            } else if (context instanceof android.support.v4.app.Fragment) {
-                return Glide.with(((android.support.v4.app.Fragment) context));
+            } else if (context instanceof Fragment) {
+                return Glide.with(((Fragment) context));
             } else if (context instanceof ContextWrapper) {
                 return Glide.with((((ContextWrapper) context).getBaseContext()));
             }

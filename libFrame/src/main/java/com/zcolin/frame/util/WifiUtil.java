@@ -351,8 +351,8 @@ public class WifiUtil {
     public static WifiInfo getWifiConnectInfo(Context context) {
         WifiManager wifiManager = getWifiMgr(context);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        if (!NetworkUtil.isWifiConnect(context) || wifiInfo == null || ("0x").equalsIgnoreCase(wifiInfo.getSSID()) || wifiInfo.getSSID()
-                                                                                                                              .equals("<unknown ssid>")) {
+        if (!NetworkUtil.isWifiConnect(context) || wifiInfo == null || ("0x").equalsIgnoreCase(wifiInfo.getSSID()) || "<unknown ssid>"
+                                                                                                                              .equals(wifiInfo.getSSID())) {
             return null;
         }
         return wifiInfo;

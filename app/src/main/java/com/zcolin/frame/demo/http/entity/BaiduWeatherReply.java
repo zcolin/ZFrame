@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class BaiduWeatherReply extends HttpBaseReplyBean {
 
-
     public String            date;
     public List<ResultsBean> results;
 
