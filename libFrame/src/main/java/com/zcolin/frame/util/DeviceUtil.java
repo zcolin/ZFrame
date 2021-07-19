@@ -163,7 +163,7 @@ public class DeviceUtil {
      * 获取设备序列号（android10及以上无效）
      * （android6.0及以上调用此函数需要申请权限：Manifest.permission.READ_PHONE_STATE）
      */
-    private static String getSerial(Context context) {
+    public static String getSerial(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             return Build.SERIAL;
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
