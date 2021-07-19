@@ -64,7 +64,7 @@ public class NetworkUtil {
     /**
      * 获取本机Ip地址，可以获取Gprs和Wifi的
      */
-    public List<InetAddress> getLocalIpList() {
+    public static List<InetAddress> getLocalIpList() {
         ArrayList<InetAddress> list = new ArrayList<>();
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
@@ -84,7 +84,7 @@ public class NetworkUtil {
     /**
      * 获取本机IpV4地址，可以获取Gprs和Wifi的
      */
-    public String getLocalIpV4() {
+    public static String getLocalIpV4() {
         List<InetAddress> list = getLocalIpList();
         for (InetAddress inetAddress : list) {
             if (inetAddress instanceof Inet4Address) {
