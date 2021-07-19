@@ -17,10 +17,10 @@ Orm数据库采用GreenDao, Http采用OkHttp, 图片加载采用Glide, 这三个
 1. 工具类集合：工具类是经过多个项目积累整理的，基本都会用到，涉及面比较广。
 
 ## reference library version
-1. GeeenDao ：3.2.0
-1. OkHtpp : 3.5.0
-1. Glide : 4.0.0
-1. Gson : 2.7
+1. GeeenDao ：3.3.0
+1. OkHtpp : 3.10.0
+1. Glide : 4.11.0
+1. Gson : 2.8.2
 
 ## Gradle
 app的build.gradle中添加
