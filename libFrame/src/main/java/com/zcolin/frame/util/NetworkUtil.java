@@ -12,10 +12,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * 网络连接工具类
@@ -48,7 +51,8 @@ public class NetworkUtil {
      */
     public static int getConnectedType(Context context) {
         if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager mConnectivityManager =
+                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             if (mNetworkInfo != null && mNetworkInfo.isAvailable()) {
                 return mNetworkInfo.getType();
@@ -58,20 +62,34 @@ public class NetworkUtil {
     }
 
     /**
-     * 获取本机Ip地址， 可以获取Gprs和wifi的
+     * 获取本机Ip地址，可以获取Gprs和Wifi的
      */
-    public String getLocalIp() {
+    public List<InetAddress> getLocalIpList() {
+        ArrayList<InetAddress> list = new ArrayList<>();
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
                 for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress();
+                        list.add(inetAddress);
                     }
                 }
             }
         } catch (SocketException ex) {
+        }
+        return list;
+    }
+
+    /**
+     * 获取本机IpV4地址，可以获取Gprs和Wifi的
+     */
+    public String getLocalIpV4() {
+        List<InetAddress> list = getLocalIpList();
+        for (InetAddress inetAddress : list) {
+            if (inetAddress instanceof Inet4Address) {
+                return inetAddress.getHostAddress();
+            }
         }
         return null;
     }

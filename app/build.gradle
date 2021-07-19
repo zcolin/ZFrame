@@ -52,8 +52,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':libFrame')
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'org.greenrobot:greendao:3.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'org.greenrobot:greendao:3.3.0'
 }
 
 

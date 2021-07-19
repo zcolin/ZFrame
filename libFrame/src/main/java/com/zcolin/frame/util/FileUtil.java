@@ -26,6 +26,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -191,6 +193,7 @@ public class FileUtil {
      * @param filePath 文件路径
      * @param rawID    文件资源
      * @param isIgnore 是否忽略源文件存在， true则不管有没有都复制，false如果有不复制
+     *
      * @return 是否拷贝成功
      */
     public static boolean copyFileFromRaw(Context context, String filePath, int rawID, boolean isIgnore) {
@@ -274,6 +277,7 @@ public class FileUtil {
      * 将内容读取成字符串
      *
      * @param in 输入流
+     *
      * @return 从文件读取的内容
      */
     public static String readFileStr(InputStream in) {
@@ -297,6 +301,7 @@ public class FileUtil {
      * 将文件内容读取成字符串
      *
      * @param path 文件路径
+     *
      * @return 从文件读取的内容
      */
     public static String readFileStr(String path) {
@@ -325,6 +330,7 @@ public class FileUtil {
      *
      * @param path 文件路径
      * @param str  要写入的内容
+     *
      * @return 是否写入成功
      */
     public static boolean writeFileStr(String path, String str) {
@@ -337,6 +343,7 @@ public class FileUtil {
      * @param path     文件路径
      * @param str      要写入的内容
      * @param isAppend 是否追加到文件中
+     *
      * @return 是否写入成功
      */
     public static boolean writeFileStr(String path, String str, boolean isAppend) {
@@ -366,6 +373,7 @@ public class FileUtil {
      * @param f     文件对象
      * @param start 开始读取的位置
      * @param len   读取的长度
+     *
      * @return 存储读取内容的字节数组
      */
     public static byte[] readToByteArray(File f, long start, int len) {
@@ -387,6 +395,7 @@ public class FileUtil {
      * 将文件读入到字节数组中
      *
      * @param f 文件对象
+     *
      * @return 存储读取内容的字节数组
      */
     public static byte[] readToByteArray(File f) {
@@ -414,6 +423,7 @@ public class FileUtil {
      * 从Uri中获取path
      *
      * @param uri Uri
+     *
      * @return 读取的内容
      */
     public static String getPathFroUri(Context context, Uri uri) {
@@ -468,6 +478,7 @@ public class FileUtil {
      * 判断文件是否存在
      *
      * @param path 文件路径
+     *
      * @return 文件是否存在
      */
     public static boolean exist(String path) {
@@ -482,36 +493,36 @@ public class FileUtil {
      * @param outPath     解压指定的路径
      */
     public static void unZipFolder(String zipFilePath, String outPath) throws Exception {
-        ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFilePath));
-        ZipEntry zipEntry;
-        String szName = "";
-
-        while ((zipEntry = inZip.getNextEntry()) != null) {
-            szName = zipEntry.getName();
-            if (zipEntry.isDirectory()) {
-                // get the folder name of the widget
-                szName = szName.substring(0, szName.length() - 1);
-                File folder = new File(outPath + File.separator + szName);
-                folder.mkdirs();
-            } else {
-
-                File file = new File(outPath + File.separator + szName);
-                file.createNewFile();
-                // get the output stream of the file
-                FileOutputStream out = new FileOutputStream(file);
-                int len;
-                byte[] buffer = new byte[1024];
-                // read (len) bytes into buffer
-                while ((len = inZip.read(buffer)) != -1) {
-                    // write (len) byte from buffer at the position 0
-                    out.write(buffer, 0, len);
-                    out.flush();
+        try {
+            ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFilePath));
+            ZipEntry zipEntry;
+            String szName;
+            while ((zipEntry = inZip.getNextEntry()) != null) {
+                szName = zipEntry.getName();
+                if (zipEntry.isDirectory()) {
+                    szName = szName.substring(0, szName.length() - 1);
+                    File folder = new File(outPath + File.separator + szName);
+                    folder.mkdirs();
+                } else {
+                    File file = new File(outPath + File.separator + szName);
+                    if (!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        file.createNewFile();
+                    }
+                    FileOutputStream out = new FileOutputStream(file);
+                    int len;
+                    byte[] buffer = new byte[1024];
+                    while ((len = inZip.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                        out.flush();
+                    }
+                    out.close();
                 }
-                out.close();
             }
-        }//end of while
-
-        inZip.close();
+            inZip.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -526,4 +537,29 @@ public class FileUtil {
             }
         }
     }
+
+    /**
+     * 检查能否找到动态链接库，如果找不到，请修改工程配置
+     *
+     * @param libraries 需要的动态链接库
+     *
+     * @return 动态库是否存在
+     */
+    public static boolean checkSoLibrary(Context context, String[] libraries) {
+        File dir = new File(context.getApplicationInfo().nativeLibraryDir);
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return false;
+        }
+        List<String> listLibraryName = new ArrayList<>();
+        for (File file : files) {
+            listLibraryName.add(file.getName());
+        }
+        boolean allExist = true;
+        for (String library : libraries) {
+            allExist &= listLibraryName.contains(library);
+        }
+        return allExist;
+    }
+
 }

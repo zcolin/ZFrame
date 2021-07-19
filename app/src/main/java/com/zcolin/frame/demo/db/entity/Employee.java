@@ -5,6 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 
 import java.util.Date;
+import org.greenrobot.greendao.annotation.Generated;
 
 //@Entity(nameInDb = "NOTE", generateGettersSetters = false, generateConstructors = false,createInDb = false)
 @Entity(nameInDb = "NOTE", generateConstructors = false)

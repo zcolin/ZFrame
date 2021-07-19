@@ -112,6 +112,7 @@ public class AppUtil {
      * 从指定包中 获取自定义标签值标签
      *
      * @param key 字段key
+     *
      * @return key对应的值
      */
     public static String getApplicationMetaData(Context context, String key) {
@@ -135,7 +136,9 @@ public class AppUtil {
     public static Bundle getApplicationMetaData(Context context) {
         Bundle bundle = null;
         try {
-            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = context.getPackageManager()
+                                             .getApplicationInfo(context.getPackageName(),
+                                                                 PackageManager.GET_META_DATA);
             bundle = appInfo.metaData;
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,7 +151,9 @@ public class AppUtil {
      */
     public static String getActivityMetaData(Activity activity, String key) {
         try {
-            return activity.getPackageManager().getActivityInfo(activity.getComponentName(), PackageManager.GET_META_DATA).metaData.getString(key);
+            return activity.getPackageManager()
+                           .getActivityInfo(activity.getComponentName(),
+                                            PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -162,7 +167,9 @@ public class AppUtil {
      */
     public static String getServiceMetaData(Context context, Class<? extends Service> serviceClazz, String key) {
         try {
-            return context.getPackageManager().getServiceInfo(new ComponentName(context, serviceClazz), PackageManager.GET_META_DATA).metaData.getString(key);
+            return context.getPackageManager()
+                          .getServiceInfo(new ComponentName(context, serviceClazz),
+                                          PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -174,9 +181,12 @@ public class AppUtil {
      *
      * @param receiverClazz 广播接收器的class
      */
-    public static String getBroadCasetMetaData(Context context, Class<? extends BroadcastReceiver> receiverClazz, String key) {
+    public static String getBroadCasetMetaData(Context context, Class<? extends BroadcastReceiver> receiverClazz,
+            String key) {
         try {
-            return context.getPackageManager().getReceiverInfo(new ComponentName(context, receiverClazz), PackageManager.GET_META_DATA).metaData.getString(key);
+            return context.getPackageManager()
+                          .getReceiverInfo(new ComponentName(context, receiverClazz),
+                                           PackageManager.GET_META_DATA).metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -194,6 +204,7 @@ public class AppUtil {
      * 获取指定包的包信息
      *
      * @param pckName 包名称
+     *
      * @return 包信息
      */
     public static PackageInfo getPackageInfo(Context context, String pckName) {
@@ -231,6 +242,7 @@ public class AppUtil {
      * 获取指定程序的版本名称
      *
      * @param pckName 指定程序的包名
+     *
      * @return 版本名称
      */
     public static String getVersionName(Context context, String pckName) {
@@ -246,6 +258,7 @@ public class AppUtil {
      * 获取指定程序的版本号
      *
      * @param pckName 指定程序的报名
+     *
      * @return 版本号
      */
     public static int getVersionCode(Context context, String pckName) {
@@ -285,40 +298,58 @@ public class AppUtil {
     }
 
     /**
+     * 判断指定程序是否处于前台运行
+     * （注意：待完善，特殊场景可能无效：Service设置成START_STICKY后，程序的importance一直是IMPORTANCE_FOREGROUND）
+     */
+    public static boolean isAppForeground(Context context, String pckName) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList = manager.getRunningAppProcesses();
+        if (runningAppProcessInfoList != null && runningAppProcessInfoList.size() != 0) {
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfoList) {
+                if (runningAppProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    return runningAppProcessInfo.processName.equals(pckName);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * 判断指定程序是否有Service运行
      *
      * @param pckName 程序包名
+     *
      * @return 是否有Service运行
      */
     public static boolean isServiceRun(Context context, String pckName) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        boolean flag = false;
-        List<ActivityManager.RunningServiceInfo> runningServiceInfo = manager.getRunningServices(100);
-        for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfo) {
-            String strInfo = serviceInfo.service.getPackageName();
-            if (strInfo.startsWith(pckName)) {
-                flag = true;
-                break;
+        List<ActivityManager.RunningServiceInfo> runningServiceInfoList = manager.getRunningServices(100);
+        if (runningServiceInfoList != null && runningServiceInfoList.size() != 0) {
+            for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServiceInfoList) {
+                return runningServiceInfo.service.getPackageName().startsWith(pckName);
             }
         }
-        return flag;
+        return false;
     }
 
     /**
-     * 判断服务是否后台运行
+     * 判断指定服务是否开启
      *
-     * @param context Context
-     * @return true 在运行 false 不在运行
+     * @param clazz 服务类
+     *
+     * @return true 开启 false 关闭
      */
-    public static boolean isServiceRun(Context context, Class<?> clazz) {
+    public static boolean isDesignatedServiceRun(Context context, Class<?> clazz) {
         boolean isRun = false;
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(Integer.MAX_VALUE);
-        int size = serviceList.size();
-        for (int i = 0; i < size; i++) {
-            if (serviceList.get(i).service.getClassName().equals(clazz.getName())) {
-                isRun = true;
-                break;
+        List<ActivityManager.RunningServiceInfo> runningServiceInfoList =
+                activityManager.getRunningServices(Integer.MAX_VALUE);
+        if (runningServiceInfoList != null && runningServiceInfoList.size() != 0) {
+            for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServiceInfoList) {
+                if (runningServiceInfo.service.getClassName().equals(clazz.getName())) {
+                    isRun = true;
+                    break;
+                }
             }
         }
         return isRun;
@@ -341,10 +372,12 @@ public class AppUtil {
             boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
             if (!hasInstallPermission) {
                 ToastUtil.toastShort("请打开[允许安装应用]权限");
-                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
+                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                            Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
                 context.startActivityWithCallback(intent1, (resultCode, data) -> {
                     if (resultCode == Activity.RESULT_OK) {
-                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)),
+                                              "application/vnd.android.package-archive");
                         context.startActivity(intent);
                     } else {
                         ToastUtil.toastShort("没有赋予[未知来源安装]权限");
@@ -375,10 +408,12 @@ public class AppUtil {
             boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
             if (!hasInstallPermission) {
                 ToastUtil.toastShort("请打开[允许安装应用]权限");
-                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
+                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                            Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
                 context.startActivityWithCallback(intent1, (resultCode, data) -> {
                     if (resultCode == Activity.RESULT_OK) {
-                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)), "application/vnd.android.package-archive");
+                        intent.setDataAndType(NUriParseUtil.get(Uri.fromFile(f)),
+                                              "application/vnd.android.package-archive");
                         context.startActivity(intent);
                     } else {
                         ToastUtil.toastShort("没有赋予[未知来源安装]权限");
@@ -449,7 +484,7 @@ public class AppUtil {
     public static List<PackageInfo> getAllNoSystemApps(Context context) {
         List<PackageInfo> apps = new ArrayList<>();
         PackageManager pManager = context.getPackageManager();
-        //获取手机内所有应用
+        // 获取手机内所有应用
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         for (int i = 0; i < paklist.size(); i++) {
             PackageInfo pak = paklist.get(i);
@@ -499,11 +534,13 @@ public class AppUtil {
         PackageInfo info = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
         if (info != null) {
             ApplicationInfo appInfo = info.applicationInfo;
-            //android有bug，需要下面这两句话来修复才能获取apk图片
+            // android有bug，需要下面这两句话来修复才能获取apk图片
             appInfo.sourceDir = path;
             appInfo.publicSourceDir = path;
-            //			    String packageName = appInfo.packageName;  //得到安装包名称
-            //	            String version=info.versionName;       //得到版本信息
+            // 得到安装包名称
+            // String packageName = appInfo.packageName;
+            // 得到版本信息
+            // String version=info.versionName;
             return pm.getApplicationIcon(appInfo);
         }
         return null;

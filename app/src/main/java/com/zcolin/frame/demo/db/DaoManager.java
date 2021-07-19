@@ -8,6 +8,7 @@ import com.zcolin.frame.db.DaoHelper;
 import com.zcolin.frame.demo.db.entity.DaoMaster;
 import com.zcolin.frame.demo.db.entity.DaoSession;
 
+
 /**
  * 数据库管理类，管理session,helper,master对象
  */

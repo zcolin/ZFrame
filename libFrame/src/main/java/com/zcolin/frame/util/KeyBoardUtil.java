@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
  * 打开或关闭软键盘
  */
 public class KeyBoardUtil {
+
     /**
      * 打卡软键盘
      *

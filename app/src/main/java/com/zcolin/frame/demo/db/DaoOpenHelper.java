@@ -1,11 +1,3 @@
-/*
- * *********************************************************
- *   author   colin
- *   email    wanglin2046@126.com
- *   date     18-1-9 上午9:59
- * ********************************************************
- */
-
 package com.zcolin.frame.demo.db;
 
 import android.content.Context;
@@ -36,7 +28,6 @@ public class DaoOpenHelper extends DaoMaster.OpenHelper {
         //TODO 如果需要保存数据， 数据库升级时需要在此写升级语句
         switch (oldVersion) {
             case 1:
-
                 //创建新表，注意createTable()是静态方法
                 // SchoolDao.createTable(db, true);     
 

@@ -254,7 +254,8 @@ public class WifiUtil {
     /**
      * 获取已经配置过的wifi信息
      */
-    public static List<WifiConfiguration> getConfiguredNetworks(Context context, List<WifiConfiguration> existingConfigs) {
+    public static List<WifiConfiguration> getConfiguredNetworks(Context context,
+            List<WifiConfiguration> existingConfigs) {
         WifiManager wifiManager = getWifiMgr(context);
         return wifiManager.getConfiguredNetworks();
     }
@@ -352,7 +353,7 @@ public class WifiUtil {
         WifiManager wifiManager = getWifiMgr(context);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (!NetworkUtil.isWifiConnect(context) || wifiInfo == null || ("0x").equalsIgnoreCase(wifiInfo.getSSID()) || "<unknown ssid>"
-                                                                                                                              .equals(wifiInfo.getSSID())) {
+                .equals(wifiInfo.getSSID())) {
             return null;
         }
         return wifiInfo;
@@ -393,4 +394,5 @@ public class WifiUtil {
         }
         return ip;
     }
+
 }

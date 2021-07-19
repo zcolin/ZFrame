@@ -10,9 +10,6 @@ package com.zcolin.frame.app;
 
 import androidx.core.content.FileProvider;
 
-/**
- *
- */
-
 public final class ZFrameFileProvider extends FileProvider {
+
 }

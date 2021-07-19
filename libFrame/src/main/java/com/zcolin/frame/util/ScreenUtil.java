@@ -77,6 +77,10 @@ public class ScreenUtil {
         return getScreenWidth(activity);
     }
 
+    public static float getScreenDensity(Context context) {
+        return DisplayUtil.getDensity(context);
+    }
+
     /**
      * 精确获取屏幕尺寸（例如：3.5、4.0、5.0寸屏幕）
      *
@@ -197,8 +201,8 @@ public class ScreenUtil {
     public static boolean isAutoBrightness(ContentResolver aContentResolver) {
         boolean automicBrightness = false;
         try {
-            automicBrightness =
-                    Settings.System.getInt(aContentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
+            automicBrightness = Settings.System.getInt(aContentResolver,
+                                                       Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
@@ -235,14 +239,18 @@ public class ScreenUtil {
      * 停止自动亮度调节
      */
     public static void stopAutoBrightness(Activity activity) {
-        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        Settings.System.putInt(activity.getContentResolver(),
+                               Settings.System.SCREEN_BRIGHTNESS_MODE,
+                               Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
     }
 
     /**
      * 开启亮度自动调节
      */
     public static void startAutoBrightness(Activity activity) {
-        Settings.System.putInt(activity.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+        Settings.System.putInt(activity.getContentResolver(),
+                               Settings.System.SCREEN_BRIGHTNESS_MODE,
+                               Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
     }
 
     /**

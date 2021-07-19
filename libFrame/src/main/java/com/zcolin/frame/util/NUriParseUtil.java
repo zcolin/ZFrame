@@ -34,6 +34,7 @@ import androidx.core.content.FileProvider;
  * 适配Android7.0的Uri解析工具类
  */
 public class NUriParseUtil {
+
     /**
      * 根据版本获取Uri, AndroidN之前直接返回，之后自动使用FileProvider转换提供的content uri
      */
