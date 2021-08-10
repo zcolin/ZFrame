@@ -81,7 +81,7 @@ public class DeviceUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 return ((TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE)).getImei();
             } else {
-                return getDeviceId(context);
+                return ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
             }
         }
         return "";
