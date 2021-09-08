@@ -16,11 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zcolin.frame.demo.db.DaoManager;
 import com.zcolin.frame.demo.db.entity.Employee;
 import com.zcolin.frame.demo.db.entity.EmployeeDao;
-import com.zcolin.frame.util.ToastUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -35,7 +35,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
     private LinearLayout      llContent;
     private TextView          textView;
     private ArrayList<Button> listButton      = new ArrayList<>();
-    private int               currentSortType = 0;//当前排序方式
+    private int               currentSortType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
     public Employee insertObject() {
         Employee employee = getEmployee();
         boolean b = DaoManager.getDaoHelper().insertObject(employee);
-        ToastUtil.toastShort(b ? "插入成功" : "插入失败-主键重复");
+        Toast.makeText(this, b ? "插入成功" : "插入失败-主键重复", Toast.LENGTH_SHORT).show();
         return employee;
     }
 
@@ -88,7 +88,7 @@ public class DbDemoActivity extends BaseActivity implements View.OnClickListener
     public Employee insertOrReplaceObject() {
         Employee employee = getEmployee();
         boolean b = DaoManager.getDaoHelper().insertOrReplaceObject(employee);
-        ToastUtil.toastShort(b ? "插入成功" : "插入失败-主键重复");
+        Toast.makeText(this, b ? "插入成功" : "插入失败-主键重复", Toast.LENGTH_SHORT).show();
         return employee;
     }
 

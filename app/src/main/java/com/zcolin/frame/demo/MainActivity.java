@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.zcolin.frame.app.FramePathConst;
 import com.zcolin.frame.imageloader.ImageLoaderUtils;
@@ -17,7 +18,6 @@ import com.zcolin.frame.permission.PermissionHelper;
 import com.zcolin.frame.permission.PermissionsResultAction;
 import com.zcolin.frame.util.ActivityUtil;
 import com.zcolin.frame.util.SystemIntentUtil;
-import com.zcolin.frame.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -77,7 +77,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                                        startActivityWithCallback(intent, (resultCode, data) -> {
                                                            if (resultCode == RESULT_OK) {
                                                                if (data != null) {
-                                                                   ToastUtil.toastShort(data.getStringExtra("data"));
+                                                                   Toast.makeText(MainActivity.this,
+                                                                                  data.getStringExtra("data"),
+                                                                                  Toast.LENGTH_SHORT).show();
                                                                }
                                                            }
                                                        });
@@ -85,7 +87,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                                                    @Override
                                                    public void onDenied(String permission) {
-                                                       ToastUtil.toastShort("请赋予本程序拨打电话和摄像头权限!");
+                                                       Toast.makeText(MainActivity.this,
+                                                                      "请赋予本程序拨打电话和摄像头权限!",
+                                                                      Toast.LENGTH_SHORT).show();
                                                    }
                                                });
         } else if (v == listButton.get(3)) {
@@ -115,7 +119,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                                  new SystemIntentUtil.OnCompleteLisenter() {
                                                      @Override
                                                      public void onSelected(Uri fileProviderUri) {
-                                                         ImageLoaderUtils.displayImage(mActivity, fileProviderUri, imageView);
+                                                         ImageLoaderUtils.displayImage(mActivity,
+                                                                                       fileProviderUri,
+                                                                                       imageView);
                                                          System.out.println(fileProviderUri.getPath());
                                                      }
 

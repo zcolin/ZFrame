@@ -18,5 +18,4 @@ import com.zcolin.frame.app.BaseFrameActivity;
  */
 @SuppressLint("Registered")
 public class BaseActivity extends BaseFrameActivity {
-
 }

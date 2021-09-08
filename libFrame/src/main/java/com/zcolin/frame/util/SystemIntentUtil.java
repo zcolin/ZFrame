@@ -14,7 +14,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
+import com.zcolin.frame.app.BaseApp;
 import com.zcolin.frame.app.BaseFrameActivity;
 import com.zcolin.frame.app.BaseFrameFrag;
 import com.zcolin.frame.app.FramePathConst;
@@ -46,49 +48,63 @@ public class SystemIntentUtil {
      * @param savePath           拍照完后的保存路径
      * @param onCompleteLisenter 拍照完的回调函数接口
      */
-    public static void takePhoto(final Object object, final String savePath, final OnCompleteLisenter onCompleteLisenter) {
+    public static void takePhoto(final Object object, final String savePath,
+            final OnCompleteLisenter onCompleteLisenter) {
         if (!SDCardUtil.isSDCardEnable()) {
             return;
         }
 
-        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-                FileUtil.checkFilePath(savePath, false);
-                final Uri uri = getUriFromPath(savePath);
-                if (uri != null) {
-                    final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    if (object instanceof BaseFrameActivity) {
-                        ((BaseFrameActivity) object).startActivityWithCallback(intent, (resultCode, data) -> {
-                            if (onCompleteLisenter != null) {
-                                if (resultCode == Activity.RESULT_OK) {
-                                    onCompleteLisenter.onSelected(uri);
-                                } else {
-                                    onCompleteLisenter.onCancel();
-                                }
-                            }
-                        });
-                    } else if (object instanceof BaseFrameFrag) {
-                        ((BaseFrameFrag) object).startActivityWithCallback(intent, (resultCode, data) -> {
-                            if (onCompleteLisenter != null) {
-                                if (resultCode == Activity.RESULT_OK) {
-                                    onCompleteLisenter.onSelected(uri);
-                                } else {
-                                    onCompleteLisenter.onCancel();
-                                }
-                            }
-                        });
-                    }
-                }
-            }
+        PermissionHelper.requestPermission(object,
+                                           new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                        Manifest.permission.CAMERA},
+                                           new PermissionsResultAction() {
+                                               @Override
+                                               public void onGranted() {
+                                                   FileUtil.checkFilePath(savePath, false);
+                                                   final Uri uri = getUriFromPath(savePath);
+                                                   if (uri != null) {
+                                                       final Intent intent =
+                                                               new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                       intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                                       if (object instanceof BaseFrameActivity) {
+                                                           ((BaseFrameActivity) object).startActivityWithCallback(intent,
+                                                                                                                  (resultCode, data) -> {
+                                                                                                                      if (onCompleteLisenter != null) {
+                                                                                                                          if (resultCode == Activity.RESULT_OK) {
+                                                                                                                              onCompleteLisenter
+                                                                                                                                      .onSelected(
+                                                                                                                                              uri);
+                                                                                                                          } else {
+                                                                                                                              onCompleteLisenter
+                                                                                                                                      .onCancel();
+                                                                                                                          }
+                                                                                                                      }
+                                                                                                                  });
+                                                       } else if (object instanceof BaseFrameFrag) {
+                                                           ((BaseFrameFrag) object).startActivityWithCallback(intent,
+                                                                                                              (resultCode, data) -> {
+                                                                                                                  if (onCompleteLisenter != null) {
+                                                                                                                      if (resultCode == Activity.RESULT_OK) {
+                                                                                                                          onCompleteLisenter
+                                                                                                                                  .onSelected(
+                                                                                                                                          uri);
+                                                                                                                      } else {
+                                                                                                                          onCompleteLisenter
+                                                                                                                                  .onCancel();
+                                                                                                                      }
+                                                                                                                  }
+                                                                                                              });
+                                                       }
+                                                   }
+                                               }
 
-            @Override
-            public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
-            }
-        });
+                                               @Override
+                                               public void onDenied(String permission) {
+                                                   Toast.makeText(BaseApp.APP_CONTEXT,
+                                                                  "请授予本程序SD卡写入权限和相机权限",
+                                                                  Toast.LENGTH_SHORT).show();
+                                               }
+                                           });
     }
 
     /**
@@ -125,7 +141,7 @@ public class SystemIntentUtil {
 
             @Override
             public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序读取SD卡权限");
+                Toast.makeText(BaseApp.APP_CONTEXT, "请授予本程序读取SD卡权限", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,7 +170,12 @@ public class SystemIntentUtil {
         selectPhoto(object, new OnCompleteLisenter() {
             @Override
             public void onSelected(Uri fileProviderUri) {
-                SystemIntentUtil.cropPhoto(object, NUriParseUtil.getFileFromUri(fileProviderUri), savePath, cropX, cropY, onCompleteLisenter);
+                SystemIntentUtil.cropPhoto(object,
+                                           NUriParseUtil.getFileFromUri(fileProviderUri),
+                                           savePath,
+                                           cropX,
+                                           cropY,
+                                           onCompleteLisenter);
             }
 
             @Override
@@ -176,8 +197,8 @@ public class SystemIntentUtil {
      * @param cropY              y像素
      * @param onCompleteLisenter 完成后回调
      */
-    public static void cropPhoto(final Object object, final File file, final String savePath, final int cropX, final int cropY,
-            final OnCompleteLisenter onCompleteLisenter) {
+    public static void cropPhoto(final Object object, final File file, final String savePath, final int cropX,
+            final int cropY, final OnCompleteLisenter onCompleteLisenter) {
         if (!SDCardUtil.isSDCardEnable()) {
             return;
         }
@@ -229,7 +250,7 @@ public class SystemIntentUtil {
 
             @Override
             public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序读写SD卡权限");
+                Toast.makeText(BaseApp.APP_CONTEXT, "请授予本程序读取SD卡权限", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -278,7 +299,7 @@ public class SystemIntentUtil {
 
             @Override
             public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序拨打电话权限！");
+                Toast.makeText(BaseApp.APP_CONTEXT, "请授予本程序拨打电话权限", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -310,55 +331,69 @@ public class SystemIntentUtil {
      * @param savePath      视频保存路径
      * @param durationLimit 最大时间限制 秒  为0不限制
      * @param isHighQuality 是否高质量
-     * @return 视频保存路径
      */
-    public static void videoCapture(final Object object, final String savePath, final int durationLimit, final boolean isHighQuality,
-            final OnCompleteLisenter onCompleteLisenter) {
-        PermissionHelper.requestPermission(object, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
-                new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-                FileUtil.checkFilePath(savePath, false);
-                Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                final Uri uri = getUriFromPath(savePath);
-                if (uri != null) {
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, isHighQuality ? 1 : 0);
-                    if (durationLimit > 0) {
-                        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, durationLimit);
-                    }
-                    if (object instanceof BaseFrameActivity) {
-                        ((BaseFrameActivity) object).startActivityWithCallback(intent, (resultCode, data) -> {
-                            if (onCompleteLisenter != null) {
-                                if (resultCode == Activity.RESULT_OK) {
-                                    onCompleteLisenter.onSelected(uri);
-                                } else {
-                                    onCompleteLisenter.onCancel();
-                                }
-                            }
-                        });
-                    } else if (object instanceof BaseFrameFrag) {
-                        ((BaseFrameFrag) object).startActivityWithCallback(intent, (resultCode, data) -> {
-                            if (onCompleteLisenter != null) {
-                                if (resultCode == Activity.RESULT_OK) {
-                                    onCompleteLisenter.onSelected(uri);
-                                } else {
-                                    onCompleteLisenter.onCancel();
-                                }
-                            }
-                        });
-                    }
-                }
-            }
+    public static void videoCapture(final Object object, final String savePath, final int durationLimit,
+            final boolean isHighQuality, final OnCompleteLisenter onCompleteLisenter) {
+        PermissionHelper.requestPermission(object,
+                                           new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                        Manifest.permission.CAMERA},
+                                           new PermissionsResultAction() {
+                                               @Override
+                                               public void onGranted() {
+                                                   FileUtil.checkFilePath(savePath, false);
+                                                   Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                                   final Uri uri = getUriFromPath(savePath);
+                                                   if (uri != null) {
+                                                       intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                                       intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,
+                                                                       isHighQuality ? 1 : 0);
+                                                       if (durationLimit > 0) {
+                                                           intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,
+                                                                           durationLimit);
+                                                       }
+                                                       if (object instanceof BaseFrameActivity) {
+                                                           ((BaseFrameActivity) object).startActivityWithCallback(intent,
+                                                                                                                  (resultCode, data) -> {
+                                                                                                                      if (onCompleteLisenter != null) {
+                                                                                                                          if (resultCode == Activity.RESULT_OK) {
+                                                                                                                              onCompleteLisenter
+                                                                                                                                      .onSelected(
+                                                                                                                                              uri);
+                                                                                                                          } else {
+                                                                                                                              onCompleteLisenter
+                                                                                                                                      .onCancel();
+                                                                                                                          }
+                                                                                                                      }
+                                                                                                                  });
+                                                       } else if (object instanceof BaseFrameFrag) {
+                                                           ((BaseFrameFrag) object).startActivityWithCallback(intent,
+                                                                                                              (resultCode, data) -> {
+                                                                                                                  if (onCompleteLisenter != null) {
+                                                                                                                      if (resultCode == Activity.RESULT_OK) {
+                                                                                                                          onCompleteLisenter
+                                                                                                                                  .onSelected(
+                                                                                                                                          uri);
+                                                                                                                      } else {
+                                                                                                                          onCompleteLisenter
+                                                                                                                                  .onCancel();
+                                                                                                                      }
+                                                                                                                  }
+                                                                                                              });
+                                                       }
+                                                   }
+                                               }
 
-            @Override
-            public void onDenied(String permission) {
-                ToastUtil.toastShort("请授予本程序SD卡写入权限和相机权限！");
-            }
-        });
+                                               @Override
+                                               public void onDenied(String permission) {
+                                                   Toast.makeText(BaseApp.APP_CONTEXT,
+                                                                  "请授予本程序SD卡写入权限和相机权限",
+                                                                  Toast.LENGTH_SHORT).show();
+                                               }
+                                           });
     }
 
     public interface OnCompleteLisenter {
+
         /**
          * @param fileProviderUri FileProvider的Uri，如果要获取实际路径需要使用 {@link NUriParseUtil#getFileFromUri(Uri)}
          */

@@ -9,12 +9,12 @@
 package com.zcolin.frame.app;
 
 import android.os.Build;
+import android.widget.Toast;
 
 import com.zcolin.frame.util.AppUtil;
 import com.zcolin.frame.util.CalendarUtil;
 import com.zcolin.frame.util.FileUtil;
 import com.zcolin.frame.util.LogUtil;
-import com.zcolin.frame.util.ToastUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -78,7 +78,7 @@ final class CrashHandler implements UncaughtExceptionHandler {
         }
 
         // TODO: 2021/1/6  debug：主线程被杀死了，Toast无法正常执行，目前暂无法解决。
-        new Thread(() -> ToastUtil.toastShort("很抱歉，程序出现异常，即将退出"));
+        new Thread(() -> Toast.makeText(BaseApp.APP_CONTEXT, "很抱歉，程序出现异常，即将退出", Toast.LENGTH_SHORT).show());
 
         return true;
     }

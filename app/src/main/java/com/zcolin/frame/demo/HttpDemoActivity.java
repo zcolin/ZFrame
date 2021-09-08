@@ -82,7 +82,7 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
         ZHttp.get(HttpUrl.URL_BAIDU_TEST, new ZStringResponse(mActivity, "正在获取数据") {
             @Override
             public void onError(int code, Call call, Exception e) {
-                //TODO 错误处理  ToastUtil.toastShort(LogUtil.ExceptionToString(e));
+                //Toast.makeText(BaseApp.APP_CONTEXT, LogUtil.ExceptionToString(e), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -100,21 +100,20 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
      * ZResponse的参数，第二个参数是显示旋转进度条则传入，第三个参数是进度条文字，如果不需要进度条则只需要传入第一个参数
      */
     public void getObject() {
-        ZHttp.get(HttpUrl.URL_BAIDU_TEST,
-                  new ZResponse<BaiduWeatherReply>(mActivity, "正在获取数据……") {
-                      @Override
-                      public void onError(int code, String error) {
-                          //TODO 错误处理   ToastUtil.toastShort(error);
-                      }
+        ZHttp.get(HttpUrl.URL_BAIDU_TEST, new ZResponse<BaiduWeatherReply>(mActivity, "正在获取数据……") {
+            @Override
+            public void onError(int code, String error) {
+                //Toast.makeText(BaseApp.APP_CONTEXT,error, Toast.LENGTH_SHORT).show();
+            }
 
-                      @Override
-                      public void onSuccess(Response response, BaiduWeatherReply resObj) {
-                          if (resObj.results.size() > 0) {
-                              BaiduWeatherReply.ResultsBean bean = resObj.results.get(0);
-                              textView.setText("city:" + bean.currentCity + " pm25:" + bean.pm25);
-                          }
-                      }
-                  });
+            @Override
+            public void onSuccess(Response response, BaiduWeatherReply resObj) {
+                if (resObj.results.size() > 0) {
+                    BaiduWeatherReply.ResultsBean bean = resObj.results.get(0);
+                    textView.setText("city:" + bean.currentCity + " pm25:" + bean.pm25);
+                }
+            }
+        });
     }
 
     /**
@@ -125,19 +124,17 @@ public class HttpDemoActivity extends BaseActivity implements View.OnClickListen
     public void postWithBarResponse() {
         HashMap<String, String> params = new HashMap<>();
         params.put("param1", "sss");
-        ZHttp.post(HttpUrl.URL_BAIDU_TEST,
-                   params,
-                   new ZResponse<HttpCommonReply>(mActivity, "正在加载……") {
-                       @Override
-                       public void onSuccess(Response response, HttpCommonReply httpBaseBean) {
-                           textView.setText(String.valueOf(httpBaseBean));
-                       }
+        ZHttp.post(HttpUrl.URL_BAIDU_TEST, params, new ZResponse<HttpCommonReply>(mActivity, "正在加载……") {
+            @Override
+            public void onSuccess(Response response, HttpCommonReply httpBaseBean) {
+                textView.setText(String.valueOf(httpBaseBean));
+            }
 
-                       @Override
-                       public void onError(int code, String error) {
-                           textView.setText(error);
-                       }
-                   });
+            @Override
+            public void onError(int code, String error) {
+                textView.setText(error);
+            }
+        });
     }
 
     /**

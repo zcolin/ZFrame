@@ -10,10 +10,10 @@ package com.zcolin.frame.http.response;
 
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.zcolin.frame.http.ZReply;
 import com.zcolin.frame.util.LogUtil;
-import com.zcolin.frame.util.ToastUtil;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -94,7 +94,7 @@ public abstract class ZResponse<T extends ZReply> {
     public abstract void onSuccess(Response response, T resObj);
 
     public void onError(int code, String error) {
-        ToastUtil.toastShort(error);
+        Toast.makeText(barActy, error, Toast.LENGTH_SHORT).show();
         LogUtil.w("HttpResponse:", error);
     }
 

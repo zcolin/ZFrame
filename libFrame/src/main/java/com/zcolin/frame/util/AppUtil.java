@@ -27,6 +27,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import com.zcolin.frame.app.BaseApp;
 import com.zcolin.frame.app.BaseFrameActivity;
@@ -371,7 +372,7 @@ public class AppUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
             if (!hasInstallPermission) {
-                ToastUtil.toastShort("请打开[允许安装应用]权限");
+                Toast.makeText(context, "请打开[允许安装应用]权限", Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
                                             Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
                 context.startActivityWithCallback(intent1, (resultCode, data) -> {
@@ -380,7 +381,7 @@ public class AppUtil {
                                               "application/vnd.android.package-archive");
                         context.startActivity(intent);
                     } else {
-                        ToastUtil.toastShort("没有赋予[未知来源安装]权限");
+                        Toast.makeText(context, "没有赋予[未知来源安装]权限", Toast.LENGTH_SHORT).show();
                     }
                 });
                 return;
@@ -407,7 +408,7 @@ public class AppUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             boolean hasInstallPermission = BaseApp.APP_CONTEXT.getPackageManager().canRequestPackageInstalls();
             if (!hasInstallPermission) {
-                ToastUtil.toastShort("请打开[允许安装应用]权限");
+                Toast.makeText(context.getActivity(), "请打开[允许安装应用]权限", Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
                                             Uri.parse("package:" + getPackageName(BaseApp.APP_CONTEXT)));
                 context.startActivityWithCallback(intent1, (resultCode, data) -> {
@@ -416,7 +417,7 @@ public class AppUtil {
                                               "application/vnd.android.package-archive");
                         context.startActivity(intent);
                     } else {
-                        ToastUtil.toastShort("没有赋予[未知来源安装]权限");
+                        Toast.makeText(context.getActivity(), "没有赋予[未知来源安装]权限", Toast.LENGTH_SHORT).show();
                     }
                 });
                 return;
