@@ -12,13 +12,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 
 import com.zcolin.frame.permission.PermissionsManager;
 import com.zcolin.frame.util.ActivityUtil;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 /**
@@ -31,10 +32,12 @@ import com.zcolin.frame.util.ActivityUtil;
  * 5 继承此类之后可使用getView（int resId）替代findViewById。
  */
 public class BaseFrameActivity extends AppCompatActivity {
+
     private final SparseArray<View>    mViews = new SparseArray<>();
     private       ResultActivityHelper resultActivityHelper;
     protected     Activity             mActivity;
-    protected     Bundle               mBundle; //Activity 销毁/恢复 时 保存/获取 数据
+    /** Activity 销毁或恢复时，用于保存或获取数据 */
+    protected     Bundle               mBundle;
     private       boolean              isDestroyed;
 
     @Override
@@ -55,7 +58,7 @@ public class BaseFrameActivity extends AppCompatActivity {
     protected void onDestroy() {
         isDestroyed = true;
         super.onDestroy();
-        //mActivity = null; //防止引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
+        // mActivity = null; //防止引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
         ActivityUtil.removeActivityFromList(this);
     }
 
@@ -118,10 +121,10 @@ public class BaseFrameActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

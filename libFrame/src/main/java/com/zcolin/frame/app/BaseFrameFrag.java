@@ -12,15 +12,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.zcolin.frame.permission.PermissionsManager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -36,9 +37,12 @@ public abstract class BaseFrameFrag extends Fragment {
     protected     Activity             mActivity;
     protected     View                 rootView;
     protected     boolean              mIsDetached;
-    protected     boolean              isVisible;//Fragment当前状态是否可见
-    protected     boolean              mHasLoadedOnce;//是否已被加载过一次，第二次就不再去请求数据了
-    protected     boolean              isPrepared;//是否已经准备好，防止在onCreateView之前调用
+    /** Fragment当前状态是否可见 */
+    protected     boolean              isVisible;
+    /** 是否已被加载过一次，第二次就不再去请求数据了 */
+    protected     boolean              mHasLoadedOnce;
+    /** 是否已经准备好，防止在onCreateView之前调用 */
+    protected     boolean              isPrepared;
     private       ResultActivityHelper resultActivityHelper;
 
 
@@ -58,12 +62,13 @@ public abstract class BaseFrameFrag extends Fragment {
     public void onDetach() {
         mIsDetached = true;
         super.onDetach();
-        //mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
+        // mActivity = null; 防止fragment中引用activity导致空指针，这样可能会有内存泄漏，但是相比空指针要好得多
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         /*在ViewPager切换过程中会重新调用onCreateView，此时如果实例化过，需要移除，会自动再次添加*/
         if (rootView == null) {
             rootView = inflater.inflate(getRootViewLayId(), null);
@@ -80,18 +85,24 @@ public abstract class BaseFrameFrag extends Fragment {
     }
 
     /**
-     * 在OnCreatView之前执行
-     * onAttach之前
+     * androidX中对于ViewPager的传参是BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT，不再执行setUserVisibleHint方法，需要结合onResume和onPause
+     * 实现懒加载。
      */
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            isVisible = true;
-            onPreLoad(null);
-        } else {
-            isVisible = false;
-        }
+    public void onResume() {
+        super.onResume();
+        isVisible = true;
+        onPreLoad(null);
+    }
+
+    /**
+     * androidX中对于ViewPager的传参是BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT，不再执行setUserVisibleHint方法，需要结合onResume和onPause
+     * 实现懒加载。
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        isVisible = false;
     }
 
     /**
@@ -104,6 +115,34 @@ public abstract class BaseFrameFrag extends Fragment {
 
         mHasLoadedOnce = true;
         lazyLoad(savedInstanceState);
+    }
+
+    /**
+     * 用于Framgment的show/hide方式切换
+     */
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            onShow();
+        } else {
+            onHidden();
+        }
+    }
+
+    /**
+     * fragment显示
+     */
+    public void onShow() {
+
+    }
+
+
+    /**
+     * fragment隐藏
+     */
+    public void onHidden() {
+
     }
 
     /**
@@ -153,7 +192,8 @@ public abstract class BaseFrameFrag extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }
