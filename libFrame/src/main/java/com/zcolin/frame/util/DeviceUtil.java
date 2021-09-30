@@ -180,10 +180,10 @@ public class DeviceUtil {
      * 如果用户拒绝了权限或以上所有获取id的方法都获取失败，则需要生成一个本次安装的唯一ID
      */
     public static String getUUID() {
-        String str = SPUtil.getString("device_app_uuid", null);
+        String str = SpUtil.getString("device_app_uuid", null);
         if (str == null) {
             str = UUID.randomUUID().toString();
-            SPUtil.putString("device_app_uuid", str);
+            SpUtil.putString("device_app_uuid", str);
         }
         return str;
     }

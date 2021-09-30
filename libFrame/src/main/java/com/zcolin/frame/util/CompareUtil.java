@@ -84,14 +84,14 @@ public class CompareUtil {
     public static <T> int compare(T o1, T o2, boolean isNullGreater) {
         if (o1 == o2) {
             return 0;
-        } else if (null == o1) {// null 排在后面
+        } else if (null == o1) { // null 排在后面
             return isNullGreater ? 1 : -1;
         } else if (null == o2) {
             return isNullGreater ? -1 : 1;
         }
 
         if (o1 instanceof Comparable && o2 instanceof Comparable) {
-            //如果bean可比较，直接比较bean
+            // 如果bean可比较，直接比较 bean
             return ((Comparable) o1).compareTo(o2);
         }
 

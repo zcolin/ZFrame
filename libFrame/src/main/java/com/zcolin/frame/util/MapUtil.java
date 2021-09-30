@@ -46,6 +46,7 @@ public class MapUtil {
      * Map是否为空
      *
      * @param map 集合
+     *
      * @return 是否为空
      */
     public static boolean isEmpty(Map<?, ?> map) {
@@ -56,6 +57,7 @@ public class MapUtil {
      * Map是否为非空
      *
      * @param map 集合
+     *
      * @return 是否为非空
      */
     public static boolean isNotEmpty(Map<?, ?> map) {
@@ -69,6 +71,7 @@ public class MapUtil {
      * @param <K> 键类型
      * @param <V> 值类型
      * @param set 提供的集合，可能为null
+     *
      * @return 原集合，若为null返回空集合
      *
      * @since 4.6.3
@@ -85,6 +88,7 @@ public class MapUtil {
      * @param <V>        值类型
      * @param map        Map
      * @param defaultMap 默认Map
+     *
      * @return 非空（empty）的原Map或默认Map
      *
      * @since 4.6.9
@@ -100,6 +104,7 @@ public class MapUtil {
      *
      * @param <K> Key类型
      * @param <V> Value类型
+     *
      * @return HashMap对象
      */
     public static <K, V> HashMap<K, V> newHashMap() {
@@ -113,6 +118,7 @@ public class MapUtil {
      * @param <V>     Value类型
      * @param size    初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
      * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+     *
      * @return HashMap对象
      *
      * @since 3.0.4
@@ -128,6 +134,7 @@ public class MapUtil {
      * @param <K>  Key类型
      * @param <V>  Value类型
      * @param size 初始大小，由于默认负载因子0.75，传入的size会实际初始大小为size / 0.75 + 1
+     *
      * @return HashMap对象
      */
     public static <K, V> HashMap<K, V> newHashMap(int size) {
@@ -140,6 +147,7 @@ public class MapUtil {
      * @param <K>     Key类型
      * @param <V>     Value类型
      * @param isOrder Map的Key是否有序，有序返回 {@link LinkedHashMap}，否则返回 {@link HashMap}
+     *
      * @return HashMap对象
      */
     public static <K, V> HashMap<K, V> newHashMap(boolean isOrder) {
@@ -152,6 +160,7 @@ public class MapUtil {
      * @param <K>        key的类型
      * @param <V>        value的类型
      * @param comparator Key比较器
+     *
      * @return TreeMap
      *
      * @since 3.2.3
@@ -167,6 +176,7 @@ public class MapUtil {
      * @param <V>        value的类型
      * @param map        Map
      * @param comparator Key比较器
+     *
      * @return TreeMap
      *
      * @since 3.2.3
@@ -185,6 +195,7 @@ public class MapUtil {
      * @param <K>  key的类型
      * @param <V>  value的类型
      * @param size 初始容量
+     *
      * @return {@link IdentityHashMap}
      *
      * @since 4.5.7
@@ -198,6 +209,7 @@ public class MapUtil {
      *
      * @param <K> key的类型
      * @param <V> value的类型
+     *
      * @return ConcurrentHashMap
      */
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
@@ -210,6 +222,7 @@ public class MapUtil {
      * @param size 初始容量，当传入的容量小于等于0时，容量为{@link MapUtil#DEFAULT_INITIAL_CAPACITY}
      * @param <K>  key的类型
      * @param <V>  value的类型
+     *
      * @return ConcurrentHashMap
      */
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int size) {
@@ -223,6 +236,7 @@ public class MapUtil {
      * @param map map
      * @param <K> key的类型
      * @param <V> value的类型
+     *
      * @return ConcurrentHashMap
      */
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<K, V> map) {
@@ -241,6 +255,7 @@ public class MapUtil {
      * @param <V>   值类型
      * @param key   键
      * @param value 值
+     *
      * @return {@link HashMap}
      */
     public static <K, V> HashMap<K, V> of(K key, V value) {
@@ -255,6 +270,7 @@ public class MapUtil {
      * @param key     键
      * @param value   值
      * @param isOrder 是否有序
+     *
      * @return {@link HashMap}
      */
     public static <K, V> HashMap<K, V> of(K key, V value, boolean isOrder) {
@@ -280,6 +296,7 @@ public class MapUtil {
      * 参考：commons-lang
      *
      * @param array 数组。元素类型为Map.Entry、数组、Iterable、Iterator
+     *
      * @return {@link HashMap}
      *
      * @since 3.0.8
@@ -319,7 +336,9 @@ public class MapUtil {
                     }
                 }
             } else {
-                throw new IllegalArgumentException(StringUtil.format("Array element {}, '{}', is not type of Map.Entry or Array or Iterable or Iterator", i,
+                throw new IllegalArgumentException(StringUtil.format(
+                        "Array element {}, '{}', is not type of Map.Entry or Array or Iterable or Iterator",
+                        i,
                         object));
             }
         }
@@ -354,6 +373,7 @@ public class MapUtil {
      * @param <K>     键类型
      * @param <V>     值类型
      * @param mapList Map列表
+     *
      * @return Map
      */
     public static <K, V> Map<K, List<V>> toListMap(Iterable<? extends Map<K, V>> mapList) {
@@ -410,6 +430,7 @@ public class MapUtil {
      * @param <K>     键类型
      * @param <V>     值类型
      * @param listMap 列表Map
+     *
      * @return Map列表
      */
     public static <K, V> List<Map<K, V>> toMapList(Map<K, ? extends Iterable<V>> listMap) {
@@ -455,6 +476,7 @@ public class MapUtil {
      * 将键值对转换为二维数组，第一维是key，第二纬是value
      *
      * @param map map
+     *
      * @return 数组
      *
      * @since 4.1.9
@@ -476,6 +498,18 @@ public class MapUtil {
         return result;
     }
 
+    /**
+     * 通过Value获取key
+     */
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (value == null ? (entry.getValue() == null) : value.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     // ----------------------------------------------------------------------------------------------- join
 
     /**
@@ -487,6 +521,7 @@ public class MapUtil {
      * @param separator         entry之间的连接符
      * @param keyValueSeparator kv之间的连接符
      * @param otherParams       其它附加参数字符串（例如密钥）
+     *
      * @return 连接字符串
      *
      * @since 3.1.1
@@ -503,11 +538,13 @@ public class MapUtil {
      * @param keyValueSeparator kv之间的连接符
      * @param isIgnoreNull      是否忽略null的键和值
      * @param otherParams       其它附加参数字符串（例如密钥）
+     *
      * @return 签名字符串
      *
      * @since 5.0.4
      */
-    public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+    public static String sortJoin(Map<?, ?> params, String separator, String keyValueSeparator, boolean isIgnoreNull,
+            String... otherParams) {
         return join(sort(params), separator, keyValueSeparator, isIgnoreNull, otherParams);
     }
 
@@ -520,11 +557,13 @@ public class MapUtil {
      * @param separator         entry之间的连接符
      * @param keyValueSeparator kv之间的连接符
      * @param otherParams       其它附加参数字符串（例如密钥）
+     *
      * @return 连接后的字符串
      *
      * @since 3.1.1
      */
-    public static <K, V> String joinIgnoreNull(Map<K, V> map, String separator, String keyValueSeparator, String... otherParams) {
+    public static <K, V> String joinIgnoreNull(Map<K, V> map, String separator, String keyValueSeparator,
+            String... otherParams) {
         return join(map, separator, keyValueSeparator, true, otherParams);
     }
 
@@ -538,11 +577,13 @@ public class MapUtil {
      * @param keyValueSeparator kv之间的连接符
      * @param isIgnoreNull      是否忽略null的键和值
      * @param otherParams       其它附加参数字符串（例如密钥）
+     *
      * @return 连接后的字符串，map和otherParams为空返回""
      *
      * @since 3.1.1
      */
-    public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull, String... otherParams) {
+    public static <K, V> String join(Map<K, V> map, String separator, String keyValueSeparator, boolean isIgnoreNull,
+            String... otherParams) {
         final StringBuilder strBuilder = StringUtil.builder();
         boolean isFirst = true;
         if (isNotEmpty(map)) {
@@ -575,6 +616,7 @@ public class MapUtil {
      * @param <K> key的类型
      * @param <V> value的类型
      * @param map Map
+     *
      * @return TreeMap
      *
      * @see #newTreeMap(Map, Comparator)
@@ -591,6 +633,7 @@ public class MapUtil {
      * @param <V>        value的类型
      * @param map        Map，为null返回null
      * @param comparator Key比较器
+     *
      * @return TreeMap，map为null返回null
      *
      * @see #newTreeMap(Map, Comparator)
@@ -622,6 +665,7 @@ public class MapUtil {
      *
      * @param <K> Key类型
      * @param <V> Value类型
+     *
      * @return map创建类
      */
     public static <K, V> MapBuilder<K, V> builder() {
@@ -634,6 +678,7 @@ public class MapUtil {
      * @param <K> Key类型
      * @param <V> Value类型
      * @param map 实际使用的map
+     *
      * @return map创建类
      */
     public static <K, V> MapBuilder<K, V> builder(Map<K, V> map) {
@@ -647,6 +692,7 @@ public class MapUtil {
      * @param <V> Value类型
      * @param k   key
      * @param v   value
+     *
      * @return map创建类
      */
     public static <K, V> MapBuilder<K, V> builder(K k, V v) {
@@ -660,6 +706,7 @@ public class MapUtil {
      * @param <V>  Value类型
      * @param map  Map
      * @param keys 键列表
+     *
      * @return 修改后的key
      *
      * @since 5.0.5
@@ -682,6 +729,7 @@ public class MapUtil {
      * @param map    Map
      * @param oldKey 原键
      * @param newKey 新键
+     *
      * @return map
      *
      * @throws IllegalArgumentException 新key存在抛出此异常
@@ -704,6 +752,7 @@ public class MapUtil {
      * @param <K> key的类型
      * @param <V> value的类型
      * @param map Map
+     *
      * @return map
      *
      * @since 4.6.5

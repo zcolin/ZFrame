@@ -153,6 +153,7 @@ public class CalendarUtil {
      * 得到系统当前日期及时间，并用指定的方式格式化
      *
      * @param pattern 显示格式
+     *
      * @return 当前日期及时间
      */
     public static String getDateTime(String pattern) {
@@ -192,6 +193,7 @@ public class CalendarUtil {
      *
      * @param date    Date对象
      * @param pattern 显示格式
+     *
      * @return 日期时间字符串
      */
     public static String getDateTime(Date date, String pattern) {
@@ -211,6 +213,7 @@ public class CalendarUtil {
      *
      * @param date    Date对象
      * @param pattern 显示格式
+     *
      * @return 日期时间字符串
      */
     public static String getDateTimeUTC(Date date, String pattern) {
@@ -258,6 +261,7 @@ public class CalendarUtil {
      *
      * @param timeStamp 时间戳
      * @param pattern   显示格式
+     *
      * @return 日期时间字符串
      */
     public static String getDateTime(long timeStamp, String pattern) {
@@ -320,6 +324,7 @@ public class CalendarUtil {
      * 获取周天数    Calendar中1-星期天，2-星期一，3-星期二，4-星期三，5-星期四，6-星期五，7-星期六
      *
      * @param dayofweek 使用Calendar获取的dayOfWeek
+     *
      * @return 转换后的dayOfWeek
      */
     public static int getDayOfWeek(int dayofweek) {
@@ -335,6 +340,7 @@ public class CalendarUtil {
      * 获取中文周天数    星期天
      *
      * @param dayofweek 使用Calendar获取的dayOfWeek
+     *
      * @return 转换后的dayOfWeek
      */
     public static String getChineseCharDayOfWeek(int dayofweek) {
@@ -351,6 +357,7 @@ public class CalendarUtil {
      * 例如要得到上星期同一天的日期，参数则为-7
      *
      * @param days 增加的日期数
+     *
      * @return 增加以后的日期
      */
     public static Date addDays(int days) {
@@ -362,6 +369,7 @@ public class CalendarUtil {
      *
      * @param date 基准日期
      * @param days 增加的日期数
+     *
      * @return 增加以后的日期
      */
     public static Date addDays(Date date, int days) {
@@ -372,6 +380,7 @@ public class CalendarUtil {
      * 取得当前日期以后某月的日期。如果要得到以前月份的日期，参数用负数。
      *
      * @param months 增加的月份数
+     *
      * @return 增加以后的日期
      */
     public static Date addMonths(int months) {
@@ -384,6 +393,7 @@ public class CalendarUtil {
      *
      * @param date   基准日期
      * @param months 增加的月份数
+     *
      * @return 增加以后的日期
      */
     public static Date addMonths(Date date, int months) {
@@ -396,6 +406,7 @@ public class CalendarUtil {
      * @param date   基准日期
      * @param amount 增加的数量
      * @param field  增加的单位，年，月或者日
+     *
      * @return 增加以后的日期
      */
     public static Date add(Date date, int amount, int field) {
@@ -444,6 +455,7 @@ public class CalendarUtil {
      * 计算日期和现在相差时间
      *
      * @param date 需要计算的Date对象
+     *
      * @return 相差的时间
      */
     public static String timeAgo(Date date) {
@@ -455,6 +467,7 @@ public class CalendarUtil {
      *
      * @param one 第一个日期数，作为基准
      * @param two 第二个日期数，作为比较
+     *
      * @return 相差时间
      */
     public static String timeAgo(Date one, Date two) {
@@ -494,6 +507,7 @@ public class CalendarUtil {
      *
      * @param one 第一个日期数，作为基准
      * @param two 第二个日期数，作为比较
+     *
      * @return 两个日期相差分钟数
      */
     public static long diffMinutes(Date one, Date two) {
@@ -506,6 +520,7 @@ public class CalendarUtil {
      *
      * @param one 第一个日期数，作为基准
      * @param two 第二个日期数，作为比较
+     *
      * @return 两个日期相差小时数
      */
     public static long diffHours(Date one, Date two) {
@@ -519,6 +534,7 @@ public class CalendarUtil {
      *
      * @param one 第一个日期数，作为基准
      * @param two 第二个日期数，作为比较
+     *
      * @return 两个日期相差天数
      */
     public static long diffDays(Date one, Date two) {
@@ -534,6 +550,7 @@ public class CalendarUtil {
      *
      * @param one 第一个日期数，作为基准
      * @param two 第二个日期数，作为比较
+     *
      * @return 两个日期相差天数
      */
     public static long diffDays(Calendar one, Calendar two) {
@@ -614,6 +631,7 @@ public class CalendarUtil {
      *
      * @param datestr 需要解析的日期字符串
      * @param pattern 日期字符串的格式，默认为“yyyy-MM-dd”的形式
+     *
      * @return 解析后的日期 ， 如果返回null，则表示解析失败
      */
     public static Date parse(String datestr, String pattern) {
@@ -634,6 +652,7 @@ public class CalendarUtil {
      *
      * @param datestr 需要解析的日期字符串
      * @param pattern 日期字符串的格式，默认为“yyyy-MM-dd”的形式
+     *
      * @return 解析后的日期 ， 如果返回null，则表示解析失败
      */
     public static Date parseUTC(String datestr, String pattern) {

@@ -20,9 +20,13 @@ import java.util.Properties;
  * Properties配置文件操作类
  */
 public class PropertyUtil {
-    protected String      fileName; // 文件名称
-    protected String      filePath; // 文件路径
-    protected InputStream inputStream;//读取配置文件的输入流
+
+    /** 文件名称 */
+    protected String      fileName;
+    /** 文件路径 */
+    protected String      filePath;
+    /** 读取配置文件的输入流 */
+    protected InputStream inputStream;
 
     public static InputStreamProperties instance(InputStream inputStream) {
         return new PropertyUtil(inputStream).new InputStreamProperties();

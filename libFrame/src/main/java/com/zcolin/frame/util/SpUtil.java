@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * SharedPreferences配置文件读写封装
  */
-public class SPUtil {
+public class SpUtil {
     public static final String DEFAULT_NAME = "shared_data";
 
     public static void putString(String key, String value) {
